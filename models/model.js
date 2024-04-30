@@ -1,75 +1,334 @@
-import { Sequelize, DataTypes } from "sequelize"
+import { Sequelize, DataTypes } from 'sequelize'
 
-
-const db = new Sequelize("book_magazin","root","",{
-  dialect:"mysql",
-  host:"localhost",
+const db = new Sequelize('book_magazin','root','',{
+  dialect:'mysql',
+  host:'localhost',
   define:{
-    freezeTableName:true
+    freezeTableName:true,
+    timestamps:false
   }
 })
-const UserTable = db.define("user",{
+const User = db.define('user',{
   id:{
     type:DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement:true,
-    field:"id"
+    field:'id'
   },
   name:{
-    type:DataTypes.STRING,
-    field:"user_name"
+    field:'user_name',
+    type:DataTypes.STRING
   },
   lastname:{
-    type:DataTypes.STRING,
-    field:"user_lastname"
+    field:'user_lastname',
+    type:DataTypes.STRING
   },
   type:{
-    type:DataTypes.ENUM("администратор","работник","клиент"),
-    field:"user_type"
+    field:'user_type',
+    type:DataTypes.ENUM('администратор','работник','клиент')
   },
   email:{
+    field:'email',
     type:DataTypes.STRING,
-    field:"email"
   },
   password:{
-    type:DataTypes.STRING,
-    field:"user_password"
+    field:'user_password',
+    type:DataTypes.STRING
   }
-}, {timestamps:false})
-const Genre = db.define("genre",{
-  
-  ,{timestamps:false}
 })
-const TaskTable = db.define("task",{
-    id_task:{
-        type:DataTypes.INTEGER,
-        autoIncrement:true,
-        primaryKey:true
-    },
-    title_task:{
-        type:DataTypes.STRING
-    },
-    describe_task:{
-        type:DataTypes.STRING
-    },
-    data_add_task:{
-        type:DataTypes.DATE
-    },
-    data_completion_task:{
-        type:DataTypes.DATE
-    },
-    user_fk_id_task :{
-        type:DataTypes.INTEGER,
-        references:{
-          model:'user',
-          key:'id_user'
-        }
-    }
-},{timestamps:false})
-TaskTable.associations = (model) =>{
-  TaskTable.belongsTo(model.User,{
-    foreignKey:'user_fk_id_task',
-    onDelete:'CASCADE'
-  })
-}
-export {UserTable,TaskTable}
+const Genre = db.define('genre',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  },
+  name:{
+    field:'genre_name',
+    type:DataTypes.STRING,
+    allowNull:false
+  }
+})
+const Subgenre = db.define('subgenre',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  },
+  name:{
+    field:'subgenre_name',
+    type:DataTypes.STRING,
+    allowNull:false
+  }
+})
+const GenreSubgenre = db.define('genre_subgenre',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  },
+  genreFk:{
+    field:'genre_fk',
+    type:DataTypes.INTEGER
+  },
+  subgenreFk:{
+    field:'subgenre_fk',
+    type:DataTypes.INTEGER
+  }
+})
+const Publishing = db.define('publishing',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  name:{
+    field:'publishing_name',
+    type:DataTypes.STRING
+  },
+  discountFk:{
+    field:'discount_fk',
+    type:DataTypes.INTEGER
+  }
+})
+const Series = db.define('series',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  name:{
+    field:'series_name',
+    type:DataTypes.STRING
+  },
+  publishingFk:{
+    field:'publishing_fk',
+    type:DataTypes.INTEGER
+  },
+  discountFk:{
+    field:'discount_fk',
+    type:DataTypes.INTEGER
+  }
+})
+const Discount = db.define('discount',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  quantity:{
+    field:'discount_quantity',
+    type:DataTypes.INTEGER
+  },
+  dateStart:{
+    field:'date_start',
+    type:DataTypes.DATE
+  },
+  dateStop:{
+    field:'data_stop',
+    type:DataTypes.DATE
+  }
+})
+const Author = db.define('author',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  lastname:{
+    field:'lastname',
+    type:DataTypes.STRING
+  },
+  authorName:{
+    field:'author_name',
+    type:DataTypes.STRING
+  },
+  surname:{
+    field:'surname',
+    type:DataTypes.STRING
+  }
+})
+const AuthorBook = db.define('author_book',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  authorFk:{
+    field:'author_fk',
+    type:DataTypes.INTEGER
+  },
+  bookFk:{
+    field:'book_fk',
+    type:DataTypes.INTEGER
+  }
+})
+const Book = db.define('book',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  name:{
+    field:'book_name',
+    type:DataTypes.STRING
+  },
+  price:{
+    field:'price',
+    type:DataTypes.INTEGER
+  },
+  discountFk:{
+    field:'discount_fk',
+    type:DataTypes.INTEGER
+  },
+  publishingFk:{
+    field:'publishing_fk',
+    type:DataTypes.INTEGER
+  },
+  yearPublishing:{
+    field:'year_publishing',
+    type:DataTypes.DATEONLY
+  },
+  isbn:{
+    field:'isbn',
+    type:DataTypes.STRING
+  },
+  countPages:{
+    field:'count_pages',
+    type:DataTypes.INTEGER
+  },
+  height:{
+    field:'height',
+    type:DataTypes.INTEGER
+  },
+  width:{
+    field:'width',
+    type:DataTypes.INTEGER
+  },
+  bookLength:{
+    field:'book_length',
+    type:DataTypes.INTEGER
+  },
+  coverType:{
+    field:'cover_type',
+    type:DataTypes.ENUM('мягкий переплёт','твердый переплет')
+  },
+  count:{
+    field:'count',
+    type:DataTypes.INTEGER
+  },
+  weigth:{
+    field:'weigth',
+    type:DataTypes.INTEGER
+  },
+  ageRestrictions:{
+    field:'age_restrictions',
+    type:DataTypes.ENUM('не задано','18+','16+','12+','6+')
+  },
+  genreSubgenreFk:{
+    field:'genre_subgenre_fk',
+    type:DataTypes.INTEGER
+  }
+})
+const Basket = db.define('basket',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  userFk:{
+    field:'user_fk',
+    type:DataTypes.INTEGER
+  },
+  bookFk:{
+    field:'book_fk',
+    type:DataTypes.INTEGER
+  },
+  count:{
+    field:'count',
+    type:DataTypes.INTEGER
+  },
+})
+const UserOrder = db.define('user_order',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  basketFk:{
+    field:'basket_fk',
+    type:DataTypes.INTEGER
+  },
+  addres:{
+    field:'addres',
+    type:DataTypes.STRING
+  },
+  orderDate:{
+    field:'order_date',
+    type:DataTypes.DATEONLY
+  },
+  dateIssue:{
+    field:'date_issue',
+    type:DataTypes.DATEONLY
+  },
+  orderStatus:{
+    field:'order_status',
+    type:DataTypes.ENUM('в пути','доставлен','отменен')
+  }
+})
+const SeriesBook = db.define('series_book',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  seriesFk:{
+    field:'series_fk',
+    type:DataTypes.INTEGER
+  },
+  bookFk:{
+    field:'book_fk',
+    type:DataTypes.INTEGER
+  }
+})
+const Review = db.define('review',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  },
+  generalReview:{
+    field:'general_review',
+    type:DataTypes.STRING
+  }, 
+  disReview:{
+    field:'dis_review',
+    type:DataTypes.STRING
+  },
+  advReview:{
+    field:'adv_review',
+    type:DataTypes.STRING
+  },
+  bookFk:{
+    field:'book_fk',
+    type:DataTypes.INTEGER
+  },
+  userFk:{
+    field:'user_fk',
+    type:DataTypes.INTEGER
+  }
+})
+
+export {User, Subgenre, Genre, GenreSubgenre, Publishing, Series, Discount, Author, AuthorBook, Book, Basket, UserOrder, SeriesBook, Review}

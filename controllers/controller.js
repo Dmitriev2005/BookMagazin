@@ -1,5 +1,5 @@
 import { json } from "sequelize"
-import {UserTable,TaskTable} from "../models/model.js"
+//import {UserTable,TaskTable} from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
 
 let secretWord = 'very_secret'
