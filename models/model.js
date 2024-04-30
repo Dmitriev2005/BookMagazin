@@ -1,8 +1,8 @@
 import { Sequelize, DataTypes } from 'sequelize'
-
-const db = new Sequelize('book_magazin','root','',{
-  dialect:'mysql',
-  host:'localhost',
+import 'dotenv/config'
+const db = new Sequelize(process.env.DATABASE,process.env.USER,process.env.PASSWORD,{
+  dialect:process.env.DIALECT,
+  host:process.env.HOST,
   define:{
     freezeTableName:true,
     timestamps:false
