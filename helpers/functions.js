@@ -18,5 +18,5 @@ const verifyToken = (req) =>{
     else
       return false
 }
-//const getToken = ()
+
 export {verifyToken}

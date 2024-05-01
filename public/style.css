@@ -1,50 +1,36 @@
-header, footer,#appIndex{
-    background-color: rgb(151, 152, 229);
-    border: 2px solid black;
-  }
-  /*контент*/
-  #appIndex{
-    margin-top: 1%;
-    margin-bottom: 1%;
-  }
-  /*********/
-  nav{
-    display: inline-block;
-    font-weight: bolder;
-    border: 2px solid black;
-    color: white;
-    background-color: blueviolet;
-    margin-left: 20px;
-    font-size: 25px;
-    padding: 5px;
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  padding-top: 3.5rem; /* Выравнивание по вертикали */
+  background-color: #343a40; /* Цвет фона сайдбара */
+}
 
-  }
-  h1{
-    display: inline-block;
-    margin-left: 20px;
-  }
-  .user{
-    background-color:rgb(128, 185, 202);
-    display: inline-block;
-    font-size: 20px;
-    border: 2px solid black;
-    width: 200px;
-    margin-left: auto;
-  }
-  
-  nav{
-    user-select: none;
-    cursor: pointer;
-  }
-  input{
-    font-size: large;
-    font-weight: 700;
-    width: 200px;
-  }
-  .input__container{
-    display: inline-block;
-  }
-  .form__authorisation{
-    display: flex;
-    align-items: center;
-  }
+.sidebar a {
+  padding: 10px;
+  text-decoration: none;
+  color: #f8f9fa; /* Цвет текста */
+  display: block;
+}
+
+.sidebar a:hover {
+  background-color: #495057; /* Цвет фона при наведении */
+}
+
+.sidebar .active {
+  background-color: #007bff; /* Цвет фона активного пункта */
+}
+
+.sidebar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f8f9fa; /* Цвет текста логотипа */
+  padding: 10px;
+  text-align: center;
+}
+
+.content {
+  margin-left: 250px; /* Отступ для контента, чтобы он не перекрывал сайдбар */
+}
