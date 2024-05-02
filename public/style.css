@@ -1,36 +1,7 @@
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 250px;
-  padding-top: 3.5rem; /* Выравнивание по вертикали */
-  background-color: #343a40; /* Цвет фона сайдбара */
+#app{
+  position: absolute;
 }
-
-.sidebar a {
-  padding: 10px;
-  text-decoration: none;
-  color: #f8f9fa; /* Цвет текста */
-  display: block;
-}
-
-.sidebar a:hover {
-  background-color: #495057; /* Цвет фона при наведении */
-}
-
-.sidebar .active {
-  background-color: #007bff; /* Цвет фона активного пункта */
-}
-
-.sidebar .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #f8f9fa; /* Цвет текста логотипа */
-  padding: 10px;
-  text-align: center;
-}
-
-.content {
-  margin-left: 250px; /* Отступ для контента, чтобы он не перекрывал сайдбар */
+#sidetBarLeft{
+  z-index: 2;
+  top: -20px;
 }

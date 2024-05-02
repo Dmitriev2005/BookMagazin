@@ -1,37 +1,37 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <a class="navbar-brand" href="#">sdsdsdsd</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-      </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-success" type="submit">Search</button>
-      </form>
-    </div>
+  
+  <div class="container">
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore facere assumenda soluta tempore similique expedita, alias itaque obcaecati corrupti eligendi magnam animi facilis, ut aliquam et ratione explicabo quas nam suscipit maiores nihil molestias incidunt. Nemo saepe ut ipsa odit, assumenda officiis asperiores quibusdam facilis dolore voluptates quasi neque blanditiis voluptate, facere aut illum! Ex, assumenda adipisci! Earum obcaecati hic corrupti sed ducimus possimus praesentium temporibus molestiae. Totam, ab suscipit iste dolor neque ex, id ipsam voluptas rerum qui nihil doloremque odio possimus nemo. Optio nam asperiores veniam porro repudiandae? Harum quis molestiae dolor at aperiam consectetur nobis fugiat omnis!
   </div>
-</nav>
+
+  <div id="app" style="position: absolute; top: 50px;">
+    <ul class="list-group" >
+      <li class="list-group-item dropend ">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+          Художественная литература
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Детектив</a></li>
+          <li><a class="dropdown-item" href="#">Фантастика</a></li>
+          <li><a class="dropdown-item" href="#">Фентези</a></li>
+        </ul>
+      </li>
+      <li class="list-group-item">Второй элемент</li>
+      <li class="list-group-item">Третий элемент</li>
+      <li class="list-group-item">Четвертый элемент</li>
+      <li class="list-group-item">И пятый</li>
+    </ul>
+  </div>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+    Vue.createApp({
+        methods:{
+            cl(){
+                alert("dfsd")
+            }
+        }
+    }).mount('#app')
+</script>
+
 <%-include("../partials/footer")%>
