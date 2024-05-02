@@ -1,29 +1,68 @@
 <body>
-    
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">ЧиталоффЪ</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Главная</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Доп. инфо</a>
-              </li>
-              <li class="nav-item dropdown">
-                  <button type="button" class="btn btn-primary" @click="showLeftSideBarHundler">
-                    Католог
-                  </button>   
-              </li>
-            </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Что-то найти?" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Поиск</button>
-            </form>
-          </div>
+    <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">ЧиталоффЪ</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Главная</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Доп. инфо</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <!--sdfgdfdrwfderwegretregeregte-->
+                      <button id="btnSideBar" type="button" class="btn btn-primary">
+                        Католог
+                      </button>   
+                  </li>
+                </ul>
+                <form class="d-flex">
+                  <input class="form-control me-2" type="search" placeholder="Что-то найти?" aria-label="Search">
+                  <button class="btn btn-outline-success" type="button">Поиск</button>
+                </form>
+              </div>
+            </div>
+          </nav>
+            <div  style="position: absolute; left: 200px; top: 50px; visibility: hidden;" id="sideBar">
+                <ul class="list-group" >
+                  <li class="list-group-item dropend ">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" >
+                      Художественная литература
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Детектив</a></li>
+                      <li><a class="dropdown-item" href="#">Фантастика</a></li>
+                      <li><a class="dropdown-item" href="#">Фентези</a></li>
+                    </ul>
+                  </li>
+                  <li class="list-group-item">Второй элемент</li>
+                  <li class="list-group-item">Третий элемент</li>
+                  <li class="list-group-item">Четвертый элемент</li>
+                  <li class="list-group-item">И пятый</li>
+                </ul>
+              </div>
+          
         </div>
-      </nav>
+        <script>
+            // const sideBar = document.getElementById('sideBar')
+            // const btnSide = document.getElementById('btnSideBar')
+            // let globalTarget
+            // btnSide.addEventListener("click",(target)=>{
+            //     sideBar.style.visibility = "visible"
+            //     globalTarget = target
+                
+            // })
+            
+            // document.body.addEventListener("click",(target)=>{
+            //     if(target!==globalTarget)
+            //         sideBar.style.visibility = "hidden"
+
+            //     })
+            
+        </script>
+    
