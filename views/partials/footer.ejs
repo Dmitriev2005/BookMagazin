@@ -1,3 +1,22 @@
   <footer>@Dmitriev</footer>
+  <script>
+    const sideBar = document.getElementById('sideBar')
+    const btnSide = document.getElementById('btnSideBar')
+    const listItem = document.getElementById('listItem')
+
+    let globalTarget
+    btnSide.addEventListener("click",(target)=>{
+        sideBar.style.visibility = "visible"
+       
+        
+    })
+    
+    document.addEventListener("click",(target)=>{
+        if(target!==listItem&&target!==btnSide)
+            sideBar.style.visibility = "hidden"
+            console.log(target)
+        })
+      
+</script>
   </body>
 </html>
