@@ -56,13 +56,17 @@ const Subgenre = db.define('subgenre',{
     primaryKey:true,
     autoIncrement:true
   },
+  genreFk:{
+    field:'genre_fk',
+    type:DataTypes.INTEGER
+  },
   name:{
     field:'subgenre_name',
     type:DataTypes.STRING,
     allowNull:false
   }
 })
-const GenreSubgenre = db.define('genre_subgenre',{
+const SubgenreBook = db.define('genre_subgenre',{
   id:{
     field:'id',
     type:DataTypes.INTEGER,
@@ -73,8 +77,8 @@ const GenreSubgenre = db.define('genre_subgenre',{
     field:'genre_fk',
     type:DataTypes.INTEGER
   },
-  subgenreFk:{
-    field:'subgenre_fk',
+  bookFk:{
+    field:'book_fk',
     type:DataTypes.INTEGER
   }
 })
@@ -232,10 +236,6 @@ const Book = db.define('book',{
   ageRestrictions:{
     field:'age_restrictions',
     type:DataTypes.ENUM('не задано','18+','16+','12+','6+')
-  },
-  genreSubgenreFk:{
-    field:'genre_subgenre_fk',
-    type:DataTypes.INTEGER
   }
 })
 const Basket = db.define('basket',{
@@ -331,4 +331,4 @@ const Review = db.define('review',{
   }
 })
 
-export {User, Subgenre, Genre, GenreSubgenre, Publishing, Series, Discount, Author, AuthorBook, Book, Basket, UserOrder, SeriesBook, Review}
+export {User, Subgenre, Genre, SubgenreBook as GenreSubgenre, Publishing, Series, Discount, Author, AuthorBook, Book, Basket, UserOrder, SeriesBook, Review}
