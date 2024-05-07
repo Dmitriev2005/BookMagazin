@@ -331,4 +331,4 @@ const Review = db.define('review',{
   }
 })
 
-export {User, Subgenre, Genre, SubgenreBook as GenreSubgenre, Publishing, Series, Discount, Author, AuthorBook, Book, Basket, UserOrder, SeriesBook, Review}
+export {User, Subgenre, Genre, SubgenreBook, Publishing, Series, Discount, Author, AuthorBook, Book, Basket, UserOrder, SeriesBook, Review}
