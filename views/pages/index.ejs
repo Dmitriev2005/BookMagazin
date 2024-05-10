@@ -1,10 +1,18 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
   
-  <div class="container">
-    <div class="row">
+  <div class="container" id="app">
+    
+  </div>
+  <script>
+    const app = Vue.createApp({
+        
+    })
+    app.component('book-list',{
+      template:`
+      <div class="row">
       <div class="col" style="border: 2px solid black;">
-        1
+        
       </div>
       <div class="col" style="border: 2px solid black;">
         2
@@ -15,8 +23,17 @@
       <div class="col" style="border: 2px solid black;">
         4
       </div>
+      <div class="col" style="border: 2px solid black;">
+        4
+      </div>
+      <div class="col" style="border: 2px solid black;">
+        4
+      </div>
     </div>
-  </div>
+      `
+    })
+    app.mount('#app')
+  </script>
 
   
 

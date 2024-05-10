@@ -211,15 +211,15 @@ const Book = db.define('book',{
   },
   height:{
     field:'height',
-    type:DataTypes.INTEGER
+    type:DataTypes.FLOAT
   },
   width:{
     field:'width',
-    type:DataTypes.INTEGER
+    type:DataTypes.FLOAT
   },
   bookLength:{
     field:'book_length',
-    type:DataTypes.INTEGER
+    type:DataTypes.FLOAT
   },
   coverType:{
     field:'cover_type',
