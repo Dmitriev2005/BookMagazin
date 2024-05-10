@@ -1,11 +1,11 @@
-import express from "express"
-import {getIndex,getGenre,getSubgenre} from "../controllers/controller.js"
+import express from 'express'
+import {getIndex,getGenre,getSubgenre} from '../controllers/controller.js'
 const router = express.Router()
 
-router.get("/",getIndex)
+router.get('/',getIndex)
 //Получение жанров и поджанров
-router.get("/get-genre",getGenre)
-router.get("/get-subgenre",getSubgenre)
-
+router.get('/get-genre',getGenre)
+router.get('/get-subgenre',getSubgenre)
+//Отправка выбранного жанра
 
 export const exportRouter = router

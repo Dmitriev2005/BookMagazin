@@ -26,5 +26,6 @@ export const getSubgenre = async(req,res) =>{
   console.log(answer)
   res.render("./pages/index",{title:"Home"})
 }
+
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

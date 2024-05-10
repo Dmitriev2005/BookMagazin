@@ -20,7 +20,7 @@
             </div>
           </nav>
           <!--genre-->
-         <genre-component :genre-ar="genre"></genre-component>
+         <genre-component :genre-ar="genre" :handle-click-genre="clickGenre"></genre-component>
          <!--sub_genre-->
           </div>
           <script>
@@ -28,59 +28,69 @@
                 data(){
                   return{
                     genre:[],
-                    subGenre:[]
+                    //все поджанры
+                    subGenre:[],
+                    //Отображаемые поджанры
+                    displaySubGenre:[]
                   }
                 },
                 methods:{
                   async getGenre(){
-                    const res = await fetch("http://localhost:9001/get-genre")
+                    const res = await fetch('http://localhost:9001/get-genre')
                     this.genre = await res.json()
-                    console.log(this.genre)
+                  },
+                  async getSubGenre(){
+                    const res = await fetch('http://localhost:9001/get-subgenre')
+                    this.subGenre = await res.json()
+                    console.log(this.subGenre)
+                  },
+                  async clickGenre(item){
+                    this.displaySubGenre = []
+                    this.subGenre.forEach(el=>{
+                      if(el.genreFk===item.id)
+                        this.displaySubGenre.push(el)
+                    })
                   }
                 },
                 mounted(){
-                  
+                  this.getSubGenre()
                   this.getGenre() 
                 }
             }).component('genre-component',
             {
-              props:['genreAr'],
+              props:['genreAr','handleClickGenre'],
               template:` <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                 <div class="container-fluid">
                   <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                       
                       <li class="nav-item" v-for="item in genreAr">
-                        <a class="nav-link" href="#">{{item.name}}</a>
+                        <a class="nav-link a-btn" @click="handleClickGenre(item)">{{item.name}}</a>
                       </li>
-                              
+                      
                     </ul>
                   </div>
                 </div>
               </nav>`
               
             }).mount('#app')
-        //   app.component('sub-genre',{
-        // //     template:` <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        // //   <div class="container-fluid">
-        // //     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        // //       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        // //         <li class="nav-item">
-        // //           <a class="nav-link" href="#">Детектив</a>
-        // //         </li>
-        // //         <li class="nav-item">
-        // //           <a class="nav-link" href="#">Фентези</a>
-        // //         </li>
-        // //         <li class="nav-item">
-        // //           <a class="nav-link" href="#">Фантастика</a>
-        // //         </li>         
-        // //       </ul>
-        // //     </div>
-        // //   </div>
-        // // </nav>`
+          app.component('sub-genre',
+          {
+            props:['subGenre','handleClickSubGenre'],
+            template:` <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link a-btn" href="#">Детектив</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>`
         
        
-        //   })
+        })
 
           </script>
  
