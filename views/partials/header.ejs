@@ -22,6 +22,7 @@
           <!--genre-->
          <genre-component :genre-ar="genre" :handle-click-genre="clickGenre"></genre-component>
          <!--sub_genre-->
+         <sub-genre :sub-genre-ar="displaySubGenre"></sub-genre>
           </div>
           <script>
             const app = Vue.createApp({
@@ -36,13 +37,13 @@
                 },
                 methods:{
                   async getGenre(){
-                    const res = await fetch('http://localhost:9001/get-genre')
+                    const res = await fetch('http://localhost:9001/json/get-genre')
                     this.genre = await res.json()
                   },
                   async getSubGenre(){
-                    const res = await fetch('http://localhost:9001/get-subgenre')
+                    const res = await fetch('http://localhost:9001/json/get-subgenre')
                     this.subGenre = await res.json()
-                    console.log(this.subGenre)
+                    //console.log(this.subGenre)
                   },
                   async clickGenre(item){
                     this.displaySubGenre = []
@@ -50,13 +51,15 @@
                       if(el.genreFk===item.id)
                         this.displaySubGenre.push(el)
                     })
+                    console.log(item)
                   }
                 },
                 mounted(){
                   this.getSubGenre()
                   this.getGenre() 
                 }
-            }).component('genre-component',
+            })
+            app.component('genre-component',
             {
               props:['genreAr','handleClickGenre'],
               template:` <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -73,25 +76,22 @@
                 </div>
               </nav>`
               
-            }).mount('#app')
+            })
           app.component('sub-genre',
           {
-            props:['subGenre','handleClickSubGenre'],
+            props:['subGenreAr','handleClickSubGenre'],
             template:` <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link a-btn" href="#">Детектив</a>
+                <li class="nav-item" v-for="item in subGenreAr">
+                  <a class="nav-link a-btn" :href="item.reference">{{item.name}}</a>
                 </li>
               </ul>
             </div>
           </div>
-        </nav>`
-        
-       
-        })
-
+        </nav>`})
+        app.mount('#app')
           </script>
  
         

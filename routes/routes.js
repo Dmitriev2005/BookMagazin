@@ -4,8 +4,8 @@ const router = express.Router()
 
 router.get('/',getIndex)
 //Получение жанров и поджанров
-router.get('/get-genre',getGenre)
-router.get('/get-subgenre',getSubgenre)
+router.get('/json/get-genre',getGenre)
+router.get('/json/get-subgenre',getSubgenre)
 //Отправка выбранного жанра
 
 export const exportRouter = router
