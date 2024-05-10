@@ -18,7 +18,7 @@ const verifyToken = (req) =>{
     else
       return false
 }
-//Преобразование русских символов в латиницу
+//Преобразование кирилицы в латиницу
 const translit = (word) =>{
   let converter = {
 		'а': 'a',    'б': 'b',    'в': 'v',    'г': 'g',    'д': 'd',
@@ -46,4 +46,5 @@ const translit = (word) =>{
 	answer = answer.replace(/^\-|-$/g, '') 
 	return answer
 }
+
 export {verifyToken, translit}

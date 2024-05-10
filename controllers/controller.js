@@ -4,7 +4,7 @@ import {User, Subgenre, Genre,
   Author, AuthorBook, Book, Basket, 
   UserOrder, SeriesBook, Review}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
-import {verifyToken, translit} from "../helpers/functions.js"
+import {verifyToken, translit} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 
 
@@ -35,6 +35,9 @@ export const getSubgenre = async(req,res) =>{
   })
   console.log(answerAr)
   res.status(200).json(answerAr)
+}
+const getBook = (req,res)=>{
+   
 }
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
