@@ -43,7 +43,6 @@
                   async getSubGenre(){
                     const res = await fetch('http://localhost:9001/json/get-subgenre')
                     this.subGenre = await res.json()
-                    //console.log(this.subGenre)
                   },
                   async clickGenre(item){
                     this.displaySubGenre = []
@@ -51,7 +50,6 @@
                       if(el.genreFk===item.id)
                         this.displaySubGenre.push(el)
                     })
-                    console.log(item)
                   }
                 },
                 mounted(){
@@ -91,7 +89,7 @@
             </div>
           </div>
         </nav>`})
-        app.mount('#app')
+       app.mount('#app')
           </script>
  
         

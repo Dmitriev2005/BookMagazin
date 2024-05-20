@@ -1,38 +1,46 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
   
-  <div class="container" id="app">
+  <div class="container" id="indexBody">
     
+    <new-book-row :new-book="newBookRow"></new-book-row>
   </div>
   <script>
-    const app = Vue.createApp({
-        
+    const indexApp = Vue.createApp({
+        data(){
+          return{
+            newBookRow:[]
+          }
+        },
+        methods:{
+          async getNewBookRow(){
+            const res = await fetch('http://localhost:9001/json/get-new-book-row')
+            if(res.ok){
+              this.newBookRow = await res.json()
+              console.log(this.newBookRow)
+            }
+
+          }
+        },
+        mounted(){
+          this.getNewBookRow()
+        }
     })
-    app.component('book-list',{
+    indexApp.component('new-book-row',{
+      props:['newBook'],
       template:`
       <div class="row">
-      <div class="col" style="border: 2px solid black;">
-        
-      </div>
-      <div class="col" style="border: 2px solid black;">
-        2
-      </div>
-      <div class="col" style="border: 2px solid black;">
-        3
-      </div>
-      <div class="col" style="border: 2px solid black;">
-        4
-      </div>
-      <div class="col" style="border: 2px solid black;">
-        4
-      </div>
-      <div class="col" style="border: 2px solid black;">
-        4
+
+      <div class="col" style="border: 2px solid black;" v-for="item in newBook">
+        <div>
+          
+        </div>
+        {{item.name}}
       </div>
     </div>
       `
     })
-    app.mount('#app')
+    indexApp.mount('#indexBody')
   </script>
 
   

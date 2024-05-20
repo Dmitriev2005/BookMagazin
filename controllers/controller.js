@@ -1,4 +1,4 @@
-import { json } from "sequelize"
+import { Op, json } from "sequelize"
 import {User, Subgenre, Genre, 
   SubgenreBook, Publishing, Series, Discount, 
   Author, AuthorBook, Book, Basket, 
@@ -22,7 +22,6 @@ const getGenre = async(req,res) =>{
     answerAr.push(buffer)
   })
 
-  console.log(answerAr)
   res.status(200).json(answerAr)
 }
 const getSubgenre = async(req,res) =>{
@@ -33,13 +32,24 @@ const getSubgenre = async(req,res) =>{
     buffer.reference = process.env.SITE_INDEX_PAGE+'book/'+translit(+buffer.name)
     answerAr.push(buffer)
   })
-  console.log(answerAr)
   res.status(200).json(answerAr)
 }
-const getBook = (req,res)=>{
-
+const getNewBookRow = async(req,res)=>{
+  const books = await Book.findAll({
+    where:{
+      yearPublishing:{
+        [Op.eq]:(new Date()).getFullYear()
+      }
+      
+    },
+    limit:6
+  })
+  if(books.length>0){
+    res.status(200).json(books)
+    console.log(books)
+  }
 }
-export {getIndex, getGenre, getSubgenre, getBook}
+export {getIndex, getGenre, getSubgenre, getNewBookRow}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

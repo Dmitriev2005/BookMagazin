@@ -199,7 +199,7 @@ const Book = db.define('book',{
   },
   yearPublishing:{
     field:'year_publishing',
-    type:DataTypes.DATEONLY
+    type:DataTypes.INTEGER
   },
   isbn:{
     field:'isbn',
@@ -236,6 +236,18 @@ const Book = db.define('book',{
   ageRestrictions:{
     field:'age_restrictions',
     type:DataTypes.ENUM('не задано','18+','16+','12+','6+')
+  },
+  dataAdd:{
+    field:'data_add',
+    type:DataTypes.DATE
+  },
+  userWhoAdd:{
+    field:'user_who_add_fk',
+    type:DataTypes.INTEGER
+  },
+  discription:{
+    field:'discription',
+    type:DataTypes.STRING
   }
 })
 const Basket = db.define('basket',{

@@ -30,7 +30,7 @@ const translit = (word) =>{
 		'э': 'e',    'ю': 'yu',   'я': 'ya'
 	}
  
-	word = word.toLowerCase() 
+	word = String(word).toLowerCase() 
   
 	let answer = ''
 	for (let i = 0; i < word.length; ++i ) {
