@@ -6,8 +6,11 @@ import {User, Subgenre, Genre,
 import jwt, { decode } from "jsonwebtoken"
 import {verifyToken, translit} from "../helpers/functionForServer.js"
 import 'dotenv/config'
-
-
+import 'fs'
+import path from "path"
+//Путь к папке с изображениями
+const __dirname = path.resolve()
+const imageDirectory = path.join(__dirname,'nomenclature')
 const getIndex = (req,res) =>{
   
   res.render("./pages/index",{title:"Home"})
@@ -34,22 +37,26 @@ const getSubgenre = async(req,res) =>{
   })
   res.status(200).json(answerAr)
 }
+//Получить книги этого года
 const getNewBookRow = async(req,res)=>{
   const books = await Book.findAll({
     where:{
       yearPublishing:{
         [Op.eq]:(new Date()).getFullYear()
-      }
-      
-    },
-    limit:6
+      } 
+    }
   })
   if(books.length>0){
     res.status(200).json(books)
     console.log(books)
   }
 }
-export {getIndex, getGenre, getSubgenre, getNewBookRow}
+const getImage = (req,res)=>{
+  const imageName = req.params.imageName
+  const imagePath = path.join(imageDirectory,imageName)
+  res.sendFile(imagePath)
+}
+export {getIndex, getGenre, getSubgenre, getNewBookRow, getImage}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
