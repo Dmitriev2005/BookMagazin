@@ -1,0 +1,33 @@
+<%-include("../partials/head")%>
+<%-include("../partials/header")%>
+    <div class="container" id="bookBody">
+        
+    </div>
+    <script>
+        const bookBody = Vue.createApp({
+            data(){
+                return{
+
+                }
+            },
+            mounted(){
+                fetch("/json/get-book/:bookName")
+            }
+        })
+        bookBody.component('book',{
+            template:`
+            <div class="row">
+                <div class="col">
+                    <img w-100 width="304" height="438" :src="'http://localhost:9001/images/'+item.id+'.jpg'">
+                </div>
+                <div class="col">
+                    
+                </div>
+                <div class="col">
+                    
+                </div>
+            </div>
+            `
+        })
+    </script>
+<%-include("../partials/footer")%> 
