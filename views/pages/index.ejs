@@ -3,7 +3,7 @@
   
   <div class="container" id="indexBody">
     <h2>Новинки</h2>
-    <new-book-row :new-book="newBookRow"></new-book-row>
+    <new-book-row :new-book="newBookRow" :handler-buy="handlerBuy"></new-book-row>
   </div>
   <script>
     const indexApp = Vue.createApp({
@@ -19,7 +19,9 @@
               this.newBookRow = await res.json()
               console.log(this.newBookRow)
             }
-
+          },
+          async handlerBuy(item){
+            location.href = 'http://localhost:9001/content/get-book/'+item.id           
           }
         },
         mounted(){
@@ -27,7 +29,7 @@
         }
     })
     indexApp.component('new-book-row',{
-      props:['newBook'],
+      props:['newBook','handlerBuy'],
       template:`
       <div class="row">
 
@@ -45,11 +47,12 @@
         <div class="fs-8 fw-light">
           Пока нет
         </div>
-          <button type="button" class="align-self-end mt-auto btn btn-primary w-100" >Купить</button>  
+          <button type="button" class="align-self-end mt-auto btn btn-primary w-100" @click="handlerBuy(item)">Купить</button>  
       </div>
     </div>
       `
     })
+
     indexApp.mount('#indexBody')
   </script>
 

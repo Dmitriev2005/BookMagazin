@@ -1,4 +1,4 @@
-import { Op, json } from "sequelize"
+import { Op, json, where } from "sequelize"
 import {User, Subgenre, Genre, 
   SubgenreBook, Publishing, Series, Discount, 
   Author, AuthorBook, Book, Basket, 
@@ -13,7 +13,7 @@ const __dirname = path.resolve()
 const imageDirectory = path.join(__dirname,'nomenclature')
 const getIndex = (req,res) =>{
   
-  res.render("./pages/index",{title:"Home"})
+  res.render("./pages/index",{title:"Новинки"})
 }
 
 const getGenre = async(req,res) =>{
@@ -56,7 +56,21 @@ const getImage = (req,res)=>{
   const imagePath = path.join(imageDirectory,imageName)
   res.sendFile(imagePath)
 }
-export {getIndex, getGenre, getSubgenre, getNewBookRow, getImage}
+const getBookPage = async(req,res)=>{
+  const idBook = req.params.bookId
+  const book = await Book.findOne({
+    where:Number(idBook)
+  })
+  res.status(200).render('./pages/book',{title:book.name})
+}
+const getBookJson = async(req,res)=>{
+  const idBook = req.params.bookId
+  const book = await Book.findOne({
+    where:Number(idBook)
+  })
+  res.status(200).json(book)
+}
+export {getIndex, getGenre, getSubgenre, getNewBookRow, getImage, getBookPage, getBookJson}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

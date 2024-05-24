@@ -1,33 +1,45 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
     <div class="container" id="bookBody">
-        
+        <book :element-book="book"></book>
     </div>
     <script>
         const bookBody = Vue.createApp({
             data(){
                 return{
-
+                    book:new Object()
+                }
+            },
+            methods:{
+                async getBook(){
+                    let url = location.href
+                    let newUrl = url.replace(/\/content\/get-book\//, "/json/get-book/");
+                    const res = await fetch(newUrl)
+                    if(res.ok){
+                        this.book = await res.json()
+                    }
                 }
             },
             mounted(){
-                fetch("/json/get-book/:bookName")
+                this.getBook()
             }
         })
         bookBody.component('book',{
+            props:['elementBook'],
             template:`
             <div class="row">
                 <div class="col">
-                    <img w-100 width="304" height="438" :src="'http://localhost:9001/images/'+item.id+'.jpg'">
+                    <img w-100 width="304" height="438" :src="'http://localhost:9001/get-image/'+elementBook.id+'.jpg'">
                 </div>
                 <div class="col">
-                    
+                    {{elementBook.name}}
                 </div>
                 <div class="col">
-                    
+                    <button type="button" class="align-self-end mt-auto btn btn-primary w-100" @click="handlerBuy(item)">Купить</button>  
                 </div>
             </div>
             `
         })
+        bookBody.mount('#bookBody')
     </script>
 <%-include("../partials/footer")%> 
