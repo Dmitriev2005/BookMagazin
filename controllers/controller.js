@@ -113,8 +113,14 @@ const getSearch = (req,res) =>{
 const getBasket = (req,res)=>{
   res.status(200).render('./pages/basket',{title:'Корзина'})
 }
+const getPlacingOrder = (req,res)=>{
+  res.status(200).render('./pages/placingAnOrder',{title:'Оформление заказа'})
+}
+const getPayForm = (req,res) => {
+  res.status(200).render('./pages/formBuy',{title:'Оплата заказа'})
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
-  getImage, getBookPage, getBookJson,getSearch,getBasket}
+  getImage, getBookPage, getBookJson,getSearch,getBasket,getPlacingOrder,getPayForm}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
