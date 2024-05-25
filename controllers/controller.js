@@ -8,6 +8,7 @@ import {verifyToken, translit} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 import 'fs'
 import path from "path"
+import { title } from "process"
 //Путь к папке с изображениями
 const __dirname = path.resolve()
 const imageDirectory = path.join(__dirname,'nomenclature')
@@ -106,7 +107,14 @@ const getBookJson = async(req,res)=>{
   //console.log(generalInfoBook)
   res.status(200).json(generalInfoBook)
 }
-export {getIndex, getGenre, getSubgenre, getNewBookRow, getImage, getBookPage, getBookJson}
+const getSearch = (req,res) =>{
+  res.status(200).render('./pages/search',{title:'Результаты поиска'})
+}
+const getBasket = (req,res)=>{
+  res.status(200).render('./pages/basket',{title:'Корзина'})
+}
+export {getIndex, getGenre, getSubgenre, getNewBookRow, 
+  getImage, getBookPage, getBookJson,getSearch,getBasket}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

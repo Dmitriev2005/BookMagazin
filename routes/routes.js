@@ -1,5 +1,6 @@
 import express from 'express'
-import {getIndex,getGenre,getSubgenre,getNewBookRow,getImage,getBookPage,getBookJson} from '../controllers/controller.js'
+import {getIndex,getGenre,getSubgenre,getNewBookRow,
+    getImage,getBookPage,getBookJson,getSearch, getBasket} from '../controllers/controller.js'
 const router = express.Router()
 
 router.get('/',getIndex)
@@ -14,5 +15,9 @@ router.get('/get-image/:imageName',getImage)
 router.get('/content/get-book/:bookId',getBookPage)
 //Маршрут для содуржимого страницы книги
 router.get('/json/get-book/:bookId',getBookJson)
+//Маршрут для страницы поиска
+router.get('/content/get-search',getSearch)
+//Маршрут для страницы корзины
+router.get('/content/get-basket',getBasket)
 
 export const exportRouter = router
