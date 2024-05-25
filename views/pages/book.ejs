@@ -1,14 +1,16 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
     <div class="container" id="bookBody">
-        <book :element-book="book"></book>
+        <book :element-book="book" :element-review="review"></book>
     </div>
     <script>
         const bookBody = Vue.createApp({
             data(){
                 return{
-                    book:new Object()
+                    book:new Object(),
+                    review:[]
                 }
+                
             },
             methods:{
                 async getBook(){
@@ -17,25 +19,176 @@
                     const res = await fetch(newUrl)
                     if(res.ok){
                         this.book = await res.json()
+                        this.review = this.book.arReview
+                        console.log(this.book)
                     }
+                    
                 }
             },
             mounted(){
                 this.getBook()
+
             }
         })
         bookBody.component('book',{
-            props:['elementBook'],
+            props:['elementBook','elementReview'],
             template:`
+            <div class="row">
+                <div class="col fs-3">
+                    {{elementBook.name}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col fs-8">
+                    Автора пока нет
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <img w-100 width="304" height="438" :src="'http://localhost:9001/get-image/'+elementBook.id+'.jpg'">
                 </div>
                 <div class="col">
-                    {{elementBook.name}}
+                    <!--В этой колонке характеристики книги-->
+                    <div class="row">
+                        <div class="col">
+                            Издательство
+                        </div>
+                        <div class="col">
+                            Здесь будет издательство
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            Серия
+                        </div>
+                        <div class="col">
+                            Здесь будет серия
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            Год издания
+                        </div>
+                        <div class="col">
+                            {{elementBook.yearPublishing}}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            ISBN
+                        </div>
+                        <div class="col">
+                            {{elementBook.isbn}}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            Количество страниц
+                        </div>
+                        <div class="col">
+                            {{elementBook.countPages}}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            Размер
+                        </div>
+                        <div class="col">
+                            {{elementBook.height}}x{{elementBook.width}}x{{elementBook.bookLength}}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            Тираж
+                        </div>
+                        <div class="col">
+                            {{elementBook.count}}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            Вес, г
+                        </div>
+                        <div class="col">
+                            {{elementBook.weigth}}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            Возрастные ограничения
+                        </div>
+                        <div class="col">
+                            {{elementBook.ageRestrictions}}
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
-                    <button type="button" class="align-self-end mt-auto btn btn-primary w-100" @click="handlerBuy(item)">Купить</button>  
+                    <div class="row">
+                        <div class="col fs-4" v-if="elementBook.discount!==null">
+                            
+                            <del>{{elementBook.price+"₽"}}</del> <b>{{elementBook.discount+"₽"}}</b>
+                        </div> 
+                        <div class="col fs-4" v-else>
+                            
+                            <b>{{elementBook.price+"₽"}}</b>
+                        </div>          
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-10">
+                            <button type="button" class="align-self-end mt-auto btn btn-primary w-100 h-100" @click="handlerBuy(item)">Купить</button>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-8 fs-8">
+                    {{elementBook.discription}}
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-8 fs-3">
+                    Отзывы
+                </div>
+            </div>        
+            <!--Отзывы-->
+            <div class="row mt-4" v-for="item in elementReview" style="background-color:#e8e8e8">
+                <div class="row mt-2">
+                    <div class="col-8 fs-10 fw-light">
+                        {{item.name}}
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-8 fs-8">
+                        {{item.generalReview}}
+                    </div>
+                </div>
+                <div class="row mt-2" v-if="item.advReview!==null">
+                    <div class="col-6">
+                        <div class="row mt-1">
+                            <div class="col-6  fw-bold">
+                                Плюсы
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-8  ">
+                                {{item.advReview}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2" v-if="item.disReview!==null">
+                    <div class="col-6">
+                        <div class="row mt-1">
+                            <div class="col-6  fw-bold">
+                                Минусы
+                            </div>
+                        </div>
+                        <div class="row mt-1">
+                            <div class="col-8  ">
+                                {{item.disReview}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             `

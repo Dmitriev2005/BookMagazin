@@ -93,10 +93,18 @@ const Publishing = db.define('publishing',{
     field:'publishing_name',
     type:DataTypes.STRING
   },
-  discountFk:{
-    field:'discount_fk',
+  discount:{
+    field:'discount',
     type:DataTypes.INTEGER
-  }
+  },
+  dataStartDiscount:{
+    field:'data_start_discount',
+    type:DataTypes.DATE
+  },
+  dataStopDiscount:{
+    field:'data_stop_discount',
+    type:DataTypes.DATE
+  },
 })
 const Series = db.define('series',{
   id:{
@@ -189,9 +197,17 @@ const Book = db.define('book',{
     field:'price',
     type:DataTypes.INTEGER
   },
-  discountFk:{
-    field:'discount_fk',
+  discount:{
+    field:'discount',
     type:DataTypes.INTEGER
+  },
+  dataStartDiscount:{
+    field:'data_start_discount',
+    type:DataTypes.DATE
+  },
+  dataStopDiscount:{
+    field:'data_stop_discount',
+    type:DataTypes.DATE
   },
   publishingFk:{
     field:'publishing_fk',
@@ -312,7 +328,19 @@ const SeriesBook = db.define('series_book',{
   bookFk:{
     field:'book_fk',
     type:DataTypes.INTEGER
-  }
+  },
+  discount:{
+    field:'discount',
+    type:DataTypes.INTEGER
+  },
+  dataStartDiscount:{
+    field:'data_start_discount',
+    type:DataTypes.DATE
+  },
+  dataStopDiscount:{
+    field:'data_stop_discount',
+    type:DataTypes.DATE
+  },
 })
 const Review = db.define('review',{
   id:{

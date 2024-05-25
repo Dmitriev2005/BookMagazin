@@ -48,7 +48,6 @@ const getNewBookRow = async(req,res)=>{
   })
   if(books.length>0){
     res.status(200).json(books)
-    console.log(books)
   }
 }
 const getImage = (req,res)=>{
@@ -56,6 +55,7 @@ const getImage = (req,res)=>{
   const imagePath = path.join(imageDirectory,imageName)
   res.sendFile(imagePath)
 }
+//Возвращает страницу книги
 const getBookPage = async(req,res)=>{
   const idBook = req.params.bookId
   const book = await Book.findOne({
@@ -63,12 +63,48 @@ const getBookPage = async(req,res)=>{
   })
   res.status(200).render('./pages/book',{title:book.name})
 }
+//Возвращает содержимое страницы книги
 const getBookJson = async(req,res)=>{
   const idBook = req.params.bookId
   const book = await Book.findOne({
     where:Number(idBook)
+
   })
-  res.status(200).json(book)
+  const review = await Review.findAll({
+    where:{
+      bookFk:Number(idBook)
+    }
+  })
+  let bufferBuffer = {}
+  let bufferForReview = {}
+  bufferForReview.arReview = []
+  const userIdReview = []
+
+  //Заполняем массив id пользователей, в которых есть отзыв на данную книгу
+  review.forEach(item=>{  
+    userIdReview.push(item.dataValues.userFk)
+  })
+  //Ищем совпадающих пользователей по массиву
+  const userFromReview = await User.findAll({
+    where:{
+      id:{
+        [Op.in]:userIdReview
+      }
+    }
+  })
+  //Заполняем свойство ararReview склейкой двух объектов
+  //С помощью find проверяем свопадает ли текущий элемент итерации отзыва и пользователя(тот ли id)
+  for(let i=0; i<userFromReview.length; i++){
+      const oneReview = review.find(q=>q.dataValues.userFk===userFromReview[i].dataValues.id)
+      bufferBuffer = {...userFromReview[i].dataValues, ...oneReview.dataValues}
+      bufferForReview.arReview.push(bufferBuffer)
+   
+  }
+  console.log(bufferForReview.arReview)
+  //Склеиваем объект книги с объектов озывов и пользователей
+  const generalInfoBook = {...book.dataValues, ...bufferForReview}
+  //console.log(generalInfoBook)
+  res.status(200).json(generalInfoBook)
 }
 export {getIndex, getGenre, getSubgenre, getNewBookRow, getImage, getBookPage, getBookJson}
 //выдача токена
