@@ -1,6 +1,8 @@
 import express from 'express'
 import {getIndex,getGenre,getSubgenre,getNewBookRow,
-    getImage,getBookPage,getBookJson,getSearch, getBasket,getPlacingOrder,getPayForm} from '../controllers/controller.js'
+    getImage,getBookPage,getBookJson,getSearch, 
+    getBasket,getPlacingOrder,getPayForm, 
+    getAuthorisation,getRegistration,getListOrder,getBookList,getEditBook} from '../controllers/controller.js'
 const router = express.Router()
 
 router.get('/',getIndex)
@@ -23,4 +25,14 @@ router.get('/content/get-basket',getBasket)
 router.get('/content/get-placing-order',getPlacingOrder)
 //Маршрут для формы оплаты заказа(нужно будет добавить номер заказа в пути)
 router.get('/content/get-pay-form',getPayForm)
+//Маршрут для страницы авторизации
+router.get('/content/get-autoris',getAuthorisation)
+//Маршрут для страницы регистрации
+router.get('/content/get-registr',getRegistration)
+//Маршрут для страницы заказов
+router.get('/content/get-list-order',getListOrder)
+//Маршрут сотрудника для списка книг
+router.get('/sotrudnik/content/get-book-list',getBookList)
+//Маршрут сотрудника для изменения книги
+router.get('/sotrudnik/content/get-edit-book',getEditBook)
 export const exportRouter = router

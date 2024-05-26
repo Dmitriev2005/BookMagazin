@@ -1,3 +1,29 @@
 .a-btn{
     cursor: pointer;
 }
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+.content {
+    flex: 1 0 auto;
+}
+.footer {
+    flex-shrink: 0;
+}
+.status{
+    border-radius: 5%;
+    text-align: center;
+}
+.drive{
+    background-color: #ebb121;
+}
+.cancel{
+    background-color:#db0b0b
+}
+.delivered{
+    background-color: #03cc00;
+}

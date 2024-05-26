@@ -1,0 +1,95 @@
+<%- include("../../partials/head") %>
+<div class="container">
+    <h1 class="mt-2">Редактировать книгу</h1>
+    <div class="row mt-4">
+        <div class="col-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+              </svg>
+        </div>
+        <div class="col">
+            <!-- <img   height="138"  src="http://localhost:9001/get-image/2.jpg"> -->
+            <div class="mt-4">
+                <label for="exampleFormControlTextarea1" class="form-label">Название</label>
+                <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search">
+            </div>
+            <div class="mt-4">
+                <label for="exampleFormControlTextarea2" class="form-label">Описание</label>
+                <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+            </div>
+            
+        </div>
+        <div class="col">
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100"  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          Автор
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">Action</a></li>
+                          <li><a class="dropdown-item" href="#">Another action</a></li>
+                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                      </div>
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          Жанр
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">Action</a></li>
+                          <li><a class="dropdown-item" href="#">Another action</a></li>
+                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                      </div>
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          Поджанр
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item" href="#">Action</a></li>
+                          <li><a class="dropdown-item" href="#">Another action</a></li>
+                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                      </div>
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">Скидка</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search">
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-2">
+            </div>
+            <div class="col-5">
+                <img   height="250"  src="http://localhost:9001/get-image/2.jpg">
+            </div>
+            <div class="col-2 ms-4">
+                <button type="button" class="btn btn-success">Сохранить</button>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-danger">Удалить</button>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-2">
+            </div>
+            <div class="col-8">
+                <button type="button" class="btn btn-outline-primary">Загрузить изображение</button>
+            </div>
+            
+        </div>
+    </div>
+   
+</div>

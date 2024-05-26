@@ -119,8 +119,27 @@ const getPlacingOrder = (req,res)=>{
 const getPayForm = (req,res) => {
   res.status(200).render('./pages/formBuy',{title:'Оплата заказа'})
 }
+const getAuthorisation = (req,res)=>{
+  res.status(200).render('./pages/authorisation',{title:'Авторизация'})
+}
+const getRegistration = (req,res)=>{
+  res.status(200).render('./pages/registration',{title:'Регистрация'})
+}
+const getListOrder  = (req,res)=>{
+  res.status(200).render('./pages/listOrder',{title:'Заказы'})
+}
+const getBookList = (req,res)=>{
+  res.status(200).render('./pages/sotrudnik/sotrudnikBookList',{title:'Книги'})
+
+}
+const getEditBook = (req,res)=>{
+  res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Редактировать книгу'})
+
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
-  getImage, getBookPage, getBookJson,getSearch,getBasket,getPlacingOrder,getPayForm}
+  getImage, getBookPage, getBookJson,getSearch,
+  getBasket,getPlacingOrder,getPayForm,
+  getAuthorisation,getRegistration,getListOrder,getBookList,getEditBook}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
