@@ -130,16 +130,27 @@ const getListOrder  = (req,res)=>{
 }
 const getBookList = (req,res)=>{
   res.status(200).render('./pages/sotrudnik/sotrudnikBookList',{title:'Книги'})
-
 }
 const getEditBook = (req,res)=>{
   res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Редактировать книгу'})
-
+}
+const getUserList = (req,res)=>{
+  res.status(200).render('./pages/admin/adminListUser',{title:'Пользователи'})
+}
+const getUserEdit = (req,res)=>{
+  res.status(200).render('./pages/admin/adminEditUser',{title:'Редактировать пользователя'})
+}
+const getEditComment = (req,res)=>{
+  res.status(200).render('./pages/admin/adminComment',{title:'Просмотр комментария'})
+}
+const getShortcut = (req,res)=>{
+  res.status(200).render('./pages/hotkey(TEST!!!)/shorcutCLIENTPage')
 }
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
-  getAuthorisation,getRegistration,getListOrder,getBookList,getEditBook}
+  getAuthorisation,getRegistration,
+  getListOrder,getBookList,getEditBook, getUserList,getUserEdit,getEditComment,getShortcut}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

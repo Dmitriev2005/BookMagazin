@@ -1,0 +1,70 @@
+<%- include("../../partials/head") %>
+<body>
+    <div class="d-flex align-items-start mt-3 ms-3">
+        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <button class="nav-link active mt-2" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Пользователи</button>
+          <button class="nav-link mt-2" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Неодобренные комментарии</button>
+        </div>
+        <div class="tab-content flex-grow-1" id="v-pills-tabContent">
+          <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control me-2" type="search" placeholder="Книга, автор, жанр и тд." aria-label="Search">
+                    </div>      
+                    <div class="col">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg></button>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID Пользователя</th>
+                        <th scope="col">Почта</th>
+                        <th scope="col">ФИО</th>
+                        <th scope="col">Роль</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="row">2000</th>
+                      <td>ivanov_ii@mail.ru</td>
+                      <td>Иванов Иван Иванович</td>
+                      <td>Сотрудник</td>
+                    </tr>
+                  </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID Комментария</th>
+                        <th scope="col">ID Пользователя</th>
+                        <th scope="col">Почта</th>
+                        <th scope="col">ID Книги</th>
+                        <th scope="col">Название книги</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                      <th scope="row">1000</th>  
+                      <td>2000</td>  
+                      <td>ivanov_ii@mail.ru</td>
+                      <td>4000</td>
+                      <td>Летучий корабль</td>
+                    </tr>
+                  </tbody>
+            </table>
+          </div>
+          <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+        </div>
+      </div>
+</body>
+</html>
