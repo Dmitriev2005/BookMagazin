@@ -11,7 +11,7 @@
         </div>
         <div class="tab-content flex-grow-1" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-           <list-books :books="listBook"></list-books>
+           <list-books :books="listBook" :click-book-handler="clickBookHandler"></list-books>
           </div>
           <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"></div>
           <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
@@ -57,6 +57,9 @@
             async getListBook(){
               const res = await fetch('http://localhost:9001/json/get-all-books')
               this.listBook = await res.json()
+            },
+            clickBookHandler(item){
+              location.href=`http://localhost:9001/sotrudnik/content/get-edit-book?id=${item.id}`
             }
           },
           mounted(){
@@ -64,7 +67,7 @@
           }
         })
         listBookBody.component('list-books',{
-          props:['books'],
+          props:['books','clickBookHandler'],
           template:`
           <div class="container">
                 <div class="row">
@@ -93,10 +96,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in books">
+                    <tr v-for="item in books" @click="clickBookHandler(item)">
                       <th scope="row">{{item.id}}</th>
                       <td>{{item.name}}</td>
-                      <td>{{item.authorName}}</td>
+                      <td>{{item.authorName+" "+item.lastname}}</td>
                       <td>{{item.genre}}</td>
                       <td>{{item.subgenre}}</td>
                       <td>{{item.price+"₽"}}</td>

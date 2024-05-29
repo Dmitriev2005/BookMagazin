@@ -17,7 +17,16 @@ const getBookList = (req,res)=>{
 }
 const getAllBooks = async(req,res)=>{
     const books = await Book.findAll()
-    res.status(200).json(books)
+    const author = await Author.findAll()
+    const outputBook = []
+    
+    author.forEach(aItem=>{
+        books.forEach(bItem=>{
+            if(aItem.dataValues.id===bItem.dataValues.authorFk)
+            outputBook.push({...aItem.dataValues, ...bItem.dataValues})
+        })
+    })
+    res.status(200).json(outputBook)
 }
 const getEditBook = (req,res)=>{
     res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Редактировать книгу'})
