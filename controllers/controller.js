@@ -1,7 +1,7 @@
 import { Op, json, where } from "sequelize"
 import {User, Subgenre, Genre, 
   SubgenreBook, Publishing, Series, Discount, 
-  Author, AuthorBook, Book, Basket, 
+  Author, Book, Basket, 
   UserOrder, SeriesBook, Review}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
 import {verifyToken, translit} from "../helpers/functionForServer.js"
@@ -40,6 +40,7 @@ const getSubgenre = async(req,res) =>{
 }
 //Получить книги этого года
 const getNewBookRow = async(req,res)=>{
+
   const books = await Book.findAll({
     where:{
       yearPublishing:{
@@ -47,9 +48,19 @@ const getNewBookRow = async(req,res)=>{
       } 
     }
   })
-  if(books.length>0){
-    res.status(200).json(books)
-  }
+ const author = await Author.findAll()
+ const outputBook = []
+
+ author.forEach(aItem=>{
+    books.forEach(bItem=>{
+      if(aItem.dataValues.id===bItem.dataValues.authorFk)
+        outputBook.push({...aItem.dataValues, ...bItem.dataValues})
+    })
+    
+ })
+ res.status(200).json(outputBook)
+
+
 }
 const getImage = (req,res)=>{
   const imageName = req.params.imageName
@@ -146,11 +157,14 @@ const getEditComment = (req,res)=>{
 const getShortcut = (req,res)=>{
   res.status(200).render('./pages/hotkey(TEST!!!)/shorcutCLIENTPage')
 }
+const getOrder = (req,res)=>{
+  res.status(200).render('./pages/sotrudnik/sotrudnikOrderEdit',{title:'Содержимое заказа'})
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getAuthorisation,getRegistration,
-  getListOrder,getBookList,getEditBook, getUserList,getUserEdit,getEditComment,getShortcut}
+  getListOrder,getBookList,getEditBook, getUserList,getUserEdit,getEditComment,getShortcut,getOrder}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

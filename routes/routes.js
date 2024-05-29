@@ -3,7 +3,7 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getImage,getBookPage,getBookJson,getSearch, 
     getBasket,getPlacingOrder,getPayForm, 
     getAuthorisation,getRegistration,getListOrder,
-    getBookList,getEditBook, getUserList,getUserEdit,getEditComment, getShortcut} from '../controllers/controller.js'
+    getBookList,getEditBook, getUserList,getUserEdit,getEditComment, getShortcut,getOrder} from '../controllers/controller.js'
 const router = express.Router()
 
 router.get('/',getIndex)
@@ -37,6 +37,8 @@ router.get('/content/get-list-order',getListOrder)
 router.get('/sotrudnik/content/get-book-list',getBookList)
 //Маршрут сотрудника для изменения книги
 router.get('/sotrudnik/content/get-edit-book',getEditBook)
+//Маршрут сотрудника для сбора заказа
+router.get('/sotrudnik/content/get-order',getOrder)
 
 //Маршрут страницы админа для списка пользователей
 router.get('/admin/content/get-user-list',getUserList)
@@ -45,6 +47,8 @@ router.get('/admin/content/get-user-edit',getUserEdit)
 //Маршрут страницы админа для модерирования комментариями
 router.get('/admin/content/get-edit-comment',getEditComment)
 
+
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!
 router.get('/sh',getShortcut)
+
 export const exportRouter = router

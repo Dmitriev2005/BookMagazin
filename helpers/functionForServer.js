@@ -46,5 +46,8 @@ const translit = (word) =>{
 	answer = answer.replace(/^\-|-$/g, '') 
 	return answer
 }
+//Получить книги 
+
+//Получить книгу
 
 export {verifyToken, translit}

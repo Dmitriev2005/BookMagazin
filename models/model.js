@@ -166,22 +166,6 @@ const Author = db.define('author',{
     type:DataTypes.STRING
   }
 })
-const AuthorBook = db.define('author_book',{
-  id:{
-    field:'id',
-    type:DataTypes.INTEGER,
-    primaryKey:true,
-    autoIncrement:true
-  }, 
-  authorFk:{
-    field:'author_fk',
-    type:DataTypes.INTEGER
-  },
-  bookFk:{
-    field:'book_fk',
-    type:DataTypes.INTEGER
-  }
-})
 const Book = db.define('book',{
   id:{
     field:'id',
@@ -212,6 +196,10 @@ const Book = db.define('book',{
   publishingFk:{
     field:'publishing_fk',
     type:DataTypes.INTEGER
+  },
+  authorFk:{
+    field:'author_fk',
+    type:DataTypes.STRING
   },
   yearPublishing:{
     field:'year_publishing',
@@ -371,4 +359,4 @@ const Review = db.define('review',{
   }
 })
 
-export {User, Subgenre, Genre, SubgenreBook, Publishing, Series, Discount, Author, AuthorBook, Book, Basket, UserOrder, SeriesBook, Review}
+export {User, Subgenre, Genre, SubgenreBook, Publishing, Series, Discount, Author, Book, Basket, UserOrder, SeriesBook, Review}
