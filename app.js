@@ -1,5 +1,7 @@
 import express from "express"
-import  {exportRouter} from "./routes/routes.js"
+import  {buyerRouter} from "./routes/buyer.js"
+import { routerAdmin } from "./routes/admin.js"
+import { routerSotrudnik } from "./routes/sotrudnik.js"
 import cookieParser from "cookie-parser"
 const app = express()
 
@@ -7,6 +9,8 @@ app.set("view engine","ejs")
 app.use(express.static("public"))
 app.use(cookieParser())
 app.use(express.json())
-app.use(exportRouter)
 
+app.use(buyerRouter)
+app.use(routerAdmin)
+app.use(routerSotrudnik)
 app.listen(9001,()=>console.log("Server work..."))

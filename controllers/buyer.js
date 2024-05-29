@@ -8,7 +8,6 @@ import {verifyToken, translit} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 import 'fs'
 import path from "path"
-import { title } from "process"
 //Путь к папке с изображениями
 const __dirname = path.resolve()
 const imageDirectory = path.join(__dirname,'nomenclature')
@@ -139,32 +138,18 @@ const getRegistration = (req,res)=>{
 const getListOrder  = (req,res)=>{
   res.status(200).render('./pages/listOrder',{title:'Заказы'})
 }
-const getBookList = (req,res)=>{
-  res.status(200).render('./pages/sotrudnik/sotrudnikBookList',{title:'Книги'})
-}
-const getEditBook = (req,res)=>{
-  res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Редактировать книгу'})
-}
-const getUserList = (req,res)=>{
-  res.status(200).render('./pages/admin/adminListUser',{title:'Пользователи'})
-}
-const getUserEdit = (req,res)=>{
-  res.status(200).render('./pages/admin/adminEditUser',{title:'Редактировать пользователя'})
-}
-const getEditComment = (req,res)=>{
-  res.status(200).render('./pages/admin/adminComment',{title:'Просмотр комментария'})
-}
+
+
 const getShortcut = (req,res)=>{
   res.status(200).render('./pages/hotkey(TEST!!!)/shorcutCLIENTPage')
 }
-const getOrder = (req,res)=>{
-  res.status(200).render('./pages/sotrudnik/sotrudnikOrderEdit',{title:'Содержимое заказа'})
-}
+
+
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getAuthorisation,getRegistration,
-  getListOrder,getBookList,getEditBook, getUserList,getUserEdit,getEditComment,getShortcut,getOrder}
+  getListOrder,getShortcut}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
