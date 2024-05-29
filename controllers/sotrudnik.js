@@ -31,4 +31,14 @@ const getAllBooks = async(req,res)=>{
 const getEditBook = (req,res)=>{
     res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Редактировать книгу'})
 }
-export {getAllBooks,getOrder, getBookList,getEditBook}
+const getEditBookJson = async(req,res)=>{
+    const idBook = req.params.id
+    const book = await Book.findOne({
+        where:{
+            id:Number(idBook)
+        }
+    })
+    console.log(idBook)
+    res.status(200).json(book.dataValues)
+}
+export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson}

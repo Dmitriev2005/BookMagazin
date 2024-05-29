@@ -4,7 +4,6 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getBasket,getPlacingOrder,getPayForm, 
     getAuthorisation,getRegistration,getListOrder,
     getShortcut} from '../controllers/buyer.js'
-import {getAllBooks,getOrder, getBookList,getEditBook} from '../controllers/sotrudnik.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
