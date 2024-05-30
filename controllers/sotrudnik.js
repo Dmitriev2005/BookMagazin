@@ -41,4 +41,30 @@ const getEditBookJson = async(req,res)=>{
     console.log(idBook)
     res.status(200).json(book.dataValues)
 }
-export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson}
+const getGenreSubgenre = async(req,res)=>{
+    const idBook = req.params.id
+    const subGenreId = await SubgenreBook.findOne({
+        where:{
+            bookFk:Number(idBook)
+        }
+    })
+    const subgenre = await Subgenre.findOne({
+        where:{
+            id:subGenreId.get("subgenreFk")
+        }
+    })
+    const genre = await Genre.findOne({
+        where:{
+            id:subgenre.get("genreFk")
+        }
+    })
+    const responseObj = {
+        subgenre,
+        genre
+    }
+    responseObj.subgenre = {...subgenre.dataValues}
+    responseObj.genre = {...genre.dataValues}
+    console.log(responseObj)
+    res.status(200).json(responseObj)
+}
+export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,getGenreSubgenre}

@@ -66,15 +66,15 @@ const Subgenre = db.define('subgenre',{
     allowNull:false
   }
 })
-const SubgenreBook = db.define('genre_subgenre',{
+const SubgenreBook = db.define('subgenre_book',{
   id:{
     field:'id',
     type:DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement:true
   },
-  genreFk:{
-    field:'genre_fk',
+  subgenreFk:{
+    field:'subgenre_fk',
     type:DataTypes.INTEGER
   },
   bookFk:{

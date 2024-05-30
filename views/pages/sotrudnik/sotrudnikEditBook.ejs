@@ -1,7 +1,48 @@
 <%- include("../../partials/head") %>
 <div class="container" id="bookEditBody">
     <h1 class="mt-2">Редактировать книгу</h1>
-    <div class="row mt-4">
+    <edit-book :book="book" :subgenre="subgenre" :genre="genre"></edit-book>
+</div>
+<script>
+    const bookEditBody = Vue.createApp({
+        data(){
+            return{
+                book:new Object(),
+                idBook:0,
+                genre:new Object(),
+                subgenre:new Object()
+            }
+        },
+        methods:{
+            async getBookForEdit(){
+                this.idBook = new URL(location.href).searchParams.get('id')
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-edit-book/${this.idBook}`)
+                if(res.ok){
+                    this.book = await res.json()
+                    console.log(this.book)
+                }
+                console.log(this.idBook)
+            },
+            async getGenreAndSubGenre(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-edit-book-genre-subgenre/${this.idBook}`)
+                if(res.ok){
+                    const buffer = await res.json()
+                    this.genre = await buffer.genre
+                    this.subgenre = await buffer.subgenre
+                }
+            },
+            backHandle(){
+                location.href='http://localhost:9001/sotrudnik/content/get-book-list'
+            }
+        },
+        mounted(){
+            this.getBookForEdit()
+            this.getGenreAndSubGenre()
+        }
+    })
+    bookEditBody.component('edit-book',{
+        props:['book','subgenre', 'genre'],
+        template:`   <div class="row mt-4">
         <div class="col-2">
             <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
                 <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
@@ -38,7 +79,7 @@
                 <div class="col">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                          Жанр
+                          {{genre.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                           <li><a class="dropdown-item" href="#">Action</a></li>
@@ -52,7 +93,7 @@
                 <div class="col">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                          Поджанр
+                          {{subgenre.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                           <li><a class="dropdown-item" href="#">Action</a></li>
@@ -90,41 +131,7 @@
             </div>
             
         </div>
-    </div>
-   
-</div>
-<script>
-    const bookEditBody = Vue.createApp({
-        data(){
-            return{
-                book:new Object(),
-                idBook:0
-            }
-        },
-        methods:{
-            async getBookForEdit(){
-                this.idBook = new URL(location.href).searchParams.get('id')
-                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-edit-book/${this.idBook}`)
-                if(res.ok){
-                    this.book = await res.json()
-                    console.log(this.book)
-                }
-                console.log(this.idBook)
-            },
-            async getGenreAndSubGenre(){
-                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-edit-book-genre-subgenre/${this.idBook}`)
-                if(res.ok){
-                    this.genreSubgenre = await res.json()
-                }
-            },
-            backHandle(){
-                location.href='http://localhost:9001/sotrudnik/content/get-book-list'
-            }
-        },
-        mounted(){
-            this.getBookForEdit()
-        }
+    </div>`
     })
-
     bookEditBody.mount('#bookEditBody')
 </script>

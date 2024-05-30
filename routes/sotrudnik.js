@@ -1,5 +1,5 @@
 import express from 'express'
-import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson} from '../controllers/sotrudnik.js'
+import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,getGenreSubgenre} from '../controllers/sotrudnik.js'
 const routerSotrudnik = express.Router()
 
 //Маршрут сотрудника для страницы списка книг
@@ -13,5 +13,5 @@ routerSotrudnik.get('/sotrudnik/content/get-order',getOrder)
 //Маршрут сотрудника получения книг для редактирования
 routerSotrudnik.get('/sotrudnik/json/get-edit-book/:id',getEditBookJson)
 
-routerSotrudnik.get('/sotrudnik/json/get-edit-book-genre-subgenre/:id',getGenre)
+routerSotrudnik.get('/sotrudnik/json/get-edit-book-genre-subgenre/:id',getGenreSubgenre)
 export{routerSotrudnik}
