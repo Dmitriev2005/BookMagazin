@@ -145,7 +145,25 @@ const getAllSeriesBooks = async(req,res)=>{
         pub:pub
     }
     res.status(200).json(responseObj)
-
+}
+const postEditBook = async(req,res)=>{
+    const idBook = req.params.id
+    const dataFromClient = req.body
+    console.log(dataFromClient)
+    const answer = await Book.update({
+        name:dataFromClient.name,
+        discription:dataFromClient.discription,
+        price:dataFromClient.price,
+        discount:dataFromClient.discount,
+        subgenreFk:dataFromClient.subgenre.id,
+        authorFk:dataFromClient.author.id,
+        seriesFk:dataFromClient.series.id
+    },{where:{
+        id:Number(idBook)
+    }})
+    if(answer.length>0)
+        res.status(200).send("Запись добавлена")
 }
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
-    getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,getAllAuthors,getPubSeries,getAllSeriesBooks}
+    getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
+    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook}

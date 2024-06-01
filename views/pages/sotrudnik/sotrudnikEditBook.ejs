@@ -6,7 +6,7 @@
     :current-author="currentAuthor" :authors="authors" :current-img-path="currentImgPath" :hadle-change-img="hadleChangeImg"
     :current-series="currentSeries" :current-pub="currentPub" :pub="pub" :series="series"
     :handle-click-pub="handleClickPub" :handle-click-series="handleClickSeries" :handle-click-author="handleClickAuthor"
-    :back-handle="backHandle"></edit-book>
+    :back-handle="backHandle" :handle-save="handleSave"></edit-book>
 </div>
 <script>
     const bookEditBody = Vue.createApp({
@@ -112,6 +112,32 @@
             },
             handleClickAuthor(elem){
                 this.currentAuthor = elem
+            },
+            async handleSave(){
+                const saveData = {
+                    name:this.book.name,
+                    discription:this.book.discription,
+                    price:this.book.price,
+                    discount:this.book.discount,
+                    genre:this.currentGenre,
+                    subgenre:this.currentSubgenre,
+                    author:this.currentAuthor,
+                    imgPath:this.currentImgPath,
+                    series:this.currentSeries,
+                    pub:this.currentPub
+                }
+                console.log(saveData)
+                const res = await fetch(
+                    `http://localhost:9001/sotrudnik/save/post-edit-book/${this.idBook}`,{
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    body:JSON.stringify(saveData),
+                    method:'POST'
+                })
+                if(res.ok){
+
+                }
             }
         },
         mounted(){
@@ -129,7 +155,7 @@
         props:['backHandle','book','subgenre', 'genre','currentSubgenre','currentGenre',
         'handleClickGenre','handleClicSubgenre','authors',
         'currentAuthor','currentImgPath','hadleChangeImg','currentSeries','currentPub',
-        'pub', 'series','handleClickPub','handleClickSeries','handleClickAuthor'],
+        'pub', 'series','handleClickPub','handleClickSeries','handleClickAuthor','handleSave'],
         template:`   <div class="row mt-4">
         <div class="col-2">
             <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
@@ -146,9 +172,32 @@
                 <label for="exampleFormControlTextarea2" class="form-label">Описание</label>
                 <textarea class="form-control" id="exampleFormControlTextarea2" rows="3" v-model="book.discription"></textarea>
             </div>
-            
+            <div class="row mt-4">
+                <div class="row">
+                    <div class="col">
+                        <img   height="250"  :src="currentImgPath">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label for="formFile" class="form-label">Обложка</label>
+                        <input class="form-control" type="file" id="formFile" @change="hadleChangeImg" accept=".jpg, jpeg">
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-3">
+                        <button type="button" class="btn btn-success" @click="handleSave">Сохранить</button>
+                    </div>
+                    <div class="col-3">
+                        <button type="button" class="btn btn-danger">Удалить</button>
+                    </div>
+                </div>  
+            </div>
         </div>
         <div class="col">
+            <div class="row">
+               
+            </div>
             <div class="row  mt-2">
                 <div class="col">
                     <div class="dropdown">
@@ -156,7 +205,7 @@
                           {{currentAuthor.authorName+" "+currentAuthor.lastname}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li v-for="item in authors"><a class="dropdown-item" href="#" @click="handleClickAuthor(item)">{{item.authorName +" "+item.lastname}}</a></li>
+                          <li v-for="item in authors"><a class="dropdown-item" @click="handleClickAuthor(item)">{{item.authorName +" "+item.lastname}}</a></li>
                         </ul>
                       </div>
                 </div>
@@ -168,7 +217,7 @@
                           {{currentGenre.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li v-for="item in genre"><a class="dropdown-item" href="#" @click="handleClickGenre(item)">{{item.name}}</a></li>
+                          <li v-for="item in genre"><a class="dropdown-item" @click="handleClickGenre(item)">{{item.name}}</a></li>
                         </ul>
                       </div>
                 </div>
@@ -180,7 +229,7 @@
                           {{currentSubgenre.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li v-for="item in subgenre"><a class="dropdown-item" href="#" v-if="item.genreFk===currentGenre.id" @click="handleClicSubgenre(item)" >{{item.name}}</a></li>
+                          <li v-for="item in subgenre"><a class="dropdown-item" v-if="item.genreFk===currentGenre.id" @click="handleClicSubgenre(item)" >{{item.name}}</a></li>
                         </ul>
                       </div>
                 </div>
@@ -192,7 +241,7 @@
                           {{currentPub.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li v-for="item in pub"><a class="dropdown-item" href="#"  @click="handleClickPub(item)" >{{item.name}}</a></li>
+                          <li v-for="item in pub"><a class="dropdown-item"   @click="handleClickPub(item)" >{{item.name}}</a></li>
                         </ul>
                       </div>
                 </div>
@@ -204,39 +253,71 @@
                           {{currentSeries.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li v-for="item in series"><a class="dropdown-item" href="#" v-if="item.publishingFk===currentPub.id" @click="handleClickSeries(item)" >{{item.name}}</a></li>
+                          <li v-for="item in series"><a class="dropdown-item" v-if="item.publishingFk===currentPub.id" @click="handleClickSeries(item)" >{{item.name}}</a></li>
                         </ul>
                       </div>
                 </div>
             </div>
             <div class="row  mt-2">
                 <div class="col">
-                    <label for="exampleFormControlTextarea1" class="form-label">Скидка</label>
+                    <label for="exampleFormControlTextarea1" class="form-label">Год издания</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.yearPublishing">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">ISBN</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.isbn">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">Количество страниц</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.countPages">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">Высота</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.height">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">Ширина</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.width">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">Длина</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.bookLength">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">В наличии(шт)</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.count">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">Вес(г)</label>
+                    <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.weigth">
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label">Скидка(%)</label>
                     <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.discount">
                 </div>
             </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-2">
+            <div class="row  mt-2">
+                <div class="col">
+                    <label for="exampleFormControlTextarea1" class="form-label ">Стоимость(₽)</label>
+                    <input class="form-control me-2 mb-5" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="book.price">
+                </div>
             </div>
-            <div class="col-5">
-                <img   height="250"  :src="currentImgPath">
-            </div>
-            <div class="col-2 ms-4">
-                <button type="button" class="btn btn-success">Сохранить</button>
-            </div>
-            <div class="col-2">
-                <button type="button" class="btn btn-danger">Удалить</button>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-2">
-            </div>
-            <div class="col-8">
-                <label for="formFile" class="form-label">Обложка</label>
-                <input class="form-control" type="file" id="formFile" @change="hadleChangeImg" accept=".jpg, jpeg">
-            </div>
-            
         </div>
     </div>`
     })
