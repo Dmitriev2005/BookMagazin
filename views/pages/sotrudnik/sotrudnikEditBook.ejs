@@ -3,7 +3,7 @@
     <h1 class="mt-2">Редактировать книгу</h1>
     <edit-book :book="book" :subgenre="subgenre" :genre="genre" :current-subgenre="currentSubgenre" 
     :current-genre="currentGenre" :handle-click-genre="handleClickGenre" :handle-clic-subgenre="handleClicSubgenre"
-    :current-author="currentAuthor" :authors="authors"></edit-book>
+    :current-author="currentAuthor" :authors="authors" :current-img-path="currentImgPath" :hadle-change-img="hadleChangeImg"></edit-book>
 </div>
 <script>
     const bookEditBody = Vue.createApp({
@@ -16,7 +16,8 @@
                 authors:[],
                 currentGenre:new Object(),
                 currentSubgenre:new Object(),
-                currentAuthor:new Object()
+                currentAuthor:new Object(),
+                currentImgPath:new String()
             }
         },
         methods:{
@@ -58,7 +59,9 @@
                     console.log(this.authors)
                 }
             },
-
+            async getImgPath(){
+                this.currentImgPath = 'http://localhost:9001/get-image/'+this.idBook+'.jpg'
+            },
             //Возврат
             backHandle(){
                 location.href='http://localhost:9001/sotrudnik/content/get-book-list'
@@ -71,6 +74,9 @@
             },
             handleClicSubgenre(elem){
                 this.currentSubgenre = elem
+            },
+            hadleChangeImg(el){
+                this.currentImgPath = URL.createObjectURL(el.target.files[0])
             }
         },
         mounted(){
@@ -79,11 +85,12 @@
             this.getGenreSubGenre()
             this.getAuthor()
             this.getAllAuthors()
+            this.getImgPath()
         }
     })
     bookEditBody.component('edit-book',{
         props:['book','subgenre', 'genre','currentSubgenre','currentGenre',
-        'handleClickGenre','handleClicSubgenre','authors','currentAuthor'],
+        'handleClickGenre','handleClicSubgenre','authors','currentAuthor','currentImgPath','hadleChangeImg'],
         template:`   <div class="row mt-4">
         <div class="col-2">
             <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
@@ -150,7 +157,7 @@
             <div class="col-2">
             </div>
             <div class="col-5">
-                <img   height="250"  :src="'http://localhost:9001/get-image/'+book.id+'.jpg'">
+                <img   height="250"  :src="currentImgPath">
             </div>
             <div class="col-2 ms-4">
                 <button type="button" class="btn btn-success">Сохранить</button>
@@ -163,7 +170,8 @@
             <div class="col-2">
             </div>
             <div class="col-8">
-                <button type="button" class="btn btn-outline-primary">Загрузить изображение</button>
+                <label for="formFile" class="form-label">Обложка</label>
+                <input class="form-control" type="file" id="formFile" @change="hadleChangeImg" accept=".jpg, jpeg">
             </div>
             
         </div>

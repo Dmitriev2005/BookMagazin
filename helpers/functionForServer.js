@@ -1,5 +1,5 @@
 import jwt, { decode } from "jsonwebtoken"
-
+import multer from "multer"
 //Проверка токена
 const verifyToken = (req) =>{ 
     let returnVerf = 403
@@ -47,5 +47,14 @@ const translit = (word) =>{
 	return answer
 }
 //Загрузить изображение на сервер
+const storage = multer.diskStorage({
+	destination:function(req,file,cb){
+		cb(null,'nomenclature/')
+	},
+	filename:function(req,file,cb){
+		cb(null,req.params.id)
+	}
+})
+const upload = multer({storage:storage})
 
-export {verifyToken, translit}
+export {verifyToken, translit,upload}
