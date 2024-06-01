@@ -1,6 +1,7 @@
 import express from 'express'
 import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
-    getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,getAllAuthors} from '../controllers/sotrudnik.js'
+    getCurrentSubgenreGenre,getGenreSubgenre,
+    getCurrentAuthor,getAllAuthors,getPubSeries,getAllSeriesBooks} from '../controllers/sotrudnik.js'
 const routerSotrudnik = express.Router()
 
 //Маршрут сотрудника для страницы списка книг
@@ -22,6 +23,8 @@ routerSotrudnik.get('/sotrudnik/json/get-edit-book-genre-subgenre',getGenreSubge
 routerSotrudnik.get('/sotrudnik/json/get-current-author/:id',getCurrentAuthor)
 //Получение всех авторов
 routerSotrudnik.get('/sotrudnik/json/get-all-authors',getAllAuthors)
-
+//Получение текущего издания и серии
+routerSotrudnik.get('/sotrudnik/json/get-current-pub-series/:id',getPubSeries)
+routerSotrudnik.get('/sotrudnik/json/get-all-series-pub',getAllSeriesBooks)
 
 export{routerSotrudnik}

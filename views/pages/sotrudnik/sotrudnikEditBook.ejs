@@ -3,7 +3,10 @@
     <h1 class="mt-2">Редактировать книгу</h1>
     <edit-book :book="book" :subgenre="subgenre" :genre="genre" :current-subgenre="currentSubgenre" 
     :current-genre="currentGenre" :handle-click-genre="handleClickGenre" :handle-clic-subgenre="handleClicSubgenre"
-    :current-author="currentAuthor" :authors="authors" :current-img-path="currentImgPath" :hadle-change-img="hadleChangeImg"></edit-book>
+    :current-author="currentAuthor" :authors="authors" :current-img-path="currentImgPath" :hadle-change-img="hadleChangeImg"
+    :current-series="currentSeries" :current-pub="currentPub" :pub="pub" :series="series"
+    :handle-click-pub="handleClickPub" :handle-click-series="handleClickSeries" :handle-click-author="handleClickAuthor"
+    :back-handle="backHandle"></edit-book>
 </div>
 <script>
     const bookEditBody = Vue.createApp({
@@ -14,10 +17,14 @@
                 genre:[],
                 subgenre:[],
                 authors:[],
+                pub:[],
+                series:[],
                 currentGenre:new Object(),
                 currentSubgenre:new Object(),
                 currentAuthor:new Object(),
-                currentImgPath:new String()
+                currentImgPath:new String(),
+                currentSeries:new Object(),
+                currentPub:new Object()
             }
         },
         methods:{
@@ -49,18 +56,35 @@
                 const res = await fetch(`http://localhost:9001/sotrudnik/json/get-current-author/${this.idBook}`)
                 if(res.ok){
                     this.currentAuthor = await res.json()
-                    console.log(this.currentAuthor)
                 }
             },
             async getAllAuthors(){
                 const res = await fetch(`http://localhost:9001/sotrudnik/json/get-all-authors`)
                 if(res.ok){
                     this.authors = await res.json()
-                    console.log(this.authors)
                 }
             },
             async getImgPath(){
                 this.currentImgPath = 'http://localhost:9001/get-image/'+this.idBook+'.jpg'
+            },
+            async getCurrentPubSeries(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-current-pub-series/${this.idBook}`)
+                if(res.ok){
+                    const buffer = await res.json()
+                    this.currentPub = await buffer.publishing
+                    this.currentSeries = await buffer.series
+                  
+                }
+            },
+            async getAllSeiresPub(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-all-series-pub`)
+                if(res.ok){
+                    const buffer = await res.json()
+                    this.pub = await buffer.pub
+                    this.series = await buffer.series
+                    console.log(this.pub)
+                    console.log(this.series)
+                }
             },
             //Возврат
             backHandle(){
@@ -77,6 +101,17 @@
             },
             hadleChangeImg(el){
                 this.currentImgPath = URL.createObjectURL(el.target.files[0])
+            },
+            handleClickPub(elem){
+                this.currentPub = elem
+                this.currentSeries = new Object()
+                this.currentSeries.name = "Выберите серию"
+            },
+            handleClickSeries(elem){
+                this.currentSeries = elem
+            },
+            handleClickAuthor(elem){
+                this.currentAuthor = elem
             }
         },
         mounted(){
@@ -85,12 +120,16 @@
             this.getGenreSubGenre()
             this.getAuthor()
             this.getAllAuthors()
+            this.getCurrentPubSeries()
+            this.getAllSeiresPub()
             this.getImgPath()
         }
     })
     bookEditBody.component('edit-book',{
-        props:['book','subgenre', 'genre','currentSubgenre','currentGenre',
-        'handleClickGenre','handleClicSubgenre','authors','currentAuthor','currentImgPath','hadleChangeImg'],
+        props:['backHandle','book','subgenre', 'genre','currentSubgenre','currentGenre',
+        'handleClickGenre','handleClicSubgenre','authors',
+        'currentAuthor','currentImgPath','hadleChangeImg','currentSeries','currentPub',
+        'pub', 'series','handleClickPub','handleClickSeries','handleClickAuthor'],
         template:`   <div class="row mt-4">
         <div class="col-2">
             <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
@@ -117,7 +156,7 @@
                           {{currentAuthor.authorName+" "+currentAuthor.lastname}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li v-for="item in authors"><a class="dropdown-item" href="#">{{item.authorName +" "+item.lastname}}</a></li>
+                          <li v-for="item in authors"><a class="dropdown-item" href="#" @click="handleClickAuthor(item)">{{item.authorName +" "+item.lastname}}</a></li>
                         </ul>
                       </div>
                 </div>
@@ -142,6 +181,30 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                           <li v-for="item in subgenre"><a class="dropdown-item" href="#" v-if="item.genreFk===currentGenre.id" @click="handleClicSubgenre(item)" >{{item.name}}</a></li>
+                        </ul>
+                      </div>
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{currentPub.name}}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li v-for="item in pub"><a class="dropdown-item" href="#"  @click="handleClickPub(item)" >{{item.name}}</a></li>
+                        </ul>
+                      </div>
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{currentSeries.name}}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li v-for="item in series"><a class="dropdown-item" href="#" v-if="item.publishingFk===currentPub.id" @click="handleClickSeries(item)" >{{item.name}}</a></li>
                         </ul>
                       </div>
                 </div>

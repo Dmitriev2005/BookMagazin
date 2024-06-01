@@ -1,8 +1,8 @@
 import { Op, json, where } from "sequelize"
 import {User, Subgenre, Genre, 
-  SubgenreBook, Publishing, Series, Discount, 
+  SubgenreBook, Publishing, Series,
   Author, Book, Basket, 
-  UserOrder, SeriesBook, Review}from "../models/model.js"
+  UserOrder, Review}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
 import {verifyToken, translit} from "../helpers/functionForServer.js"
 import 'dotenv/config'

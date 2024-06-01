@@ -1,8 +1,8 @@
 import { Op, json, where } from "sequelize"
 import {User, Subgenre, Genre, 
-  SubgenreBook, Publishing, Series, Discount, 
+  SubgenreBook, Publishing, Series,
   Author, Book, Basket, 
-  UserOrder, SeriesBook, Review}from "../models/model.js"
+  UserOrder, Review}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
 import {verifyToken, translit,upload} from "../helpers/functionForServer.js"
 import 'dotenv/config'
@@ -107,5 +107,45 @@ const getAllAuthors = async(req,res)=>{
     console.log(authorsAr)
     res.status(200).json(authorsAr)
 }
+const getPubSeries = async(req,res)=>{
+    const idBook = req.params.id
+    const book = await Book.findOne({ 
+        where:{
+            id:Number(idBook)
+        }   
+    })
+    const series = await Series.findOne({
+        where:{
+            id:book.get("seriesFk")
+        }
+    })
+    const publishing = await  Publishing.findOne({
+        where:{
+            id:series.get("publishingFk")
+        }
+    })
+    const responseObj = {
+        publishing:publishing.dataValues,
+        series:series.dataValues
+    }
+    res.status(200).json(responseObj)
+}
+const getAllSeriesBooks = async(req,res)=>{
+    const series = await Series.findAll({})
+    const pub = await Publishing.findAll({})
+
+    const seriesAr = []
+    const pubAr = []
+    
+    series.forEach(item=>seriesAr.push(item.dataValues))
+    pub.forEach(item=>pubAr.push(item.dataValues))
+
+    const responseObj = {
+        series:series,
+        pub:pub
+    }
+    res.status(200).json(responseObj)
+
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
-    getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,getAllAuthors}
+    getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,getAllAuthors,getPubSeries,getAllSeriesBooks}

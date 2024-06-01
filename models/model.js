@@ -121,29 +121,9 @@ const Series = db.define('series',{
     field:'publishing_fk',
     type:DataTypes.INTEGER
   },
-  discountFk:{
-    field:'discount_fk',
+  discount:{
+    field:'discount',
     type:DataTypes.INTEGER
-  }
-})
-const Discount = db.define('discount',{
-  id:{
-    field:'id',
-    type:DataTypes.INTEGER,
-    primaryKey:true,
-    autoIncrement:true
-  }, 
-  quantity:{
-    field:'discount_quantity',
-    type:DataTypes.INTEGER
-  },
-  dateStart:{
-    field:'date_start',
-    type:DataTypes.DATE
-  },
-  dateStop:{
-    field:'data_stop',
-    type:DataTypes.DATE
   }
 })
 const Author = db.define('author',{
@@ -193,8 +173,8 @@ const Book = db.define('book',{
     field:'data_stop_discount',
     type:DataTypes.DATE
   },
-  publishingFk:{
-    field:'publishing_fk',
+  seriesFk:{
+    field:'series_fk',
     type:DataTypes.INTEGER
   },
   authorFk:{
@@ -302,34 +282,6 @@ const UserOrder = db.define('user_order',{
     type:DataTypes.ENUM('в пути','доставлен','отменен')
   }
 })
-const SeriesBook = db.define('series_book',{
-  id:{
-    field:'id',
-    type:DataTypes.INTEGER,
-    primaryKey:true,
-    autoIncrement:true
-  }, 
-  seriesFk:{
-    field:'series_fk',
-    type:DataTypes.INTEGER
-  },
-  bookFk:{
-    field:'book_fk',
-    type:DataTypes.INTEGER
-  },
-  discount:{
-    field:'discount',
-    type:DataTypes.INTEGER
-  },
-  dataStartDiscount:{
-    field:'data_start_discount',
-    type:DataTypes.DATE
-  },
-  dataStopDiscount:{
-    field:'data_stop_discount',
-    type:DataTypes.DATE
-  },
-})
 const Review = db.define('review',{
   id:{
     field:'id',
@@ -359,4 +311,4 @@ const Review = db.define('review',{
   }
 })
 
-export {User, Subgenre, Genre, SubgenreBook, Publishing, Series, Discount, Author, Book, Basket, UserOrder, SeriesBook, Review}
+export {User, Subgenre, Genre, SubgenreBook, Publishing, Series, Author, Book, Basket, UserOrder, Review}
