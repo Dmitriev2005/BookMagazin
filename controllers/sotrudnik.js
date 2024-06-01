@@ -41,7 +41,7 @@ const getEditBookJson = async(req,res)=>{
     console.log(idBook)
     res.status(200).json(book.dataValues)
 }
-const getGenreSubgenre = async(req,res)=>{
+const getCurrentSubgenreGenre = async(req,res)=>{
     const idBook = req.params.id
     const subGenreId = await SubgenreBook.findOne({
         where:{
@@ -64,7 +64,48 @@ const getGenreSubgenre = async(req,res)=>{
     }
     responseObj.subgenre = {...subgenre.dataValues}
     responseObj.genre = {...genre.dataValues}
-    console.log(responseObj)
     res.status(200).json(responseObj)
 }
-export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,getGenreSubgenre}
+const getGenreSubgenre = async(req,res)=>{
+    const genre = await Genre.findAll()
+    const subgenre = await Subgenre.findAll()
+
+    const genreAr = []
+    const subgenreAr = []
+    genre.forEach(item=>{
+        genreAr.push(item.dataValues)
+    })
+    subgenre.forEach(item=>{
+        subgenreAr.push(item.dataValues)
+    })
+    const responseObj = {
+        genre:genreAr,
+        subgenre:subgenreAr
+    }
+    res.status(200).json(responseObj)
+}
+const getCurrentAuthor = async(req,res)=>{
+    const idBook = req.params.id
+    const authorId = await Book.findOne({
+        where:{
+            id:Number(idBook)
+        }
+    })
+    const author = await Author.findOne({
+        where:{
+            id:authorId.get("authorFk")
+        }
+    })
+    res.status(200).json(author.dataValues)
+}
+const getAllAuthors = async(req,res)=>{
+    const authors = await Author.findAll()
+    const authorsAr = []
+    authors.forEach(item=>{
+        authorsAr.push(item.dataValues)
+    })
+    console.log(authorsAr)
+    res.status(200).json(authorsAr)
+}
+export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
+    getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,getAllAuthors}

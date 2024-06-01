@@ -1,7 +1,9 @@
 <%- include("../../partials/head") %>
 <div class="container" id="bookEditBody">
     <h1 class="mt-2">Редактировать книгу</h1>
-    <edit-book :book="book" :subgenre="subgenre" :genre="genre"></edit-book>
+    <edit-book :book="book" :subgenre="subgenre" :genre="genre" :current-subgenre="currentSubgenre" 
+    :current-genre="currentGenre" :handle-click-genre="handleClickGenre" :handle-clic-subgenre="handleClicSubgenre"
+    :current-author="currentAuthor" :authors="authors"></edit-book>
 </div>
 <script>
     const bookEditBody = Vue.createApp({
@@ -9,39 +11,79 @@
             return{
                 book:new Object(),
                 idBook:0,
-                genre:new Object(),
-                subgenre:new Object()
+                genre:[],
+                subgenre:[],
+                authors:[],
+                currentGenre:new Object(),
+                currentSubgenre:new Object(),
+                currentAuthor:new Object()
             }
         },
         methods:{
+            //Методы получения данных
             async getBookForEdit(){
                 this.idBook = new URL(location.href).searchParams.get('id')
                 const res = await fetch(`http://localhost:9001/sotrudnik/json/get-edit-book/${this.idBook}`)
                 if(res.ok){
                     this.book = await res.json()
-                    console.log(this.book)
                 }
-                console.log(this.idBook)
             },
-            async getGenreAndSubGenre(){
-                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-edit-book-genre-subgenre/${this.idBook}`)
+            async getCurrentSubgenreGenre(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-current-edit-book-genre-subgenre/${this.idBook}`)
+                if(res.ok){
+                    const buffer = await res.json()
+                    this.currentGenre = await buffer.genre
+                    this.currentSubgenre = await buffer.subgenre
+                }
+            },
+            async getGenreSubGenre(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-edit-book-genre-subgenre`)
                 if(res.ok){
                     const buffer = await res.json()
                     this.genre = await buffer.genre
                     this.subgenre = await buffer.subgenre
                 }
             },
+            async getAuthor(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-current-author/${this.idBook}`)
+                if(res.ok){
+                    this.currentAuthor = await res.json()
+                    console.log(this.currentAuthor)
+                }
+            },
+            async getAllAuthors(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/json/get-all-authors`)
+                if(res.ok){
+                    this.authors = await res.json()
+                    console.log(this.authors)
+                }
+            },
+
+            //Возврат
             backHandle(){
                 location.href='http://localhost:9001/sotrudnik/content/get-book-list'
+            },
+            //Обработчики
+            handleClickGenre(elem){
+                this.currentGenre = elem
+                this.currentSubgenre = new Object()
+                this.currentSubgenre.name = "Выберите поджанр"
+            },
+            handleClicSubgenre(elem){
+                this.currentSubgenre = elem
             }
         },
         mounted(){
             this.getBookForEdit()
-            this.getGenreAndSubGenre()
+            this.getCurrentSubgenreGenre()
+            this.getGenreSubGenre()
+            this.getAuthor()
+            this.getAllAuthors()
         }
     })
     bookEditBody.component('edit-book',{
-        props:['book','subgenre', 'genre'],
+        props:['book','subgenre', 'genre','currentSubgenre','currentGenre',
+        'handleClickGenre','handleClicSubgenre','authors','currentAuthor'],
         template:`   <div class="row mt-4">
         <div class="col-2">
             <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
@@ -65,12 +107,10 @@
                 <div class="col">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle w-100"  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                          Автор
+                          {{currentAuthor.authorName+" "+currentAuthor.lastname}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="#">Action</a></li>
-                          <li><a class="dropdown-item" href="#">Another action</a></li>
-                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                          <li v-for="item in authors"><a class="dropdown-item" href="#">{{item.authorName +" "+item.lastname}}</a></li>
                         </ul>
                       </div>
                 </div>
@@ -79,12 +119,10 @@
                 <div class="col">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                          {{genre.name}}
+                          {{currentGenre.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="#">Action</a></li>
-                          <li><a class="dropdown-item" href="#">Another action</a></li>
-                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                          <li v-for="item in genre"><a class="dropdown-item" href="#" @click="handleClickGenre(item)">{{item.name}}</a></li>
                         </ul>
                       </div>
                 </div>
@@ -93,12 +131,10 @@
                 <div class="col">
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                          {{subgenre.name}}
+                          {{currentSubgenre.name}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                          <li><a class="dropdown-item" href="#">Action</a></li>
-                          <li><a class="dropdown-item" href="#">Another action</a></li>
-                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                          <li v-for="item in subgenre"><a class="dropdown-item" href="#" v-if="item.genreFk===currentGenre.id" @click="handleClicSubgenre(item)" >{{item.name}}</a></li>
                         </ul>
                       </div>
                 </div>
