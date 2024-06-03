@@ -24,7 +24,6 @@ const getAllBooks = async(req,res)=>{
     
     author.forEach(aItem=>{
         books.forEach(bItem=>{
-            
             if(aItem.dataValues.id===bItem.dataValues.authorFk)
                 outputBook.push({...aItem.dataValues, ...bItem.dataValues})
         })
