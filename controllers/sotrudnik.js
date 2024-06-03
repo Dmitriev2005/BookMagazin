@@ -8,6 +8,7 @@ import {verifyToken, translit} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 import 'fs'
 import path from "path"
+import { title } from "process"
 
 const getOrder = (req,res)=>{
     res.status(200).render('./pages/sotrudnik/sotrudnikOrderEdit',{title:'Содержимое заказа'})
@@ -152,42 +153,73 @@ const postEditBook = async(req,res)=>{
     const series = dataFromClient.series
     const subgenre = dataFromClient.subgenre
     //Поджанр убрал тк они в другой таблице
-    const answer = await Book.update({
-        name:book.name,
-        discription:book.discription,
-        price:book.price,
-        discount:book.discount,
-        seriesFk:series.id,
-        authorFk:author.id,
-        ageRestrictions:book.ageRestrictions,
-        dataAdd:new Date(),
-        yearPublishing:book.yearPublishing,
-        isbn:book.isbn,
-        countPages:book.countPages,
-        height:book.height,
-        width:book.width,
-        bookLength:book.bookLength,
-        count:book.count,
-        weigth:book.weigth,
-        coverType:book.coverType,
-        dataStopDiscount:book.dataStopDiscount,
-        dataStartDiscount:book.dataStartDiscount
-
-    },{where:{
-        id:Number(idBook)
-    }})
-    await SubgenreBook.destroy({
-        where:{
-            bookFk:Number(idBook)
-        }
-    }) 
+    if(Number(idBook)){
+        const answer = await Book.update({
+            name:book.name,
+            discription:book.discription,
+            price:book.price,
+            discount:book.discount,
+            seriesFk:series.id,
+            authorFk:author.id,
+            ageRestrictions:book.ageRestrictions,
+            dataAdd:new Date(),
+            yearPublishing:book.yearPublishing,
+            isbn:book.isbn,
+            countPages:book.countPages,
+            height:book.height,
+            width:book.width,
+            bookLength:book.bookLength,
+            count:book.count,
+            weigth:book.weigth,
+            coverType:book.coverType,
+            dataStopDiscount:book.dataStopDiscount,
+            dataStartDiscount:book.dataStartDiscount
     
-    const answerSubgenre = await SubgenreBook.create({
-        bookFk:Number(idBook),
-        subgenreFk:subgenre.id
-    })
-    if(answer.length>0&&!answerSubgenre.isNewRecord)
-        res.status(200).send("Запись добавлена")
+        },{where:{
+            id:Number(idBook)
+        }})
+        await SubgenreBook.destroy({
+            where:{
+                bookFk:Number(idBook)
+            }
+        }) 
+        const answerSubgenre = await SubgenreBook.create({
+            bookFk:Number(idBook),
+            subgenreFk:subgenre.id
+        })
+        if(answer.length>0&&!answerSubgenre.isNewRecord)
+            res.status(200).send("Запись отредактирована")
+    }
+    else{
+        const answer = await Book.create({
+            name:book.name,
+            discription:book.discription,
+            price:book.price,
+            discount:book.discount,
+            seriesFk:series.id,
+            authorFk:author.id,
+            ageRestrictions:book.ageRestrictions,
+            dataAdd:new Date(),
+            yearPublishing:book.yearPublishing,
+            isbn:book.isbn,
+            countPages:book.countPages,
+            height:book.height,
+            width:book.width,
+            bookLength:book.bookLength,
+            count:book.count,
+            weigth:book.weigth,
+            coverType:book.coverType,
+            dataStopDiscount:book.dataStopDiscount,
+            dataStartDiscount:book.dataStartDiscount
+    
+        })
+        const answerSubgenre = await SubgenreBook.create({
+            bookFk:answer.get('id'),
+            subgenreFk:subgenre.id
+        })
+        if(!answer.isNewRecord&&!answerSubgenre.isNewRecord)
+            res.status(200).json(answer.dataValues)
+    }
 }
 const postImg = (req, res) => {
     if (!req.file) {
@@ -195,7 +227,9 @@ const postImg = (req, res) => {
     }
     res.status(200).send({ message: 'File uploaded successfully.' });
 }
-
+const getNewBookPage = (req, res) => {
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Добавление книги'})
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
-    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg}
+    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg,getNewBookPage}

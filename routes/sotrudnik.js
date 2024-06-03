@@ -1,7 +1,7 @@
 import express from 'express'
 import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,
-    getCurrentAuthor,getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg} from '../controllers/sotrudnik.js'
+    getCurrentAuthor,getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg,getNewBookPage} from '../controllers/sotrudnik.js'
 import { uplaodS } from '../helpers/functionForServer.js'
 const routerSotrudnik = express.Router()
 
@@ -33,4 +33,7 @@ routerSotrudnik.get('/sotrudnik/json/get-all-series-pub',getAllSeriesBooks)
 routerSotrudnik.post('/sotrudnik/save/post-edit-book/:id',postEditBook)
 //Сохранение картинки
 routerSotrudnik.post('/sotrudnik/save/img/:id',uplaodS,postImg)
+//Добавление новой книги
+routerSotrudnik.get('/sotrudnik/content/get-new-book',getNewBookPage)
+
 export{routerSotrudnik}

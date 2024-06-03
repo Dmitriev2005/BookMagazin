@@ -11,7 +11,7 @@
         </div>
         <div class="tab-content flex-grow-1" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-           <list-books :books="listBook" :click-book-handler="clickBookHandler"></list-books>
+           <list-books :books="listBook" :click-book-handler="clickBookHandler" :handler-click-new-book="handlerClickNewBook"></list-books>
           </div>
           <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"></div>
           <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
@@ -60,6 +60,9 @@
             },
             clickBookHandler(item){
               location.href=`http://localhost:9001/sotrudnik/content/get-edit-book?id=${item.id}`
+            },
+            handlerClickNewBook(){
+              location.href = 'http://localhost:9001/sotrudnik/content/get-new-book'
             }
           },
           mounted(){
@@ -67,7 +70,7 @@
           }
         })
         listBookBody.component('list-books',{
-          props:['books','clickBookHandler'],
+          props:['books','clickBookHandler', 'handlerClickNewBook'],
           template:`
           <div class="container">
                 <div class="row">
@@ -79,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+            <button type="button" @click="handlerClickNewBook" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg></button>
             

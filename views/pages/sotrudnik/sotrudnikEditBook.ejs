@@ -25,7 +25,8 @@
                 currentImgPath:new String(),
                 currentSeries:new Object(),
                 currentPub:new Object(),
-                currentFileImg:new Object()
+                currentFileImg:new Object(),
+                isNew:false
             }
         },
         methods:{
@@ -136,7 +137,11 @@
                     method:'POST'
                 })
                 const formData = new FormData()
-                formData.append('file',this.currentFileImg )
+                formData.append('file',this.currentFileImg)
+                if(!this.idBook){
+                    const buffer = await res.json()
+                    this.idBook = buffer.id
+                }
                 const resSaveImg = await fetch(`http://localhost:9001/sotrudnik/save/img/${this.idBook}`,
                 {
                     body:formData,
@@ -156,14 +161,17 @@
             }
         },
         mounted(){
-            this.getBookForEdit()
-            this.getCurrentSubgenreGenre()
+            this.idBook = new URL(location.href).searchParams.get('id')
+            if(this.idBook){
+                this.getBookForEdit()
+                this.getCurrentSubgenreGenre()
+                this.getAuthor()
+                this.getCurrentPubSeries()
+                this.getImgPath()
+            }
             this.getGenreSubGenre()
-            this.getAuthor()
             this.getAllAuthors()
-            this.getCurrentPubSeries()
             this.getAllSeiresPub()
-            this.getImgPath()
         }
     })
     bookEditBody.component('edit-book',{
