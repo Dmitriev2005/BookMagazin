@@ -30,7 +30,7 @@ const getAllBooks = async(req,res)=>{
     res.status(200).json(outputBook)
 }
 const getEditBook = (req,res)=>{
-    res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Редактировать книгу'})
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Редактировать книгу',namePage:'Редактирование книги'})
 }
 const getEditBookJson = async(req,res)=>{
     const idBook = req.params.id
@@ -228,8 +228,23 @@ const postImg = (req, res) => {
     res.status(200).send({ message: 'File uploaded successfully.' });
 }
 const getNewBookPage = (req, res) => {
-    res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Добавление книги'})
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditBook',{title:'Добавление книги',namePage:'Добавление книги'})
+}
+const getDeleteBook = async(req,res)=>{
+    const bookId = req.params.id
+    const resDelteSub = await SubgenreBook.destroy({
+        where:{
+            bookFk:Number(bookId)
+        }
+    })
+    const resDelete =  await Book.destroy({
+        where:{
+            id:bookId
+        }
+    })
+    res.status(200).send("Запись удалена!")
+    
 }
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
-    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg,getNewBookPage}
+    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg,getNewBookPage,getDeleteBook}

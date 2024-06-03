@@ -1,7 +1,8 @@
 import express from 'express'
 import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,
-    getCurrentAuthor,getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg,getNewBookPage} from '../controllers/sotrudnik.js'
+    getCurrentAuthor,getAllAuthors,getPubSeries,
+    getAllSeriesBooks,postEditBook,postImg,getNewBookPage,getDeleteBook} from '../controllers/sotrudnik.js'
 import { uplaodS } from '../helpers/functionForServer.js'
 const routerSotrudnik = express.Router()
 
@@ -35,5 +36,6 @@ routerSotrudnik.post('/sotrudnik/save/post-edit-book/:id',postEditBook)
 routerSotrudnik.post('/sotrudnik/save/img/:id',uplaodS,postImg)
 //Добавление новой книги
 routerSotrudnik.get('/sotrudnik/content/get-new-book',getNewBookPage)
-
+//Удаление книги
+routerSotrudnik.get('/sotrudnik/delete/delete-book/:id',getDeleteBook)
 export{routerSotrudnik}
