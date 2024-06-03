@@ -4,7 +4,7 @@ import {User, Subgenre, Genre,
   Author, Book, Basket, 
   UserOrder, Review}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
-import {verifyToken, translit,upload} from "../helpers/functionForServer.js"
+import {verifyToken, translit} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 import 'fs'
 import path from "path"
@@ -38,7 +38,6 @@ const getEditBookJson = async(req,res)=>{
             id:Number(idBook)
         }
     })
-    console.log(idBook)
     res.status(200).json(book.dataValues)
 }
 const getCurrentSubgenreGenre = async(req,res)=>{
@@ -104,7 +103,6 @@ const getAllAuthors = async(req,res)=>{
     authors.forEach(item=>{
         authorsAr.push(item.dataValues)
     })
-    console.log(authorsAr)
     res.status(200).json(authorsAr)
 }
 const getPubSeries = async(req,res)=>{
@@ -149,21 +147,55 @@ const getAllSeriesBooks = async(req,res)=>{
 const postEditBook = async(req,res)=>{
     const idBook = req.params.id
     const dataFromClient = req.body
-    console.log(dataFromClient)
+    const book = dataFromClient.book
+    const author = dataFromClient.author
+    const series = dataFromClient.series
+    const subgenre = dataFromClient.subgenre
+    //Поджанр убрал тк они в другой таблице
     const answer = await Book.update({
-        name:dataFromClient.name,
-        discription:dataFromClient.discription,
-        price:dataFromClient.price,
-        discount:dataFromClient.discount,
-        subgenreFk:dataFromClient.subgenre.id,
-        authorFk:dataFromClient.author.id,
-        seriesFk:dataFromClient.series.id
+        name:book.name,
+        discription:book.discription,
+        price:book.price,
+        discount:book.discount,
+        seriesFk:series.id,
+        authorFk:author.id,
+        ageRestrictions:book.ageRestrictions,
+        dataAdd:new Date(),
+        yearPublishing:book.yearPublishing,
+        isbn:book.isbn,
+        countPages:book.countPages,
+        height:book.height,
+        width:book.width,
+        bookLength:book.bookLength,
+        count:book.count,
+        weigth:book.weigth,
+        coverType:book.coverType,
+        dataStopDiscount:book.dataStopDiscount,
+        dataStartDiscount:book.dataStartDiscount
+
     },{where:{
         id:Number(idBook)
     }})
-    if(answer.length>0)
+    await SubgenreBook.destroy({
+        where:{
+            bookFk:Number(idBook)
+        }
+    }) 
+    
+    const answerSubgenre = await SubgenreBook.create({
+        bookFk:Number(idBook),
+        subgenreFk:subgenre.id
+    })
+    if(answer.length>0&&!answerSubgenre.isNewRecord)
         res.status(200).send("Запись добавлена")
 }
+const postImg = (req, res) => {
+    if (!req.file) {
+        return res.status(400).send({ message: 'No file uploaded.' });
+    }
+    res.status(200).send({ message: 'File uploaded successfully.' });
+}
+
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
-    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook}
+    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg}

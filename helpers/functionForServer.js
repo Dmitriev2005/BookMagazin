@@ -52,9 +52,9 @@ const storage = multer.diskStorage({
 		cb(null,'nomenclature/')
 	},
 	filename:function(req,file,cb){
-		cb(null,req.params.id)
+		cb(null,req.params.id+'.jpg')
 	}
 })
 const upload = multer({storage:storage})
-
-export {verifyToken, translit,upload}
+const uplaodS = upload.single('file')
+export {verifyToken, translit,uplaodS}

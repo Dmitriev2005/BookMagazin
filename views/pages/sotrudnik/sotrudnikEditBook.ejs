@@ -6,7 +6,7 @@
     :current-author="currentAuthor" :authors="authors" :current-img-path="currentImgPath" :hadle-change-img="hadleChangeImg"
     :current-series="currentSeries" :current-pub="currentPub" :pub="pub" :series="series"
     :handle-click-pub="handleClickPub" :handle-click-series="handleClickSeries" :handle-click-author="handleClickAuthor"
-    :back-handle="backHandle" :handle-save="handleSave"></edit-book>
+    :back-handle="backHandle" :handle-save="handleSave" :handle-click-age="handleClickAge" :handle-click-cover="handleClickCover"></edit-book>
 </div>
 <script>
     const bookEditBody = Vue.createApp({
@@ -24,7 +24,8 @@
                 currentAuthor:new Object(),
                 currentImgPath:new String(),
                 currentSeries:new Object(),
-                currentPub:new Object()
+                currentPub:new Object(),
+                currentFileImg:new Object()
             }
         },
         methods:{
@@ -101,6 +102,9 @@
             },
             hadleChangeImg(el){
                 this.currentImgPath = URL.createObjectURL(el.target.files[0])
+                this.currentFileImg = el.target.files[0]
+                this.currentFileImg.name = this.idBook+".jpg"
+                console.log(this.currentFileImg)
             },
             handleClickPub(elem){
                 this.currentPub = elem
@@ -115,14 +119,10 @@
             },
             async handleSave(){
                 const saveData = {
-                    name:this.book.name,
-                    discription:this.book.discription,
-                    price:this.book.price,
-                    discount:this.book.discount,
+                    book:this.book,
                     genre:this.currentGenre,
                     subgenre:this.currentSubgenre,
                     author:this.currentAuthor,
-                    imgPath:this.currentImgPath,
                     series:this.currentSeries,
                     pub:this.currentPub
                 }
@@ -135,9 +135,24 @@
                     body:JSON.stringify(saveData),
                     method:'POST'
                 })
-                if(res.ok){
-
+                const formData = new FormData()
+                formData.append('file',this.currentFileImg )
+                const resSaveImg = await fetch(`http://localhost:9001/sotrudnik/save/img/${this.idBook}`,
+                {
+                    body:formData,
+                    method:'POST'
                 }
+                )
+                if(res.ok&&resSaveImg.ok){
+                    alert("Запись обновлена!")
+                }
+            },
+            handleClickAge(elem){
+                this.book.ageRestrictions = elem.target.innerText
+                console.log(elem)
+            },
+            handleClickCover(elem){
+                this.book.coverType = elem.target.innerText
             }
         },
         mounted(){
@@ -155,7 +170,7 @@
         props:['backHandle','book','subgenre', 'genre','currentSubgenre','currentGenre',
         'handleClickGenre','handleClicSubgenre','authors',
         'currentAuthor','currentImgPath','hadleChangeImg','currentSeries','currentPub',
-        'pub', 'series','handleClickPub','handleClickSeries','handleClickAuthor','handleSave'],
+        'pub', 'series','handleClickPub','handleClickSeries','handleClickAuthor','handleSave','handleClickAge','handleClickCover'],
         template:`   <div class="row mt-4">
         <div class="col-2">
             <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
@@ -181,7 +196,7 @@
                 <div class="row">
                     <div class="col">
                         <label for="formFile" class="form-label">Обложка</label>
-                        <input class="form-control" type="file" id="formFile" @change="hadleChangeImg" accept=".jpg, jpeg">
+                        <input class="form-control" name="file" type="file" id="formFile" @change="hadleChangeImg" accept=".jpg, jpeg">
                     </div>
                 </div>
                 <div class="row mt-5">
@@ -195,9 +210,6 @@
             </div>
         </div>
         <div class="col">
-            <div class="row">
-               
-            </div>
             <div class="row  mt-2">
                 <div class="col">
                     <div class="dropdown">
@@ -254,6 +266,36 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                           <li v-for="item in series"><a class="dropdown-item" v-if="item.publishingFk===currentPub.id" @click="handleClickSeries(item)" >{{item.name}}</a></li>
+                        </ul>
+                      </div>
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{book.ageRestrictions}}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item a-btn"  @click="handleClickAge">не задано</a></li>
+                          <li><a class="dropdown-item a-btn"  @click="handleClickAge">6+</a></li>
+                          <li><a class="dropdown-item a-btn"  @click="handleClickAge">12+</a></li>
+                          <li><a class="dropdown-item a-btn"  @click="handleClickAge">16+</a></li>
+                          <li><a class="dropdown-item a-btn"  @click="handleClickAge">18+</a></li>
+
+                        </ul>
+                      </div>
+                </div>
+            </div>
+            <div class="row  mt-2">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                          {{book.coverType}}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <li><a class="dropdown-item a-btn"  @click="handleClickCover">мягкий переплёт</a></li>
+                          <li><a class="dropdown-item a-btn"  @click="handleClickCover">твердый переплет</a></li>
                         </ul>
                       </div>
                 </div>
