@@ -11,7 +11,19 @@
         </div>
         <div class="tab-content flex-grow-1" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
-           <list-books :books="listBook" :click-book-handler="clickBookHandler" :handler-click-new-book="handlerClickNewBook"></list-books>
+            <div class="container">
+              <div class="row">
+                  <div class="col">
+                      <input class="form-control me-2" v-model="search">
+                  </div>      
+                  <div class="col">
+                      <button class="btn btn-outline-success" @click="handlerSearch">Поиск</button>
+                      <button class="btn btn-danger ms-3" type="button" @click="handlerReset">Сброс</button>
+                  </div>
+              </div>
+          </div>
+           <list-books :books="listBook" :click-book-handler="clickBookHandler" 
+           :handler-click-new-book="handlerClickNewBook"></list-books>
           </div>
           <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"></div>
           <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
@@ -24,6 +36,7 @@
                   </div>      
                   <div class="col">
                       <button class="btn btn-outline-success" type="submit">Поиск</button>
+                      <button class="btn btn-danger ms-3" type="button">Сброс</button>
                   </div>
               </div>
           </div> 
@@ -50,7 +63,10 @@
         const listBookBody = Vue.createApp({
           data(){
             return{
-              listBook:[]
+              listBook:[],
+              searchList:[],
+              listBuffer:[],
+              search:""
             }
           },
           methods:{
@@ -63,6 +79,28 @@
             },
             handlerClickNewBook(){
               location.href = 'http://localhost:9001/sotrudnik/content/get-new-book'
+            },
+            handlerSearch(){      
+              if(this.searchList.length>0)
+                this.listBook = this.listBuffer
+              this.searchList = []  
+              this.listBook.forEach(book=>{
+                
+                const values = Object.values(book)
+                let isFind = false
+                values.forEach(value=>{
+                  value = String(value)
+                  if(value.includes(this.search)&&!isFind){
+                    this.searchList.push(book)
+                    isFind = true
+                  }
+                })
+              })
+              this.listBuffer = this.listBook
+              this.listBook = this.searchList
+            },
+            handlerReset(){
+              location.reload()
             }
           },
           mounted(){
@@ -72,16 +110,7 @@
         listBookBody.component('list-books',{
           props:['books','clickBookHandler', 'handlerClickNewBook'],
           template:`
-          <div class="container">
-                <div class="row">
-                    <div class="col">
-                        <input class="form-control me-2" type="search" placeholder="Книга, автор, жанр и тд." aria-label="Search">
-                    </div>      
-                    <div class="col">
-                        <button class="btn btn-outline-success" type="submit">Поиск</button>
-                    </div>
-                </div>
-            </div>
+          
             <button type="button" @click="handlerClickNewBook" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg></button>
@@ -106,7 +135,12 @@
                       <td>{{item.genre}}</td>
                       <td>{{item.subgenre}}</td>
                       <td>{{item.price+"₽"}}</td>
-                      <td>{{item.discount}}</td>
+                      <template v-if="item.discount">
+                        <td>{{item.discount+"%"}}</td>
+                      </template>
+                      <template v-else>
+                        <td> </td>
+                      </template>
                     </tr>
                   </tbody>
             </table>
