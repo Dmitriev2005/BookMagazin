@@ -4,13 +4,13 @@
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <button class="nav-link active mt-2" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Книги</button>
           <button class="nav-link mt-2" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Жанры</button>
-          <button class="nav-link mt-2" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false">Поджанры</button>
           <button class="nav-link mt-2" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Авторы</button>
           <button class="nav-link mt-2" id="v-pills-orders-tab" data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button" role="tab" aria-controls="v-pills-orders" aria-selected="false">Заказы</button>
 
         </div>
         <div class="tab-content flex-grow-1" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+            <!--Книги-->
             <div class="container">
               <div class="row">
                   <div class="col">
@@ -25,8 +25,21 @@
            <list-books :books="listBook" :click-book-handler="clickBookHandler" 
            :handler-click-new-book="handlerClickNewBook"></list-books>
           </div>
-          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab"></div>
-          <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+            <!--Жанры-->
+            <div class="container">
+              <div class="row">
+                  <div class="col">
+                      <input class="form-control me-2" v-model="search">
+                  </div>      
+                  <div class="col">
+                      <button class="btn btn-outline-success" @click="handlerSearchGenre">Поиск</button>
+                      <button class="btn btn-danger ms-3" type="button" @click="handlerResetGenre">Сброс</button>
+                  </div>
+              </div>
+            </div>
+            <list-genre :list-genre="listBook" :handler-click-new-genre="handlerClickNewGenre"></list-genre>
+          </div>
           <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
           <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
             <div class="container">
@@ -66,15 +79,22 @@
               listBook:[],
               searchList:[],
               listBuffer:[],
-              search:""
+              search:"",
+              listGenre:[]
               
             }
           },
           methods:{
+            //Получение книг
             async getListBook(){
-              const res = await fetch('http://localhost:9001/json/get-all-books')
+              const res = await fetch('http://localhost:9001/sotrudnik/json/get-all-books')
               this.listBook = await res.json()
             },
+            //Получение жанров и поджанров
+            async getListGenre(){ 
+              const res = await fetch('http://localhost:9001/sotrudnik/json/get-all-genre')
+              this.listGenre = await res.json()
+            }, 
             clickBookHandler(item){
               location.href=`http://localhost:9001/sotrudnik/content/get-edit-book?id=${item.id}`
             },
@@ -112,6 +132,15 @@
             },
             handlerReset(){
               location.reload()
+            },
+            handlerClickNewGenre(item){
+              location.href = `http://localhost:9001/sotrudnik/content/get-new-genre?id=${item.genreId}`
+            },
+            handlerSearchGenre(){
+
+            },
+            handlerResetGenre(){
+
             }
           },
           mounted(){
@@ -155,6 +184,35 @@
                       </template>
                       <template v-else>
                         <td> </td>
+                      </template>
+                    </tr>
+                  </tbody>
+            </table>
+          `
+        })
+        listBookBody.component('list-genre',{
+          props:['listGenre','handlerClickNewGenre'],
+          template:`
+            <button type="button" @click="handlerClickNewGenre" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg></button>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Жанр</th>
+                        <th scope="col">Поджанры</th>
+                    </tr>
+                </thead>
+                <tbody style="cursor:pointer;">
+                    <tr v-for="item in listGenre" @click="clickBookHandler(item)">
+                      <template v-if="item.subgenre.length>0">
+                        <td>{{item.genreName}}</td>
+                        <td>
+                          <template v-for="subItem in item.subgenre">
+                            {{subItem.name+" "}}
+                          </template>
+                        </td>
                       </template>
                     </tr>
                   </tbody>

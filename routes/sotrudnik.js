@@ -2,14 +2,15 @@ import express from 'express'
 import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,
     getCurrentAuthor,getAllAuthors,getPubSeries,
-    getAllSeriesBooks,postEditBook,postImg,getNewBookPage,getDeleteBook} from '../controllers/sotrudnik.js'
+    getAllSeriesBooks,postEditBook,postImg,getNewBookPage,
+    getDeleteBook,getNewGenrePage,postNewGenreSub,getOneGenreManySubgenre,getAllGenre} from '../controllers/sotrudnik.js'
 import { uplaodS } from '../helpers/functionForServer.js'
 const routerSotrudnik = express.Router()
 
 //Маршрут сотрудника для страницы списка книг
 routerSotrudnik.get('/sotrudnik/content/get-book-list',getBookList)
 //Маршрут сотрудника для получения json всех книг
-routerSotrudnik.get('/json/get-all-books',getAllBooks)
+routerSotrudnik.get('/sotrudnik/json/get-all-books',getAllBooks)
 //Маршрут сотрудника для изменения книги
 routerSotrudnik.get('/sotrudnik/content/get-edit-book',getEditBook)
 //Маршрут сотрудника для сбора заказа
@@ -38,4 +39,14 @@ routerSotrudnik.post('/sotrudnik/save/img/:id',uplaodS,postImg)
 routerSotrudnik.get('/sotrudnik/content/get-new-book',getNewBookPage)
 //Удаление книги
 routerSotrudnik.get('/sotrudnik/delete/delete-book/:id',getDeleteBook)
+//Страница добавления книги
+routerSotrudnik.get('/sotrudnik/content/get-new-genre',getNewGenrePage)
+//Получение выбранного жанра с поджанрами
+routerSotrudnik.get('/sotrudnik/json/get-one-genre-subgenre',getOneGenreManySubgenre)
+//Сохранение жанра
+routerSotrudnik.post('/sotrudnik/save/post-new-genre',postNewGenreSub)
+//Получение всех жанров
+routerSotrudnik.post('/sotrudnik/json/get-all-genre',getAllGenre)
+
+
 export{routerSotrudnik}

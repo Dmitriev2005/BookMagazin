@@ -1,0 +1,129 @@
+<%- include("../../partials/head") %>
+
+<div class="container" id="editGenreBody">
+    <h1 class="mt-2"><%=namePage%></h1>
+    <genre-subgenre :back-handle="backHandle" :new-sub-genre-item="newSubGenreItem" 
+    :new-subgenre="newSubgenre" :list-sub-genre="listSubGenre" :genre="genre" :handle-change-new="handleChangeNew"
+    :delete-sub-genre-item="deleteSubGenreItem" :post-data-genre="postDataGenre" :id-genre="idGenre"
+    :handle-change-genre="handleChangeGenre"></genre-subgenre>
+</div>
+<script>
+    const editGenreBody = Vue.createApp({
+         data(){
+            return{
+                idGenre:0,
+                newSubgenre:'',
+                listSubGenre:[],
+                genre:''
+            }
+        },
+        methods:{
+            async getDataGenre(){
+                const res = await fetch('http://localhost:9001/sotrudnik/json/get-one-genre-subgenre')
+                if(res.ok){
+
+                }
+            },
+            async postDataGenre(){
+                const saveData = {
+                    name:this.genre,
+                    listSubGenre:this.listSubGenre
+                }
+                console.log(saveData)
+                const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-genre',{
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    method:'POST',
+                    body:JSON.stringify(saveData)
+                })
+                if(res.ok){
+                    alert("Жанр добавлен!")
+                    location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                }
+
+            },
+            //Обработчики
+            backHandle(){
+                location.href='http://localhost:9001/sotrudnik/content/get-book-list'
+            },
+            newSubGenreItem(){
+                
+                if(this.newSubgenre!=="")
+                    this.listSubGenre.push(this.newSubgenre)
+                this.newSubgenre=""
+            },
+            deleteSubGenreItem(elem){
+                for(let i = 0; i<this.listSubGenre.length; i++){
+                    if(this.listSubGenre[i]===elem)
+                        this.listSubGenre.splice(i,1)
+                }
+                console.log(this.listSubGenre)
+            },
+            handleChangeNew(el){
+                this.newSubgenre = el.target.value
+                el.target.value = ""
+            },
+            handleChangeGenre(el){
+                this.genre = el.target.value
+                console.log(this.genre)
+            }
+        }
+    })
+    editGenreBody.component('genreSubgenre',{
+        props:['backHandle','newSubGenreItem','listSubGenre','genre',
+        'newSubgenre','handleChangeNew','deleteSubGenreItem','postDataGenre','idGenre','handleChangeGenre'],
+        template:`
+        <div class="row mt-4">
+            <div class="col-2">
+                <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                </svg>
+            </div>
+            <div class="col-4">
+                <label for="exampleFormControlTextarea1" class="form-label">Название жанра</label>
+                <input @change="handleChangeGenre" class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" >
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-2"></div>
+            <div class="col-4">
+                <div class="form-label">Добавить поджанр</div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-2"></div>
+            <div class="col-4">
+                <input class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" @change="handleChangeNew">           
+            </div>
+            <div class="col-2">
+                <svg @click="newSubGenreItem" xmlns="http://www.w3.org/2000/svg"  width="36" height="36" fill="green" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
+                </svg>
+            </div>
+        </div>
+        <div class="row mt-2" v-for="item in listSubGenre">
+            <div class="col-2"></div>
+            <div class="col-4">
+                <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" aria-label="Search" :value="item">           
+            </div>
+            <div class="col-2">
+                <svg xmlns="http://www.w3.org/2000/svg" @click="deleteSubGenreItem(item)" width="36" height="36" fill="red" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1z"/>
+                </svg>
+            </div>
+
+        </div>
+        <div class="row mt-5">
+            <div class="col-2"></div>
+            <div class="col-2">
+                <button type="button" class="btn btn-success" @click="postDataGenre">Сохранить</button>
+            </div>
+            <div class="col-2" v-if="idGenre!==0">
+                <button @click="handlerDeleteBook" type="button" class="btn btn-danger">Удалить</button>
+            </div>
+        </div>  
+        `
+    })
+    editGenreBody.mount('#editGenreBody')
+</script>

@@ -41,8 +41,10 @@ const getAllBooks = async(req,res)=>{
             const buffer = {}
             if(subgenreAr.length>0)
                 genre.forEach(gItem=>{
-                    if(gItem.get('id')===subgenreAr[0].genreFk)
+                    if(gItem.get('id')===subgenreAr[0].genreFk){
                         buffer.genreName = gItem.get('name')
+                        buffer.genreId = gItem.get('id')
+                    }
                 })
             buffer.subgenre = subgenreAr
             if(aItem.dataValues.id===bItem.dataValues.authorFk){
@@ -272,6 +274,45 @@ const getDeleteBook = async(req,res)=>{
     res.status(200).send("Запись удалена!")
     
 }
+const getNewGenrePage = (req,res)=>{
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Добавление жанра',namePage:'Добавление жанра'})
+}
+//Получение джсона для редактирования жанра
+const getOneGenreManySubgenre = (req,res)=>{
+
+    res.status(200).json()
+}
+const postNewGenreSub = async(req,res)=>{
+    const newGenreSub = req.body
+    const arSubGenre = newGenreSub.listSubGenre
+    const answerGenre = await Genre.create({
+        name:newGenreSub.name
+    })
+
+    for(let i = 0; i<arSubGenre.length; i++){
+        const answerSubgenre = await Subgenre.create({
+            genreFk:answerGenre.get('id'),
+            name:arSubGenre[i]
+        })
+    }
+    res.status(200).send("Жанр добавлен!")
+
+
+}
+const getAllGenre = async(req,res)=>{
+    const genre = await Genre.findAll()
+    const subgenre = await Subgenre.findAll()
+    const listSub = []
+    genre.forEach(gItem=>{
+        subgenre.forEach(sItem=>{
+            if(sItem.get('genreFk')===gItem.get('id'))
+                listSub.push()
+        })
+    })
+
+    //res.status(200).
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
-    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,postImg,getNewBookPage,getDeleteBook}
+    getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
+    postImg,getNewBookPage,getDeleteBook,getNewGenrePage,getOneGenreManySubgenre,postNewGenreSub,getAllGenre}
