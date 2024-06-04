@@ -12,17 +12,25 @@
          data(){
             return{
                 idGenre:0,
-                newSubgenre:'',
+                newSubgenre:{
+                    name:''
+                },
                 listSubGenre:[],
                 genre:''
             }
         },
         methods:{
             async getDataGenre(){
-                const res = await fetch('http://localhost:9001/sotrudnik/json/get-one-genre-subgenre')
-                if(res.ok){
-
+                const idGenre = new URL(location.href).searchParams.get('id')
+                if (idGenre!=="undefined"){
+                    const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-genre-subgenre/${idGenre}`)
+                    if(res.ok){
+                        const buffer = await res.json()
+                        this.genre = buffer.genre.name
+                        this.listSubGenre = buffer.listSub
+                    }
                 }
+               
             },
             async postDataGenre(){
                 const saveData = {
@@ -68,6 +76,9 @@
                 this.genre = el.target.value
                 console.log(this.genre)
             }
+        },
+        mounted(){
+            this.getDataGenre()
         }
     })
     editGenreBody.component('genreSubgenre',{

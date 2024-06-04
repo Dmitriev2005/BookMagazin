@@ -275,9 +275,23 @@ const getNewGenrePage = (req,res)=>{
     res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Добавление жанра',namePage:'Добавление жанра'})
 }
 //Получение джсона для редактирования жанра
-const getOneGenreManySubgenre = (req,res)=>{
-
-    res.status(200).json()
+const getOneGenreManySubgenre = async(req,res)=>{
+    const idGenre = Number(req.params.id)
+    const genre = await Genre.findOne({where:{
+        id:idGenre
+    }})
+    const subgenre = await Subgenre.findAll({where:{
+        genreFk:idGenre
+    }})
+    const arSubGenre = []
+    subgenre.forEach(item=>{
+        arSubGenre.push(item.dataValues)
+    })
+    const buffer = {
+        genre:genre.dataValues,
+        listSub:arSubGenre
+    }
+    res.status(200).json(buffer)
 }
 const postNewGenreSub = async(req,res)=>{
     const newGenreSub = req.body
@@ -315,7 +329,10 @@ const getAllGenre = async(req,res)=>{
     console.log(listGenre)
     res.status(200).json(listGenre)
 }
+const getEditGenre = (req,res)=>{
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Редактирование жанра',namePage:'Редактирование жанра'})
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
-    postImg,getNewBookPage,getDeleteBook,getNewGenrePage,getOneGenreManySubgenre,postNewGenreSub,getAllGenre}
+    postImg,getNewBookPage,getDeleteBook,getNewGenrePage,getOneGenreManySubgenre,postNewGenreSub,getAllGenre,getEditGenre}

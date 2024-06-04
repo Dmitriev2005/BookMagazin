@@ -3,7 +3,7 @@ import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,
     getCurrentAuthor,getAllAuthors,getPubSeries,
     getAllSeriesBooks,postEditBook,postImg,getNewBookPage,
-    getDeleteBook,getNewGenrePage,postNewGenreSub,getOneGenreManySubgenre,getAllGenre} from '../controllers/sotrudnik.js'
+    getDeleteBook,getNewGenrePage,postNewGenreSub,getOneGenreManySubgenre,getAllGenre,getEditGenre} from '../controllers/sotrudnik.js'
 import { uplaodS } from '../helpers/functionForServer.js'
 const routerSotrudnik = express.Router()
 
@@ -42,11 +42,12 @@ routerSotrudnik.get('/sotrudnik/delete/delete-book/:id',getDeleteBook)
 //Страница добавления книги
 routerSotrudnik.get('/sotrudnik/content/get-new-genre',getNewGenrePage)
 //Получение выбранного жанра с поджанрами
-routerSotrudnik.get('/sotrudnik/json/get-one-genre-subgenre',getOneGenreManySubgenre)
+routerSotrudnik.get('/sotrudnik/json/get-one-genre-subgenre/:id',getOneGenreManySubgenre)
 //Сохранение жанра
 routerSotrudnik.post('/sotrudnik/save/post-new-genre',postNewGenreSub)
 //Получение всех жанров
 routerSotrudnik.get('/sotrudnik/json/get-all-genre',getAllGenre)
-
+//Получение страницы редактирования жанра
+routerSotrudnik.get('/sotrudnik/content/get-edit-genre',getEditGenre)
 
 export{routerSotrudnik}
