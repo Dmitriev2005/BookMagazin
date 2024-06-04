@@ -19,15 +19,41 @@ const getBookList = (req,res)=>{
 const getAllBooks = async(req,res)=>{
     const books = await Book.findAll()
     const author = await Author.findAll()
-    
+    const subgenreBook = await SubgenreBook.findAll()
+    const subgenre = await Subgenre.findAll()
+    const genre = await Genre.findAll()
     const outputBook = []
     
     author.forEach(aItem=>{
+        const subgenreBookAr = []
         books.forEach(bItem=>{
-            if(aItem.dataValues.id===bItem.dataValues.authorFk)
-                outputBook.push({...aItem.dataValues, ...bItem.dataValues})
+            subgenreBook.forEach(sItem=>{
+                if(sItem.get('bookFk')===bItem.get('id'))
+                    subgenreBookAr.push(sItem.dataValues)
+            })
+            const subgenreAr = []
+            subgenre.forEach(subItem=>{
+                subgenreBookAr.forEach(arItem=>{
+                    if(subItem.get('id')===arItem.subgenreFk)
+                        subgenreAr.push(subItem.dataValues)
+                })
+            })
+            const buffer = {}
+            if(subgenreAr.length>0)
+                genre.forEach(gItem=>{
+                    if(gItem.get('id')===subgenreAr[0].genreFk)
+                        buffer.genreName = gItem.get('name')
+                })
+            buffer.subgenre = subgenreAr
+            if(aItem.dataValues.id===bItem.dataValues.authorFk){
+                outputBook.push({...aItem.dataValues, ...bItem.dataValues,...buffer})
+            }
         })
     })
+    outputBook.forEach(item=>{
+        console.log(item.subgenre)
+    })
+    console.log(outputBook)
     res.status(200).json(outputBook)
 }
 const getEditBook = (req,res)=>{

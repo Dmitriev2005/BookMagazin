@@ -67,6 +67,7 @@
               searchList:[],
               listBuffer:[],
               search:""
+              
             }
           },
           methods:{
@@ -89,10 +90,20 @@
                 const values = Object.values(book)
                 let isFind = false
                 values.forEach(value=>{
-                  value = String(value)
-                  if(value.includes(this.search)&&!isFind){
-                    this.searchList.push(book)
-                    isFind = true
+                  if(Array.isArray(value)){
+                    if(value.length>0){
+                      value.forEach(itemAr=>{
+                        if(itemAr.name.includes(this.search)&&!isFind){
+                          this.searchList.push(book)
+                          isFind = true
+                        }
+                      })
+                    }
+                  }else{
+                    value = String(value)
+                    if(value.includes(this.search)&&!isFind){
+                      this.searchList.push(book)
+                    }
                   }
                 })
               })
@@ -132,8 +143,12 @@
                       <th scope="row">{{item.id}}</th>
                       <td>{{item.name}}</td>
                       <td>{{item.authorName+" "+item.lastname}}</td>
-                      <td>{{item.genre}}</td>
-                      <td>{{item.subgenre}}</td>
+                      <td>{{item.genreName}}</td>
+                      <td>
+                        <template v-for="subItem in item.subgenre">
+                          {{subItem.name+" "}}
+                        </template>
+                      </td>
                       <td>{{item.price+"₽"}}</td>
                       <template v-if="item.discount">
                         <td>{{item.discount+"%"}}</td>
