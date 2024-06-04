@@ -46,7 +46,7 @@ routerSotrudnik.get('/sotrudnik/json/get-one-genre-subgenre',getOneGenreManySubg
 //Сохранение жанра
 routerSotrudnik.post('/sotrudnik/save/post-new-genre',postNewGenreSub)
 //Получение всех жанров
-routerSotrudnik.post('/sotrudnik/json/get-all-genre',getAllGenre)
+routerSotrudnik.get('/sotrudnik/json/get-all-genre',getAllGenre)
 
 
 export{routerSotrudnik}

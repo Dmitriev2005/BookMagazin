@@ -52,10 +52,7 @@ const getAllBooks = async(req,res)=>{
             }
         })
     })
-    outputBook.forEach(item=>{
-        console.log(item.subgenre)
-    })
-    console.log(outputBook)
+
     res.status(200).json(outputBook)
 }
 const getEditBook = (req,res)=>{
@@ -302,15 +299,21 @@ const postNewGenreSub = async(req,res)=>{
 const getAllGenre = async(req,res)=>{
     const genre = await Genre.findAll()
     const subgenre = await Subgenre.findAll()
-    const listSub = []
+    const listGenre = []
     genre.forEach(gItem=>{
+        const listSub = []
         subgenre.forEach(sItem=>{
             if(sItem.get('genreFk')===gItem.get('id'))
-                listSub.push()
+                listSub.push(sItem.dataValues)
         })
+        const buffer = {
+            genre:gItem.dataValues,
+            listSub:listSub
+        }
+        listGenre.push(buffer)
     })
-
-    //res.status(200).
+    console.log(listGenre)
+    res.status(200).json(listGenre)
 }
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
