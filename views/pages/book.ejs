@@ -1,7 +1,7 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
     <div class="container content" id="bookBody">
-        <book :element-book="book" :element-review="review"></book>
+        <book :element-book="book" :element-review="review" :handler-buy="handlerBuy"></book>
     </div>
     <script>
         const bookBody = Vue.createApp({
@@ -23,6 +23,22 @@
                         console.log(this.book)
                     }
                     
+                },
+                async handlerBuy(el){
+
+                    el.target.classList.remove('btn-primary')
+                    el.target.classList.add('btn-success')
+                    el.target.innerText = "В корзине"
+                    const res = await fetch('http://localhost:9001/buyer/save/add-book-in-basket',{
+                        headers:{
+                            'Content-Type':'application/json'
+                        },
+                        method:'POST',
+                        body:JSON.stringify(this.book)
+                    })
+                    if(res.ok){
+                        alert("Товар добавлен в корзину!")
+                    }
                 }
             },
             mounted(){
@@ -31,7 +47,7 @@
             }
         })
         bookBody.component('book',{
-            props:['elementBook','elementReview'],
+            props:['elementBook','elementReview','handlerBuy'],
             template:`
             <div class="row">
                 <div class="col fs-3">
@@ -127,7 +143,7 @@
                     <div class="row">
                         <div class="col fs-4" v-if="elementBook.discount!==null">
                             
-                            <del>{{elementBook.price+"₽"}}</del> <b>{{elementBook.discount+"₽"}}</b>
+                            <del>{{elementBook.price+"₽"}}</del> <b>{{Math.floor(elementBook.price-elementBook.price*(elementBook.discount/100))+"₽"}}</b>
                         </div> 
                         <div class="col fs-4" v-else>
                             
@@ -136,7 +152,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-10">
-                            <button type="button" class="align-self-end mt-auto btn btn-primary w-100 h-100" @click="handlerBuy(item)">Купить</button>  
+                            <button type="button" class="align-self-end mt-auto btn btn-primary w-100 h-100" @click="handlerBuy">Купить</button>  
                         </div>
                     </div>
                 </div>

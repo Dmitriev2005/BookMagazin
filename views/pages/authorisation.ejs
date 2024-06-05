@@ -1,6 +1,6 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
-<div class="container content ">
+<div class="container content" id="autorisBody">
     <div class="row">
         <div class="col-4">
 
@@ -15,19 +15,65 @@
 
         </div>
         <div class="col-4">
-            <form class="mb-3">
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Почта</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Почта</label>
+                <input v-model="user.email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Пароль</label>
+                <input v-model="user.password" type="password" class="form-control" id="exampleInputPassword1">
+              </div>
+              <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle w-100"  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{user.type}}
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li ><a class="dropdown-item" @click="handleClickType">клиент</a></li>
+                    <li ><a class="dropdown-item" @click="handleClickType">работник</a></li>
+                    <li ><a class="dropdown-item" @click="handleClickType">администратор</a></li>
+
+                  </ul>
                 </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Пароль</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <button type="submit" class="btn btn-primary">Авторизоваться</button>
-            </form>
+              <button @click="handlerPostData" class="btn btn-primary">Авторизоваться</button>
             <a href="#" class="link-primary">Регистрация</a>
         </div>
     </div>
 </div>
+<script>
+    const autorisBody = Vue.createApp({
+        data(){
+            return{
+                user:{
+                    email:"",
+                    password:"",
+                    type:"клиент"
+                }
+            }
+        },
+        methods:{
+            async handlerPostData(){
+                const res = await fetch('http://localhost:9001/save/post-autoris',{
+                    method:'POST',
+                    body:JSON.stringify(this.user),
+                    headers:{
+                        "Content-Type":"application/json"
+                    }
+                })
+                if(res.ok){
+                    alert("Вы авторизированы!")
+                    location.href = 'http://localhost:9001'
+                }
+                else{
+                    alert("Ошибка входа!")
+                    location.reload()
+                }
+            },
+            handleClickType(el){
+                this.user.type = el.target.innerText
+            }
+        }
+
+    })
+    autorisBody.mount('#autorisBody')
+</script>
 <%-include("../partials/footer")%> 

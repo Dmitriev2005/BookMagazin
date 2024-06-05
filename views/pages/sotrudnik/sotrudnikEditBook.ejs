@@ -151,22 +151,33 @@
                     body:JSON.stringify(saveData),
                     method:'POST'
                 })
-                const formData = new FormData()
-                formData.append('file',this.currentFileImg)
-                if(!this.idBook){
-                    const buffer = await res.json()
-                    this.idBook = buffer.id
+                if(this.currentFileImg.fileName){
+                    console.log(this.currentFileImg)
+                    const formData = new FormData()
+                    formData.append('file',this.currentFileImg)
+                    if(!this.idBook){
+                        const buffer = await res.json()
+                        this.idBook = buffer.id
+                    }
+                    
+                    const resSaveImg = await fetch(`http://localhost:9001/sotrudnik/save/img/${this.idBook}`,
+                    {
+                        body:formData,
+                        method:'POST'
+                    }
+                    )
+                    if(res.ok&&resSaveImg.ok){
+                        alert("Запись обновлена!")
+                        location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                    }
                 }
-                const resSaveImg = await fetch(`http://localhost:9001/sotrudnik/save/img/${this.idBook}`,
-                {
-                    body:formData,
-                    method:'POST'
+                else{
+                    if(res.ok){
+                        alert("Запись обновлена!")
+                        location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                    }
                 }
-                )
-                if(res.ok&&resSaveImg.ok){
-                    alert("Запись обновлена!")
-                    location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
-                }
+               
             },
             handleClickAge(elem){
                 this.book.ageRestrictions = elem.target.innerText

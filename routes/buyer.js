@@ -2,8 +2,8 @@ import express from 'express'
 import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getImage,getBookPage,getBookJson,getSearch, 
     getBasket,getPlacingOrder,getPayForm, 
-    getAuthorisation,getRegistration,getListOrder,
-    getShortcut} from '../controllers/buyer.js'
+    getRegistration,getListOrder,
+    getShortcut,postAddInBasket} from '../controllers/buyer.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
@@ -21,18 +21,16 @@ buyerRouter.get('/json/get-book/:bookId',getBookJson)
 //Маршрут для страницы поиска
 buyerRouter.get('/content/get-search',getSearch)
 //Маршрут для страницы корзины(нужно будет добавить номер заказа в пути)
-buyerRouter.get('/content/get-basket',getBasket)
+buyerRouter.get('/buyer/content/get-basket',getBasket)
 //Маршрут для страницы оформления заказа
 buyerRouter.get('/content/get-placing-order',getPlacingOrder)
 //Маршрут для формы оплаты заказа(нужно будет добавить номер заказа в пути)
 buyerRouter.get('/content/get-pay-form',getPayForm)
-//Маршрут для страницы авторизации
-buyerRouter.get('/content/get-autoris',getAuthorisation)
 //Маршрут для страницы регистрации
 buyerRouter.get('/content/get-registr',getRegistration)
 //Маршрут для страницы заказов
-buyerRouter.get('/content/get-list-order',getListOrder)
-
+buyerRouter.get('/buyer/content/get-list-order',getListOrder)
+buyerRouter.post('/buyer/save/add-book-in-basket',postAddInBasket)
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!
 buyerRouter.get('/sh',getShortcut)
 

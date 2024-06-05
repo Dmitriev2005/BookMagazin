@@ -1,5 +1,6 @@
 import jwt, { decode } from "jsonwebtoken"
 import multer from "multer"
+import 'dotenv/config'
 //Проверка токена
 const verifyToken = (req) =>{ 
     let returnVerf = 403
@@ -7,7 +8,7 @@ const verifyToken = (req) =>{
       
       const tokenClient = req.cookies.authorisation_token
       if(tokenClient)
-        jwt.verify(tokenClient,secretWord,(err,decoded)=>{
+        jwt.verify(tokenClient,process.env.SECRET_WORD,(err,decoded)=>{
           if(err)
             returnVerf = 403
           else
@@ -18,6 +19,19 @@ const verifyToken = (req) =>{
     else
       return false
 }
+//Шоркат на проверку и вывод No authorisation если нет пользователя
+const shortCut = (req)=>{
+	const buffer = verifyToken(req)
+	let user
+	if(buffer===403)
+	  user = 403
+	else if(!buffer)
+	  user = "Пользователь не авторизирован"
+	else 
+	  user = buffer
+	
+	return user
+  }
 //Преобразование кирилицы в латиницу
 const translit = (word) =>{
   let converter = {
@@ -55,6 +69,7 @@ const storage = multer.diskStorage({
 		cb(null,req.params.id+'.jpg')
 	}
 })
+
 const upload = multer({storage:storage})
 const uplaodS = upload.single('file')
-export {verifyToken, translit,uplaodS}
+export {verifyToken, translit,uplaodS,shortCut}

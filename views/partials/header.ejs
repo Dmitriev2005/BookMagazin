@@ -2,18 +2,39 @@
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">ЧиталоффЪ</a>
+              <a class="navbar-brand" href="http://localhost:9001/">ЧиталоффЪ</a>
               <button class="navbar-toggler"  type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Корзина</a>
+                    <a class="nav-link" href="http://localhost:9001/buyer/content/get-basket">Корзина</a>
                   </li>  
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Заказы</a>
-                  </li>        
+                    <a class="nav-link" href="http://localhost:9001/buyer/content/get-list-order">Заказы</a>
+                  </li> 
+                  <%if(typeof user!=="object"){%> 
+                    <li class="nav-item">
+                      <a class="nav-link" href="http://localhost:9001/content/get-autoris">Авторизоваться</a>
+                    </li>
+                  <%}else{%> 
+                    <li class="nav-item">
+                      <a class="nav-link" href="http://localhost:9001/content/get-autoris" @click="handlerExit">Выйти</a>
+                    </li>
+                  <%}%>
+                
+                    <%if(typeof user!=="object"){%> 
+                      <li class="nav-item">
+                        <a class="nav-link"><%=user%></a>
+                      </li>
+
+                    <%}else{%> 
+                      <li class="nav-item">
+                        <a class="nav-link"><%=user.email%></a>
+                      </li>
+                    <%}%> 
+                  
                 </ul>
                 <form class="d-flex">
                   <input class="form-control me-2" type="search" placeholder="Что-то найти?" aria-label="Search">
@@ -53,6 +74,16 @@
                       if(el.genreFk===item.id)
                         this.displaySubGenre.push(el)
                     })
+                  },
+                  async handlerExit(){
+                    const isTrue = confirm("Вы хотите выйти из своей учетной записи?")
+                    if(isTrue){
+                      const res = await fetch('http://localhost:9001/delete-cookie')
+                      if(res.ok)
+                        location.reload()
+                    }
+                    
+                      
                   }
                 },
                 mounted(){

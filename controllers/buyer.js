@@ -4,7 +4,7 @@ import {User, Subgenre, Genre,
   Author, Book, Basket, 
   UserOrder, Review}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
-import {verifyToken, translit} from "../helpers/functionForServer.js"
+import {verifyToken, translit, shortCut} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 import 'fs'
 import path from "path"
@@ -12,8 +12,8 @@ import path from "path"
 const __dirname = path.resolve()
 const imageDirectory = path.join(__dirname,'nomenclature')
 const getIndex = (req,res) =>{
-  
-  res.render("./pages/index",{title:"Новинки"})
+  const user = shortCut(req)
+  res.render("./pages/index",{title:"Новинки",user})
 }
 
 const getGenre = async(req,res) =>{
@@ -68,11 +68,12 @@ const getImage = (req,res)=>{
 }
 //Возвращает страницу книги
 const getBookPage = async(req,res)=>{
+  const user = shortCut(req)
   const idBook = req.params.bookId
   const book = await Book.findOne({
     where:Number(idBook)
   })
-  res.status(200).render('./pages/book',{title:book.name})
+  res.status(200).render('./pages/book',{title:book.name,user})
 }
 //Возвращает содержимое страницы книги
 const getBookJson = async(req,res)=>{
@@ -118,38 +119,54 @@ const getBookJson = async(req,res)=>{
   res.status(200).json(generalInfoBook)
 }
 const getSearch = (req,res) =>{
-  res.status(200).render('./pages/search',{title:'Результаты поиска'})
+  const user = shortCut(req)
+  res.status(200).render('./pages/search',{title:'Результаты поиска',user})
 }
 const getBasket = (req,res)=>{
-  res.status(200).render('./pages/basket',{title:'Корзина'})
+  const user = shortCut(req)
+  res.status(200).render('./pages/basket',{title:'Корзина',user})
 }
 const getPlacingOrder = (req,res)=>{
-  res.status(200).render('./pages/placingAnOrder',{title:'Оформление заказа'})
+  const user = shortCut(req)
+  res.status(200).render('./pages/placingAnOrder',{title:'Оформление заказа',user})
 }
 const getPayForm = (req,res) => {
   res.status(200).render('./pages/formBuy',{title:'Оплата заказа'})
 }
-const getAuthorisation = (req,res)=>{
-  res.status(200).render('./pages/authorisation',{title:'Авторизация'})
-}
 const getRegistration = (req,res)=>{
-  res.status(200).render('./pages/registration',{title:'Регистрация'})
+  const user = shortCut(req)
+  res.status(200).render('./pages/registration',{title:'Регистрация',user})
 }
 const getListOrder  = (req,res)=>{
-  res.status(200).render('./pages/listOrder',{title:'Заказы'})
+  const user = shortCut(req)
+  res.status(200).render('./pages/listOrder',{title:'Заказы',user})
 }
 
 
 const getShortcut = (req,res)=>{
   res.status(200).render('./pages/hotkey(TEST!!!)/shorcutCLIENTPage')
 }
-
+const postAddInBasket = async(req,res)=>{
+  const user = shortCut(req)
+  const book = req.body 
+  if(typeof user==="object"){
+    
+    await Basket.create({
+      userFk:user.id,
+      bookFk:book.id,
+      count:1
+    })
+    console.log(user)
+    console.log(book)
+  }
+  res.status(200).send("Книга добавлена в корзину")
+}
 
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
-  getAuthorisation,getRegistration,
-  getListOrder,getShortcut}
+  getRegistration,
+  getListOrder,getShortcut,postAddInBasket}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
