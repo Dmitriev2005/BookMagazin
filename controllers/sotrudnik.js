@@ -4,7 +4,7 @@ import {User, Subgenre, Genre,
   Author, Book, Basket, 
   UserOrder, Review}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
-import {verifyToken, translit} from "../helpers/functionForServer.js"
+import {verifyToken, translit, shortCut} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 import 'fs'
 import path from "path"
@@ -332,7 +332,9 @@ const getAllGenre = async(req,res)=>{
 const getEditGenre = (req,res)=>{
     res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Редактирование жанра',namePage:'Редактирование жанра'})
 }
+
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
-    postImg,getNewBookPage,getDeleteBook,getNewGenrePage,getOneGenreManySubgenre,postNewGenreSub,getAllGenre,getEditGenre}
+    postImg,getNewBookPage,getDeleteBook,getNewGenrePage,
+    getOneGenreManySubgenre,postNewGenreSub,getAllGenre,getEditGenre}

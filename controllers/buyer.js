@@ -161,12 +161,38 @@ const postAddInBasket = async(req,res)=>{
   }
   res.status(200).send("Книга добавлена в корзину")
 }
+const getBasketUserList = async(req,res)=>{
+  const user = shortCut(req)
+  if(typeof user==="object"){
+    const bookList = await Book.findAll()
+      const basketList = await Basket.findAll({
+          where:{
+              userFk:user.id
+          }
+      })
+      const arBasketList = []
+      bookList.forEach(bookItem=>{
+        basketList.forEach(basketItem=>{
+          if(bookItem.get('id')===basketItem.get('bookFk')){
+            const buffer = {
+              book:bookItem.dataValues,
+              count:basketItem.get('count')
+            }
+            arBasketList.push(buffer)
+          }
+      })
+      })
 
+
+      res.status(200).json(arBasketList)
+  }
+  res.status(500).send("нету")
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getRegistration,
-  getListOrder,getShortcut,postAddInBasket}
+  getListOrder,getShortcut,postAddInBasket,getBasketUserList}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

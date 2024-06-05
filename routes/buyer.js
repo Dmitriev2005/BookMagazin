@@ -3,7 +3,7 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getImage,getBookPage,getBookJson,getSearch, 
     getBasket,getPlacingOrder,getPayForm, 
     getRegistration,getListOrder,
-    getShortcut,postAddInBasket} from '../controllers/buyer.js'
+    getShortcut,postAddInBasket,getBasketUserList} from '../controllers/buyer.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
@@ -31,6 +31,8 @@ buyerRouter.get('/content/get-registr',getRegistration)
 //Маршрут для страницы заказов
 buyerRouter.get('/buyer/content/get-list-order',getListOrder)
 buyerRouter.post('/buyer/save/add-book-in-basket',postAddInBasket)
+buyerRouter.get('/buyer/get-basket-list',getBasketUserList)
+
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!
 buyerRouter.get('/sh',getShortcut)
 
