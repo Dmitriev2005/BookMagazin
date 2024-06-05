@@ -69,7 +69,7 @@
                 console.log(this.listSubGenre)
             },
             handleChangeNew(el){
-                this.newSubgenre = el.target.value
+                this.newSubgenre.name = el.target.value
                 el.target.value = ""
             },
             handleChangeGenre(el){
@@ -116,7 +116,7 @@
         <div class="row mt-2" v-for="item in listSubGenre">
             <div class="col-2"></div>
             <div class="col-4">
-                <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" aria-label="Search" :value="item">           
+                <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" aria-label="Search" :value="item.name">           
             </div>
             <div class="col-2">
                 <svg xmlns="http://www.w3.org/2000/svg" @click="deleteSubGenreItem(item)" width="36" height="36" fill="red" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
