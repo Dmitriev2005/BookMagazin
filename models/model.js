@@ -254,17 +254,13 @@ const Basket = db.define('basket',{
     type:DataTypes.INTEGER
   },
 })
-const UserOrder = db.define('user_order',{
+const Order = db.define('user_order',{
   id:{
     field:'id',
     type:DataTypes.INTEGER,
     primaryKey:true,
     autoIncrement:true
   }, 
-  basketFk:{
-    field:'basket_fk',
-    type:DataTypes.INTEGER
-  },
   addres:{
     field:'addres',
     type:DataTypes.STRING
@@ -277,9 +273,33 @@ const UserOrder = db.define('user_order',{
     field:'date_issue',
     type:DataTypes.DATEONLY
   },
-  orderStatus:{
+  status:{
     field:'order_status',
     type:DataTypes.ENUM('в пути','доставлен','отменен')
+  },
+  userFk:{
+    field:'user_fk',
+    type:DataTypes.INTEGER
+  }
+})
+const OrderElements = db.define('order_elements',{
+  id:{
+    field:'id',
+    type:DataTypes.INTEGER,
+    primaryKey:true,
+    autoIncrement:true
+  }, 
+  orderFk:{
+    field:'order_fk',
+    type:DataTypes.INTEGER
+  }, 
+  bookFk:{
+    field:'book_fk',
+    type:DataTypes.INTEGER,
+  }, 
+  count:{
+    field:'count',
+    type:DataTypes.INTEGER
   }
 })
 const Review = db.define('review',{
@@ -311,4 +331,4 @@ const Review = db.define('review',{
   }
 })
 
-export {User, Subgenre, Genre, SubgenreBook, Publishing, Series, Author, Book, Basket, UserOrder, Review}
+export {User, Subgenre, Genre, SubgenreBook, Publishing, Series, Author, Book, Basket, Order, OrderElements, Review}

@@ -22,6 +22,7 @@ buyerRouter.get('/json/get-book/:bookId',getBookJson)
 buyerRouter.get('/content/get-search',getSearch)
 //Маршрут для страницы корзины(нужно будет добавить номер заказа в пути)
 buyerRouter.get('/buyer/content/get-basket',getBasket)
+
 //Маршрут для страницы оформления заказа
 buyerRouter.get('/content/get-placing-order',getPlacingOrder)
 //Маршрут для формы оплаты заказа(нужно будет добавить номер заказа в пути)
@@ -34,6 +35,7 @@ buyerRouter.get('/buyer/content/get-list-order',getListOrder)
 buyerRouter.post('/buyer/save/add-book-in-basket',postAddInBasket)
 //Получить страницу корзины
 buyerRouter.get('/buyer/get-basket-list',getBasketUserList)
+//Удалить книгу из корзины
 buyerRouter.get('/buyer/basket-delete-item/:id',getDeleteBasketItem)
 
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!

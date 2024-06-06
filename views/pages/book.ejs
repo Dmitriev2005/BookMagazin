@@ -141,8 +141,7 @@
                 </div>
                 <div class="col">
                     <div class="row">
-                        <div class="col fs-4" v-if="elementBook.discount!==null">
-                            
+                        <div class="col fs-4" v-if="elementBook.discount!==null">   
                             <del>{{elementBook.price+"₽"}}</del> <b>{{Math.floor(elementBook.price-elementBook.price*(elementBook.discount/100))+"₽"}}</b>
                         </div> 
                         <div class="col fs-4" v-else>

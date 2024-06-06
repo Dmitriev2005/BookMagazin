@@ -2,7 +2,7 @@ import { Op, json, where } from "sequelize"
 import {User, Subgenre, Genre, 
   SubgenreBook, Publishing, Series,
   Author, Book, Basket, 
-  UserOrder, Review}from "../models/model.js"
+  Order, Review,OrderElements}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
 import {verifyToken, translit, shortCut} from "../helpers/functionForServer.js"
 import 'dotenv/config'
@@ -175,8 +175,10 @@ const getBasketUserList = async(req,res)=>{
         basketList.forEach(basketItem=>{
           if(bookItem.get('id')===basketItem.get('bookFk')){
             const buffer = {
-              book:bookItem.dataValues,
-              count:basketItem.get('count')
+                book:bookItem.dataValues,
+                count:basketItem.get('count')
+
+             
             }
             arBasketList.push(buffer)
           }
@@ -201,8 +203,8 @@ const getDeleteBasketItem = async(req,res)=>{
     })
     res.status(200).send("Запись удалена!")
   }
-
 }
+
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,

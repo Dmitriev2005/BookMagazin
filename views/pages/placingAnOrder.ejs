@@ -1,102 +1,153 @@
+
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
 
-<div class="container content " id="placingAnOrderBody">
-    <h1>Оформление заказа</h1>
-    <div class="row">
-        <div class="col">
-            <div class="fs-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="orange" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-                  </svg>Пункт выдачи
-                  <div id="map"  style="width: 600px; height: 400px;" class="mt-3"></div>
-
-            </div>
-        </div>
-        <div class="col">
-            <button type="button" class="fs-4 align-self-end mt-auto btn btn-outline-success w-50 h-25" @click="handlerBuy(item)">Оплатить</button> 
-            <div class="mt-3">
-                Итого: <b class="fs-5">518₽</b>
-            </div> 
-        </div>
+<div class="container content" id="placingAnOrderBody">
+<h1>Оформление заказа</h1>
+<div class="row mt-3">
+    <div class="col">
+    <div class="fs-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="orange" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+        </svg>Пункт выдачи
+        <div id="map" class="mt-3"></div>
     </div>
-    <div class="row mt-3">
-        <div class="col">
-            <div class="fs-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="green" class="bi bi-currency-dollar" viewBox="0 0 16 16">
-                    <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
-                  </svg>Способ оплаты
-            </div>
-        </div>
     </div>
-    <div class="row mt-3">
-        <div class="col fs-5">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                <label class="form-check-label" for="exampleRadios1">
-                  Картой на сайте
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                <label class="form-check-label" for="exampleRadios2">
-                  При получении
-                </label>
-              </div>
-        </div>
+    <div class="col">
+    <button type="button" class="fs-4 align-self-end mt-auto btn btn-outline-success w-50 h-25" @click="handlerBuy">Оплатить</button> 
+    <div class="mt-3">
+        Итого: <b class="fs-5">{{endPrice}}₽</b>
+    </div> 
     </div>
-    <div class="row">
-        <div class="col">
-            <div class="fs-4">
-
-            </div>
-        </div>
+</div>
+<div class="row mt-3">
+    <div class="col">
+    <div class="fs-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="green" class="bi bi-currency-dollar" viewBox="0 0 16 16">
+        <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718H4zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73l.348.086z"/>
+        </svg>Способ оплаты
     </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col fs-5">
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+        <label class="form-check-label" for="exampleRadios1">
+        Картой на сайте
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+        <label class="form-check-label" for="exampleRadios2">
+        При получении
+        </label>
+    </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+    <div class="fs-4">
+    </div>
+    </div>
+</div>
 </div>
 
 <script>
-    ymaps.ready(init)
-    function init() {
-        // Создаем карту.
-        var myMap = new ymaps.Map("map", {
+const bodyPlacingOrder = Vue.createApp({
+    data() {
+    return {
+        endPrice: 0,
+        order: {
+        address: "",
+        paymentMethod: ""
+        },
+        map: null,
+        searchControl: null,
+        selectedPoint: null
+    };
+    },
+    methods: {
+    getPrice() {
+        this.endPrice = Number(new URL(location.href).searchParams.get('endPrice'));
+    },
+    async handlerBuy() {
+        console.log(this.map)
+        console.log("////////////")
+        console.log(this.searchControl)
+        console.log("////////////")
+        console.log(this.selectedPoint)
+
+        // if (this.order.address !== "") {
+        // const res = await fetch('/api/order', {
+        //     method: 'POST',
+        //     headers: {
+        //     'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(this.order)
+        // });
+
+        // if (res.ok) {
+        //     alert('Заказ успешно оформлен');
+        // } else {
+        //     alert('Ошибка при оформлении заказа');
+        // }
+        // } else {
+        // alert("Не выбран пункт выдачи!");
+        // }
+    },
+    initMap() {
+        ymaps.ready(() => {
+        this.map = new ymaps.Map("map", {
             center: [55.76, 37.64], // Координаты центра карты (Москва).
             zoom: 10
         });
 
-        // Поиск организаций по ключевым словам.
-        var searchControl = new ymaps.control.SearchControl({
+        this.searchControl = new ymaps.control.SearchControl({
             options: {
-                provider: 'yandex#search',
-                resultsPerPage: 10
+            provider: 'yandex#search',
+            resultsPerPage: 10
             }
         });
 
-        // Добавляем поисковую строку на карту.
-        myMap.controls.add(searchControl);
+        this.map.controls.add(this.searchControl);
 
-        // Выполняем поиск.
-        searchControl.search('Отделение почты России в Москве');
+        this.searchControl.search('Отделение почты России в Москве');
 
-        // Обрабатываем результаты поиска.
-        searchControl.events.add('resultselect', function (e) {
-            var index = e.get('index');
-            searchControl.getResult(index).then(function (res) {
-                var coords = res.geometry.getCoordinates();
-                var title = res.properties.get('name');
-                var description = res.properties.get('description');
+        this.searchControl.events.add('resultselect', (e) => {
+            const index = e.get('index');
+            this.searchControl.getResult(index).then((res) => {
+            const coords = res.geometry.getCoordinates();
+            const title = res.properties.get('name');
+            const description = res.properties.get('description');
 
-                var placemark = new ymaps.Placemark(coords, {
-                    balloonContentHeader: title,
-                    balloonContentBody: description,
-                    hintContent: title
-                }, {
-                    preset: 'islands#icon',
-                    iconColor: '#0095b6'
-                });
+            if (this.selectedPoint) {
+                this.map.geoObjects.remove(this.selectedPoint);
+            }
 
-                myMap.geoObjects.add(placemark);
+            this.selectedPoint = new ymaps.Placemark(coords, {
+                balloonContentHeader: title,
+                balloonContentBody: description,
+                hintContent: title
+            }, {
+                preset: 'islands#icon',
+                iconColor: '#0095b6'
+            });
+
+            this.map.geoObjects.add(this.selectedPoint);
+            this.order.address = title;
             });
         });
+        });
     }
+    },
+    mounted() {
+    this.getPrice();
+    this.initMap();
+    }
+});
+
+bodyPlacingOrder.mount('#placingAnOrderBody');
 </script>
-<%-include("../partials/footer")%> 
+<%-include("../partials/footer")%>
+
