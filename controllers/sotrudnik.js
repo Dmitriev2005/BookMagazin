@@ -340,8 +340,52 @@ const getAuthor = async(req,res)=>{
     console.log(arAuthors)
     res.status(200).json(arAuthors)
 }
+const getPageAuthor = (req,res)=>{
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditAuthor',{title:'Добавление автора',namePage:'Добавление автора'})
+}
+const postNewauthor = async(req,res)=>{
+    const author = req.body
+    const responseDB = await Author.create({
+        lastname:author.lastname,
+        authorName:author.authorName
+    })
+    if(!responseDB.isNewRecord)
+        res.status(200).send('Автор добавлен!')
+}
+const getAuthorForEdit = async(req,res)=>{
+    const authorId = Number(req.params.id)
+    const author = await Author.findOne({
+        where:{
+            id:authorId
+        }
+    })
+    res.status(200).json(author.dataValues)
+}
+const postEditAuthor = async(req,res)=>{
+    const author = req.body
+    const resp = await Author.update({
+        lastname:author.lastname,
+        authorName:author.authorName
+    },{
+        where:{
+            id:author.id
+        }
+    })
+    res.status(200).send('Автор отредактирован!')
+
+}
+const getDeleteAuthor = async(req,res)=>{
+    const authorId = Number(req.params.id)
+    const author = await Author.destroy({
+        where:{
+            id:authorId
+        }
+    })
+    res.status(200).send('Автор удален!')
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
     postImg,getNewBookPage,getDeleteBook,getNewGenrePage,
-    getOneGenreManySubgenre,postNewGenreSub,getAllGenre,getEditGenre,getAuthor}
+    getOneGenreManySubgenre,postNewGenreSub,getAllGenre,
+    getEditGenre,getAuthor,getPageAuthor,postNewauthor,getAuthorForEdit,postEditAuthor,getDeleteAuthor}

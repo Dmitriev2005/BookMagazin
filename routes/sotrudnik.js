@@ -4,7 +4,8 @@ import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentAuthor,getAllAuthors,getPubSeries,
     getAllSeriesBooks,postEditBook,postImg,getNewBookPage,
     getDeleteBook,getNewGenrePage,postNewGenreSub,
-    getOneGenreManySubgenre,getAllGenre,getEditGenre,getAuthor} from '../controllers/sotrudnik.js'
+    getOneGenreManySubgenre,getAllGenre,getEditGenre,getAuthor,
+    getPageAuthor,postNewauthor,getAuthorForEdit,postEditAuthor,getDeleteAuthor} from '../controllers/sotrudnik.js'
 import { uplaodS } from '../helpers/functionForServer.js'
 const routerSotrudnik = express.Router()
 
@@ -52,5 +53,15 @@ routerSotrudnik.get('/sotrudnik/json/get-all-genre',getAllGenre)
 routerSotrudnik.get('/sotrudnik/content/get-edit-genre',getEditGenre)
 //Получение авторов
 routerSotrudnik.get('/sotrudnik/json/get-all-author',getAuthor)
+//Получения страницы авторов
+routerSotrudnik.get('/sotrudnik/content/get-page-author',getPageAuthor)
+//Сохранение нового автора
+routerSotrudnik.post('/sotrudnik/save/post-new-author',postNewauthor)
+//Получение автора
+routerSotrudnik.get('/sotrudnik/json/get-author/:id',getAuthorForEdit)
+//Сохранение измененного автора
+routerSotrudnik.post('/sotrudnik/save/post-edit-author',postEditAuthor)
+//Удаление автора
+routerSotrudnik.get('/sotrudnik/save/get-delete-author/:id',getDeleteAuthor)
 
 export{routerSotrudnik}

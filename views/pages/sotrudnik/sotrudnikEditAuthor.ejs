@@ -1,4 +1,98 @@
 <%- include("../../partials/head") %>
-    
+    <div class="container" id="bodyEditAuthor">
+        <h1 class="mt-2"><%=namePage%></h1>
+        <div class="row mt-5">
+            <div class="col-2">
+                <svg style="cursor: pointer;" @click="backHandle" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                  </svg>
+            </div>
+            <div class="col-4">
+                <label for="formFile" class="form-label">Имя</label>
+                <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="author.authorName">
+            </div>
+            <div class="col-4">
+                <label for="formFile" class="form-label">Фамилия</label>
+                <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" placeholder="" aria-label="Search" v-model="author.lastname">
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-2"></div>
+            <div class="col-2">
+                <button type="button" class="btn btn-success" @click="postDataAuthor">Сохранить</button>
+            </div>
+            <div class="col-2" v-if="author.id">
+                <button @click="getDelete" type="button" class="btn btn-danger">Удалить</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        const bodyEditAuthor = Vue.createApp({
+            data(){
+                return{
+                    author:{
+                        authorName:"",
+                        lastname:""
+                    }
+                }
+            },
+            methods:{
+                async postDataAuthor(){
+                    const idAuthor = Number(new URL(location.href).searchParams.get('id'))
+                    if(idAuthor){
+                        const res = await fetch('http://localhost:9001/sotrudnik/save/post-edit-author',{
+                            headers:{
+                                "Content-Type":"application/json"
+                            },
+                            method:'POST',
+                            body:JSON.stringify(this.author)
+                        })
+                        if(res.ok){
+                            alert("Автор отредактирован!")
+                            location.href = 'http://localhost:9001/sotrudnik/content/get-book-list'
+                        }
+                    }else{
+                        const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-author',{
+                            headers:{
+                                "Content-Type":"application/json"
+                            },
+                            method:'POST',
+                            body:JSON.stringify(this.author)
+                        })
+                        if(res.ok){
+                            alert("Автор добавлен!")
+                            location.href = 'http://localhost:9001/sotrudnik/content/get-book-list'
+                        }
+                    }
+                   
+                },
+                async getAuthor(){
+                    const idAuthor = Number(new URL(location.href).searchParams.get('id'))
+                    if(idAuthor){
+                        const res = await fetch(`http://localhost:9001/sotrudnik/json/get-author/${idAuthor}`)
+                        if(res.ok){
+                            this.author = await res.json()
+                        }
+                    }
+                   
+                },
+                async getDelete(){
+                    const idAuthor = Number(new URL(location.href).searchParams.get('id'))
+                    if(idAuthor){
+                        const res = await fetch(`http://localhost:9001/sotrudnik/save/get-delete-author/${idAuthor}`)
+                        if(res.ok){
+                            alert("Автор удален!")
+                            location.href = 'http://localhost:9001/sotrudnik/content/get-book-list'
+                        }
+                    }
+                    
+                }
+            },
+            mounted(){
+                this.getAuthor()
+            }
+        })
+        bodyEditAuthor.mount('#bodyEditAuthor')
+    </script>
 </body>
 </html>
