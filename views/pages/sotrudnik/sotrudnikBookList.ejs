@@ -40,7 +40,20 @@
             </div>
             <list-genre :handle-click-edit-genre="handleClickEditGenre" :list-genre="listGenre" :handler-click-new-genre="handlerClickNewGenre" :handler-click-search=""></list-genre>
           </div>
-          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+            <!--Авторы-->
+            <div class="container">
+              <div class="row">
+                  <div class="col">
+                      <input class="form-control me-2" v-model="search">
+                  </div>      
+                  <div class="col">
+                      <button class="btn btn-outline-success" @click="handlerSearchGenre">Поиск</button>
+                      <button class="btn btn-danger ms-3" type="button" @click="handlerResetGenre">Сброс</button>
+                  </div>
+              </div>
+            </div>
+          </div>
           <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
             <div class="container">
               <div class="row">

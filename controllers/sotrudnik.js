@@ -332,9 +332,16 @@ const getAllGenre = async(req,res)=>{
 const getEditGenre = (req,res)=>{
     res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Редактирование жанра',namePage:'Редактирование жанра'})
 }
-
+const getAuthor = async(req,res)=>{
+    const authors = await Author.findAll()
+    const arAuthors = []
+    authors.forEach(item=>{
+        arAuthors.push(item.dataValues)
+    })
+    res.status(200).json(arAuthors)
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
     postImg,getNewBookPage,getDeleteBook,getNewGenrePage,
-    getOneGenreManySubgenre,postNewGenreSub,getAllGenre,getEditGenre}
+    getOneGenreManySubgenre,postNewGenreSub,getAllGenre,getEditGenre,getAuthor}

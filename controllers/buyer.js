@@ -171,17 +171,20 @@ const getBasketUserList = async(req,res)=>{
           }
       })
       const arBasketList = []
+      const author = await Author.findAll()
       bookList.forEach(bookItem=>{
         basketList.forEach(basketItem=>{
-          if(bookItem.get('id')===basketItem.get('bookFk')){
-            const buffer = {
-                book:bookItem.dataValues,
-                count:basketItem.get('count')
-
-             
+          author.forEach(aItem=>{
+            if(bookItem.get('id')===basketItem.get('bookFk')&&aItem.get('id')===bookItem.get('authorFk')){
+              const buffer = {
+                  book:bookItem.dataValues,
+                  count:basketItem.get('count'),
+                  author:aItem.dataValues
+              }
+              arBasketList.push(buffer)
             }
-            arBasketList.push(buffer)
-          }
+          })
+         
       })
       })
 
