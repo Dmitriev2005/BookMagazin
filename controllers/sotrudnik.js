@@ -326,7 +326,6 @@ const getAllGenre = async(req,res)=>{
         }
         listGenre.push(buffer)
     })
-    console.log(listGenre)
     res.status(200).json(listGenre)
 }
 const getEditGenre = (req,res)=>{
@@ -338,6 +337,7 @@ const getAuthor = async(req,res)=>{
     authors.forEach(item=>{
         arAuthors.push(item.dataValues)
     })
+    console.log(arAuthors)
     res.status(200).json(arAuthors)
 }
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
