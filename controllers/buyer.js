@@ -186,13 +186,28 @@ const getBasketUserList = async(req,res)=>{
 
       res.status(200).json(arBasketList)
   }
-  res.status(500).send("нету")
+  else
+    res.status(500).send("нету")
+}
+const getDeleteBasketItem = async(req,res)=>{
+  const user = shortCut(req)
+  const bookId = req.params.id
+  if(typeof user==="object"){
+    const responseDB = await Basket.destroy({
+      where:{
+        userFk:user.id,
+        bookFk:Number(bookId)
+      }
+    })
+    res.status(200).send("Запись удалена!")
+  }
+
 }
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getRegistration,
-  getListOrder,getShortcut,postAddInBasket,getBasketUserList}
+  getListOrder,getShortcut,postAddInBasket,getBasketUserList,getDeleteBasketItem}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
