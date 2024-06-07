@@ -2,41 +2,41 @@
 
 <div class="container" id="editGenreBody">
     <h1 class="mt-2"><%=namePage%></h1>
-    <genre-subgenre :back-handle="backHandle" :new-sub-genre-item="newSubGenreItem" 
-    :new-subgenre="newSubgenre" :list-sub-genre="listSubGenre" :genre="genre" :handle-change-new="handleChangeNew"
-    :delete-sub-genre-item="deleteSubGenreItem" :post-data-genre="postDataGenre" :id-genre="idGenre"
-    :handle-change-genre="handleChangeGenre"></genre-subgenre>
+    <publishing-ser :back-handle="backHandle" :new-sub-publishing-item="newSubGenreItem" 
+    :new-subpublishing="newSeries" :list-sub-publishing="listPubSer" :publishing="publishing" :handle-change-new="handleChangeNew"
+    :delete-sub-publishing-item="deleteSubGenreItem" :post-data-publishing="postDataGenre" :id-publishing="idPublishing"
+    :handle-change-publishing="handleChangeGenre"></publishing-ser>
 </div>
 <script>
     const editGenreBody = Vue.createApp({
          data(){
             return{
-                idGenre:0,
-                newSubgenre:"",
-                listSubGenre:[],
-                genre:''
+                idPublishing:0,
+                newSeries:"",
+                listPubSer:[],
+                publishing:''
             }
         },
         methods:{
             async getDataGenre(){
-                const idGenre = new URL(location.href).searchParams.get('id')
-                if (idGenre!=="undefined"){
-                    const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-genre-subgenre/${idGenre}`)
+                const idPublishing = new URL(location.href).searchParams.get('id')
+                if (idPublishing!=="undefined"){
+                    const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-publishing-subpublishing/${idPublishing}`)
                     if(res.ok){
                         const buffer = await res.json()
-                        this.genre = buffer.genre.name
-                        this.listSubGenre = buffer.listSub
+                        this.publishing = buffer.publishing.name
+                        this.listPubSer = buffer.listSub
                     }
                 }
                
             },
             async postDataGenre(){
                 const saveData = {
-                    name:this.genre,
-                    listSubGenre:this.listSubGenre
+                    name:this.publishing,
+                    listPubSer:this.listPubSer
                 }
                 console.log(saveData)
-                const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-genre',{
+                const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-publishing',{
                     headers:{
                         "Content-Type":"application/json"
                     },
@@ -55,33 +55,33 @@
             },
             newSubGenreItem(){
                 
-                if(this.newSubgenre!=="")
-                    this.listSubGenre.push(this.newSubgenre)
-                this.newSubgenre=""
+                if(this.newSeries!=="")
+                    this.listPubSer.push(this.newSeries)
+                this.newSeries=""
             },
             deleteSubGenreItem(elem){
-                for(let i = 0; i<this.listSubGenre.length; i++){
-                    if(this.listSubGenre[i]===elem)
-                        this.listSubGenre.splice(i,1)
+                for(let i = 0; i<this.listPubSer.length; i++){
+                    if(this.listPubSer[i]===elem)
+                        this.listPubSer.splice(i,1)
                 }
-                console.log(this.listSubGenre)
+                console.log(this.listPubSer)
             },
             handleChangeNew(el){
-                this.newSubgenre = el.target.value
+                this.newSeries = el.target.value
                 el.target.value = ""
             },
             handleChangeGenre(el){
-                this.genre = el.target.value
-                console.log(this.genre)
+                this.publishing = el.target.value
+                console.log(this.publishing)
             }
         },
         mounted(){
             this.getDataGenre()
         }
     })
-    editGenreBody.component('genreSubgenre',{
-        props:['backHandle','newSubGenreItem','listSubGenre','genre',
-        'newSubgenre','handleChangeNew','deleteSubGenreItem','postDataGenre','idGenre','handleChangeGenre'],
+    editGenreBody.component('publishingSer',{
+        props:['backHandle','newSubGenreItem','listPubSer','publishing',
+        'newSeries','handleChangeNew','deleteSubGenreItem','postDataGenre','idPublishing','handleChangeGenre'],
         template:`
         <div class="row mt-4">
             <div class="col-2">
@@ -111,7 +111,7 @@
                 </svg>
             </div>
         </div>
-        <div class="row mt-2" v-for="item in listSubGenre">
+        <div class="row mt-2" v-for="item in listPubSer">
             <div class="col-2"></div>
             <div class="col-4">
                 <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" aria-label="Search" :value="item">           
@@ -128,7 +128,7 @@
             <div class="col-2">
                 <button type="button" class="btn btn-success" @click="postDataGenre">Сохранить</button>
             </div>
-            <div class="col-2" v-if="idGenre!==0">
+            <div class="col-2" v-if="idPublishing!==0">
                 <button @click="handlerDeleteBook" type="button" class="btn btn-danger">Удалить</button>
             </div>
         </div>  

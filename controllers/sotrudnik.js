@@ -383,9 +383,14 @@ const getDeleteAuthor = async(req,res)=>{
     })
     res.status(200).send('Автор удален!')
 }
+const getNewPub = (req,res)=>{
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Добавление издательства',namePage:'Добавление издательства'})
+
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
     postImg,getNewBookPage,getDeleteBook,getNewGenrePage,
     getOneGenreManySubgenre,postNewGenreSub,getAllGenre,
-    getEditGenre,getAuthor,getPageAuthor,postNewauthor,getAuthorForEdit,postEditAuthor,getDeleteAuthor}
+    getEditGenre,getAuthor,getPageAuthor,postNewauthor,
+    getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub}

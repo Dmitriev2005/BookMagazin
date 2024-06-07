@@ -5,6 +5,7 @@
           <button class="nav-link active mt-2" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Книги</button>
           <button class="nav-link mt-2" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Жанры</button>
           <button class="nav-link mt-2" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false">Авторы</button>
+          <button class="nav-link mt-2" id="v-pills-pub-tab" data-bs-toggle="pill" data-bs-target="#v-pills-pub" type="button" role="tab" aria-controls="v-pills-pub" aria-selected="false">Издательства</button>
           <button class="nav-link mt-2" id="v-pills-orders-tab" data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button" role="tab" aria-controls="v-pills-orders" aria-selected="false">Заказы</button>
 
         </div>
@@ -55,6 +56,23 @@
             </div>
             <list-author :handle-click-edit-author="handleClickEditAuthor" :list-author="listAuthor" :handler-click-new-author="handlerClickNewAuthor"></list-author>
           </div>
+          <div class="tab-content flex-grow-1" id="v-pub-tabContent">
+            <div class="tab-pane fade show active" id="v-pills-pub" role="tabpanel" aria-labelledby="v-pills-pub-tab">
+              <!--Издательства-->
+              <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control me-2" v-model="search">
+                    </div>      
+                    <div class="col">
+                        <button class="btn btn-outline-success" @click="handlerSearch">Поиск</button>
+                        <button class="btn btn-danger ms-3" type="button" @click="handlerReset">Сброс</button>
+                    </div>
+                </div>
+            </div>
+             <list-books :list-pub="listPub" :handle-click-edit-pub="handleClickEditPub" 
+             :handler-click-new-pub="handlerClickNewPub" ></list-books>
+            </div>
           <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
             <div class="container">
               <div class="row">
@@ -95,8 +113,8 @@
               listBuffer:[],
               search:"",
               listGenre:[],
-              listAuthor:[]
-              
+              listAuthor:[],
+              listPub:[]
             }
           },
           methods:{
@@ -165,7 +183,6 @@
               const res = await fetch('http://localhost:9001/sotrudnik/json/get-all-author')
               if(res.ok){
                 this.listAuthor = await res.json()
-                console.log(this.listAuthor)
               }
             },
             handlerClickNewAuthor(){
@@ -173,12 +190,23 @@
             },
             handleClickEditAuthor(el){
               location.href = `http://localhost:9001/sotrudnik/content/get-page-author?id=${el.id}`
+            },
+            async getListPublishing(){
+              const res = await fetch('http://localhost:9001/sotrudnik/content/get-publishing')
+              if(res.ok){
+                this.listSeries = await res.json()
+                console.log(this.listSeries)
+              }
+            },
+            handlerClickNewPub(){
+              location.href = 'http://localhost:9001/sotrudnik/content/get-publishing'
             }
           },
           mounted(){
             this.getListBook()
             this.getListGenre()
             this.getListAuthor()
+            this.getListPublishing()
           }
         })
         listBookBody.component('list-books',{
@@ -272,6 +300,35 @@
                       <template v-if="listAuthor.length>0">
                         <td>{{item.authorName}}</td>
                         <td>{{item.lastname}}</td>
+                      </template>
+                    </tr>
+                  </tbody>
+            </table>
+          `
+        })
+        listBookBody.component('list-publishing', {
+          props:['listPub','handlerClickNewPub','handleClickEditPub'],
+          template:`
+          <button type="button" @click="handlerClickNewPub" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg></button>
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Издательство</th>
+                        <th scope="col">Серии</th>
+                    </tr>
+                </thead>
+                <tbody style="cursor:pointer;">
+                    <tr v-for="item in listPub" @click="handleClickEditPub(item.name)">
+                      <template v-if="item.listPub.length>0">
+                        <td>{{item.genre.name}}</td>
+                        <td>
+                          <template v-for="serItem in item.listSer">
+                            {{serItem.name+" "}}
+                          </template>
+                        </td>
                       </template>
                     </tr>
                   </tbody>
