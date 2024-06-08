@@ -385,7 +385,25 @@ const getDeleteAuthor = async(req,res)=>{
 }
 const getNewPub = (req,res)=>{
     res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Добавление издательства',namePage:'Добавление издательства'})
-
+}
+const getPubSeriesConstraint = async(req,res)=>{
+    const pub = await Publishing.findAll()
+    const series = await Series.findAll()
+    const listPub = []
+    pub.forEach(pItem=>{
+        const listSeries = []
+        series.forEach(sItem=>{
+            if(sItem.get('publishingFk')===pItem.get('id'))
+                listSeries.push(sItem.dataValues)
+        })
+        const buffer = {
+            pub:pItem.dataValues,
+            listSeries:listSeries
+        }
+        listPub.push(buffer)
+    })
+    res.status(200).json(listPub)
+    
 }
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
@@ -393,4 +411,4 @@ export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     postImg,getNewBookPage,getDeleteBook,getNewGenrePage,
     getOneGenreManySubgenre,postNewGenreSub,getAllGenre,
     getEditGenre,getAuthor,getPageAuthor,postNewauthor,
-    getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub}
+    getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub,getPubSeriesConstraint}

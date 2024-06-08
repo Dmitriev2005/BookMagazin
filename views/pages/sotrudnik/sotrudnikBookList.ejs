@@ -56,8 +56,7 @@
             </div>
             <list-author :handle-click-edit-author="handleClickEditAuthor" :list-author="listAuthor" :handler-click-new-author="handlerClickNewAuthor"></list-author>
           </div>
-          <div class="tab-content flex-grow-1" id="v-pub-tabContent">
-            <div class="tab-pane fade show active" id="v-pills-pub" role="tabpanel" aria-labelledby="v-pills-pub-tab">
+            <div class="tab-pane fade" id="v-pills-pub" role="tabpanel" aria-labelledby="v-pills-pub-tab">
               <!--Издательства-->
               <div class="container">
                 <div class="row">
@@ -69,9 +68,9 @@
                         <button class="btn btn-danger ms-3" type="button" @click="handlerReset">Сброс</button>
                     </div>
                 </div>
-            </div>
-             <list-books :list-pub="listPub" :handle-click-edit-pub="handleClickEditPub" 
-             :handler-click-new-pub="handlerClickNewPub" ></list-books>
+              </div>
+             <list-publishing :list-pub="listPub" :handle-click-edit-pub="handleClickEditPub" 
+             :handler-click-new-pub="handlerClickNewPub" ></list-publishing>
             </div>
           <div class="tab-pane fade" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
             <div class="container">
@@ -127,7 +126,6 @@
             async getListGenre(){ 
               const res = await fetch('http://localhost:9001/sotrudnik/json/get-all-genre')
               this.listGenre = await res.json()
-              console.log(this.listGenre)
             }, 
             clickBookHandler(item){
               location.href=`http://localhost:9001/sotrudnik/content/get-edit-book?id=${item.id}`
@@ -192,14 +190,17 @@
               location.href = `http://localhost:9001/sotrudnik/content/get-page-author?id=${el.id}`
             },
             async getListPublishing(){
-              const res = await fetch('http://localhost:9001/sotrudnik/content/get-publishing')
+              const res = await fetch('http://localhost:9001/sotrudnik/json/get-pub-series')
               if(res.ok){
-                this.listSeries = await res.json()
-                console.log(this.listSeries)
+                this.listPub = await res.json()
+                
               }
             },
             handlerClickNewPub(){
               location.href = 'http://localhost:9001/sotrudnik/content/get-publishing'
+            },
+            handleClickEditPub(){
+
             }
           },
           mounted(){
@@ -309,31 +310,30 @@
         listBookBody.component('list-publishing', {
           props:['listPub','handlerClickNewPub','handleClickEditPub'],
           template:`
-          <button type="button" @click="handlerClickNewPub" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+           <button type="button" @click="handlerClickNewGenre" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg></button>
             
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Издательство</th>
-                        <th scope="col">Серии</th>
+                        <th scope="col">Жанр</th>
+                        <th scope="col">Поджанры</th>
                     </tr>
                 </thead>
                 <tbody style="cursor:pointer;">
-                    <tr v-for="item in listPub" @click="handleClickEditPub(item.name)">
-                      <template v-if="item.listPub.length>0">
-                        <td>{{item.genre.name}}</td>
+                    <tr v-for="item in listPub" @click="handleClickEditPub(item.pub)">
+                      <template v-if="item.listSeries.length>0">
+                        <td>{{item.pub.name}}</td>
                         <td>
-                          <template v-for="serItem in item.listSer">
+                          <template v-for="serItem in item.listSeries">
                             {{serItem.name+" "}}
                           </template>
                         </td>
                       </template>
                     </tr>
                   </tbody>
-            </table>
-          `
+            </table>`
         })
         listBookBody.mount('#listBookBody')
       </script>
