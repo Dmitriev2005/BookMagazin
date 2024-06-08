@@ -28,12 +28,22 @@ const postAuthorisation = async(req,res)=>{
             id:responseDB.get('id'),
             email:responseDB.get('email'),
             lastname:responseDB.get('lastname'),
-            name:responseDB.get('name')
+            name:responseDB.get('name'),
+            type:userFromClient.type
         }
         const token = jwt.sign(userAuthorisation, secretWord)
 
         res.cookie('authorisation_token',token,{httpOnly:true})
-        res.status(200).send("You authorisation!")
+        if(responseDB.get('type')==='работник'){
+            res.status(200).json({
+                url:'/sotrudnik/content/get-book-list'
+            })
+        }
+        else{
+            res.status(200).json({
+                url:'/'
+            })
+        }
     } 
     else
         res.status(403).send("There is no such user!")

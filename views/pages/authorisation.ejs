@@ -61,8 +61,10 @@
                 })
                 if(res.ok){
                     alert("Вы авторизированы!")
-                    location.href = 'http://localhost:9001'
+                    const buffer = await res.json()
+                    location.href = 'http://localhost:9001'+buffer.url
                 }
+                
                 else{
                     alert("Ошибка входа!")
                     location.reload()

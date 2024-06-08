@@ -33,6 +33,16 @@
                       <li class="nav-item">
                         <a class="nav-link"><%=user.email%></a>
                       </li>
+                      <%if(user.type.toLowerCase().trim()==="работник"){%>
+                      <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:9001/sotrudnik/content/get-book-list">Панель работника</a>
+                      </li>
+                      <%}%>
+                      <%if (user.type.toLowerCase().trim()==="администратор"){%>
+                      <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:9001/content/get-autoris">Панель администратора</a>
+                      </li>
+                      <%}%>
                     <%}%> 
                   
                 </ul>
