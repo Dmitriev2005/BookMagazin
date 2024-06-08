@@ -3,7 +3,8 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getImage,getBookPage,getBookJson,getSearch, 
     getBasket,getPlacingOrder,getPayForm, 
     getRegistration,getListOrder,
-    getShortcut,postAddInBasket,getBasketUserList,getDeleteBasketItem} from '../controllers/buyer.js'
+    getShortcut,postAddInBasket,getBasketUserList,
+    getDeleteBasketItem,getBookForSubgenre,getBookFromSub} from '../controllers/buyer.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
@@ -37,7 +38,10 @@ buyerRouter.post('/buyer/save/add-book-in-basket',postAddInBasket)
 buyerRouter.get('/buyer/get-basket-list',getBasketUserList)
 //Удалить книгу из корзины
 buyerRouter.get('/buyer/basket-delete-item/:id',getDeleteBasketItem)
-
+//Получить страницу поджанра с книгами
+buyerRouter.get('/buyer/content/get-book-choose-subgenre',getBookForSubgenre)
+//Получить список книг согласно поджанру
+buyerRouter.get('/buyer/json/get-book-from-subgenre/:id',getBookFromSub)
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!
 buyerRouter.get('/sh',getShortcut)
 

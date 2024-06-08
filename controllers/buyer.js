@@ -58,8 +58,6 @@ const getNewBookRow = async(req,res)=>{
     
  })
  res.status(200).json(outputBook)
-
-
 }
 const getImage = (req,res)=>{
   const imageName = req.params.imageName
@@ -112,10 +110,9 @@ const getBookJson = async(req,res)=>{
       bufferForReview.arReview.push(bufferBuffer)
    
   }
-  console.log(bufferForReview.arReview)
+
   //Склеиваем объект книги с объектов озывов и пользователей
   const generalInfoBook = {...book.dataValues, ...bufferForReview}
-  //console.log(generalInfoBook)
   res.status(200).json(generalInfoBook)
 }
 const getSearch = (req,res) =>{
@@ -156,8 +153,7 @@ const postAddInBasket = async(req,res)=>{
       bookFk:book.id,
       count:1
     })
-    console.log(user)
-    console.log(book)
+
   }
   res.status(200).send("Книга добавлена в корзину")
 }
@@ -207,12 +203,43 @@ const getDeleteBasketItem = async(req,res)=>{
     res.status(200).send("Запись удалена!")
   }
 }
+const getBookForSubgenre = (req,res)=>{
+  const user = shortCut(req)
+  res.status(200).render('./pages/subgenreChoose',{title:'Заказы',user})
 
+}
+const getBookFromSub = async(req,res)=>{
+  const idSub = req.params.id
+  const responseSub1 = await Subgenre.findByPk(Number(idSub))
+  const responseSub = await SubgenreBook.findAll({
+    where:{
+      subgenreFk:Number(idSub)
+    }
+  })
+  const responseBook = await Book.findAll()
+  const arAnswer = []
+  const author = await Author.findAll()
+
+
+  author.forEach(aItem=>{
+    responseSub.forEach(sItem=>{
+      responseBook.forEach(bItem=>{
+        if(sItem.get('bookFk')===bItem.get('id')&&aItem.get('id')===bItem.get('authorFk')){
+          arAnswer.push({...bItem.dataValues , ...{lastname:aItem.get('lastname'),authorName:aItem.get('authorName')}})
+        }
+      })
+    })
+  })
+  
+  res.status(200).json({bookList:arAnswer,namePage:responseSub1})
+
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getRegistration,
-  getListOrder,getShortcut,postAddInBasket,getBasketUserList,getDeleteBasketItem}
+  getListOrder,getShortcut,postAddInBasket,
+  getBasketUserList,getDeleteBasketItem,getBookForSubgenre,getBookFromSub}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

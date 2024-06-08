@@ -10,7 +10,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="orange" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
         </svg>Пункт выдачи
-        <div id="map" class="mt-3"></div>
+        <div id="map" style="width: 600px; height: 400px;"></div>
     </div>
     </div>
     <div class="col">
@@ -53,101 +53,94 @@
 </div>
 </div>
 
-<script>
-const bodyPlacingOrder = Vue.createApp({
-    data() {
-    return {
-        endPrice: 0,
-        order: {
-        address: "",
-        paymentMethod: ""
-        },
-        map: null,
-        searchControl: null,
-        selectedPoint: null
-    };
-    },
-    methods: {
-    getPrice() {
-        this.endPrice = Number(new URL(location.href).searchParams.get('endPrice'));
-    },
-    async handlerBuy() {
-        console.log(this.map)
-        console.log("////////////")
-        console.log(this.searchControl)
-        console.log("////////////")
-        console.log(this.selectedPoint)
+<script type="text/javascript">
 
-        // if (this.order.address !== "") {
-        // const res = await fetch('/api/order', {
-        //     method: 'POST',
-        //     headers: {
-        //     'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(this.order)
-        // });
+var myMap, searchControl, адресПунктаВыдачи;
 
-        // if (res.ok) {
-        //     alert('Заказ успешно оформлен');
-        // } else {
-        //     alert('Ошибка при оформлении заказа');
-        // }
-        // } else {
-        // alert("Не выбран пункт выдачи!");
-        // }
-    },
-    initMap() {
-        ymaps.ready(() => {
-        this.map = new ymaps.Map("map", {
-            center: [55.76, 37.64], // Координаты центра карты (Москва).
-            zoom: 10
-        });
+function init() {
+    // Создаем карту.
+    myMap = new ymaps.Map("map", {
+        center: [55.76, 37.64], // Координаты центра карты (Москва).
+        zoom: 10
+    });
 
-        this.searchControl = new ymaps.control.SearchControl({
-            options: {
+    // Поиск организаций по ключевым словам.
+    searchControl = new ymaps.control.SearchControl({
+        options: {
             provider: 'yandex#search',
             resultsPerPage: 10
-            }
-        });
+        }
+    });
 
-        this.map.controls.add(this.searchControl);
+    // Добавляем поисковую строку на карту.
+    myMap.controls.add(searchControl);
 
-        this.searchControl.search('Отделение почты России в Москве');
+    // Выполняем поиск.
+    searchControl.search('пункт выдачи заказов в Москве');
 
-        this.searchControl.events.add('resultselect', (e) => {
-            const index = e.get('index');
-            this.searchControl.getResult(index).then((res) => {
-            const coords = res.geometry.getCoordinates();
-            const title = res.properties.get('name');
-            const description = res.properties.get('description');
+    // Обрабатываем результаты поиска.
+    searchControl.events.add('load', function (event) {
+        if (event.get('type') === 'submit') {
+            var results = searchControl.getResultsArray();
+            results.forEach(function (result) {
+                var coords = result.geometry.getCoordinates();
+                var title = result.properties.get('name');
+                var address = result.properties.get('description');
 
-            if (this.selectedPoint) {
-                this.map.geoObjects.remove(this.selectedPoint);
-            }
-
-            this.selectedPoint = new ymaps.Placemark(coords, {
-                balloonContentHeader: title,
-                balloonContentBody: description,
-                hintContent: title
-            }, {
-                preset: 'islands#icon',
-                iconColor: '#0095b6'
+                var placemark = createPlacemark(coords, title, address);
+                myMap.geoObjects.add(placemark);
             });
+        }
+    });
 
-            this.map.geoObjects.add(this.selectedPoint);
-            this.order.address = title;
-            });
-        });
-        });
-    }
-    },
-    mounted() {
-    this.getPrice();
-    this.initMap();
-    }
-});
+    // Обработчик кликов по карте
+    myMap.events.add('click', function (e) {
+        var coords = e.get('coords');
+        console.log('Координаты клика: ', coords);
 
-bodyPlacingOrder.mount('#placingAnOrderBody');
+        // Использование геокодера для получения адреса
+        ymaps.geocode(coords).then(function (res) {
+            var firstGeoObject = res.geoObjects.get(0);
+
+            var address = firstGeoObject.getAddressLine();
+            console.log('Адрес метки: ', address);
+
+            // Создание и добавление метки с полученным адресом
+            var placemark = createPlacemark(coords, 'Новая метка', address);
+
+            myMap.geoObjects.add(placemark);
+        });
+    });
+}
+
+function createPlacemark(coords, title, address) {
+    var placemark = new ymaps.Placemark(coords, {
+        balloonContentHeader: title,
+        balloonContentBody: address,
+        hintContent: title
+    }, {
+        preset: 'islands#icon',
+        iconColor: '#0095b6'
+    });
+
+    // Добавляем обработчик клика по метке
+    placemark.events.add('click', function (e) {
+        console.log('Метка кликнута, адрес: ', address);
+        адресПунктаВыдачи = address;  // Сохраняем адрес в переменную
+        workWithAddress(address);
+    });
+
+    return placemark;
+}
+
+// Пример функции для работы с полученным адресом
+function workWithAddress(address) {
+    console.log('Работаем с адресом: ', address);
+    // Ваш код для работы с адресом
+}
+
+ymaps.ready(init);
+
 </script>
 <%-include("../partials/footer")%>
 
