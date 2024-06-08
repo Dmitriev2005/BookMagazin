@@ -2,10 +2,10 @@
 
 <div class="container" id="editGenreBody">
     <h1 class="mt-2"><%=namePage%></h1>
-    <publishing-ser :back-handle="backHandle" :new-sub-publishing-item="newSubGenreItem" 
-    :new-subpublishing="newSeries" :list-sub-publishing="listPubSer" :publishing="publishing" :handle-change-new="handleChangeNew"
-    :delete-sub-publishing-item="deleteSubGenreItem" :post-data-publishing="postDataGenre" :id-publishing="idPublishing"
-    :handle-change-publishing="handleChangeGenre"></publishing-ser>
+    <publishing-ser :back-handle="backHandle" :new-ser-pub-item="newSerPubItem" 
+    :new-series="newSeries" :list-pub-ser="listPubSer" :publishing="publishing" :handle-change-new="handleChangeNew"
+    :delete-sub-publishing-item="deleteSubGenreItem" :post-data-pub="postDataPub" :id-publishing="idPublishing"
+    :handle-change-pub="handleChangePub"></publishing-ser>
 </div>
 <script>
     const editGenreBody = Vue.createApp({
@@ -30,7 +30,7 @@
                 }
                
             },
-            async postDataGenre(){
+            async postDataPub(){
                 const saveData = {
                     name:this.publishing,
                     listPubSer:this.listPubSer
@@ -44,7 +44,7 @@
                     body:JSON.stringify(saveData)
                 })
                 if(res.ok){
-                    alert("Жанр добавлен!")
+                    alert("Издательство добавлен!")
                     location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
                 }
 
@@ -53,7 +53,7 @@
             backHandle(){
                 location.href='http://localhost:9001/sotrudnik/content/get-book-list'
             },
-            newSubGenreItem(){
+            newSerPubItem(){
                 
                 if(this.newSeries!=="")
                     this.listPubSer.push(this.newSeries)
@@ -70,7 +70,7 @@
                 this.newSeries = el.target.value
                 el.target.value = ""
             },
-            handleChangeGenre(el){
+            handleChangePub(el){
                 this.publishing = el.target.value
                 console.log(this.publishing)
             }
@@ -80,8 +80,8 @@
         }
     })
     editGenreBody.component('publishingSer',{
-        props:['backHandle','newSubGenreItem','listPubSer','publishing',
-        'newSeries','handleChangeNew','deleteSubGenreItem','postDataGenre','idPublishing','handleChangeGenre'],
+        props:['backHandle','newSerPubItem','listPubSer','publishing',
+        'newSeries','handleChangeNew','deleteSubGenreItem','postDataPub','idPublishing','handleChangePub'],
         template:`
         <div class="row mt-4">
             <div class="col-2">
@@ -90,14 +90,14 @@
                 </svg>
             </div>
             <div class="col-4">
-                <label for="exampleFormControlTextarea1" class="form-label">Название жанра</label>
-                <input @change="handleChangeGenre" class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" >
+                <label for="exampleFormControlTextarea1" class="form-label">Название Издательства</label>
+                <input @change="handleChangePub" class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" >
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-2"></div>
             <div class="col-4">
-                <div class="form-label">Добавить поджанр</div>
+                <div class="form-label">Добавиние серии</div>
             </div>
         </div>
         <div class="row mb-4">
@@ -106,7 +106,7 @@
                 <input class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" @change="handleChangeNew">           
             </div>
             <div class="col-2">
-                <svg @click="newSubGenreItem" xmlns="http://www.w3.org/2000/svg"  width="36" height="36" fill="green" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                <svg @click="newSerPubItem" xmlns="http://www.w3.org/2000/svg"  width="36" height="36" fill="green" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z"/>
                 </svg>
             </div>
@@ -126,7 +126,7 @@
         <div class="row mt-5">
             <div class="col-2"></div>
             <div class="col-2">
-                <button type="button" class="btn btn-success" @click="postDataGenre">Сохранить</button>
+                <button type="button" class="btn btn-success" @click="postDataPub">Сохранить</button>
             </div>
             <div class="col-2" v-if="idPublishing!==0">
                 <button @click="handlerDeleteBook" type="button" class="btn btn-danger">Удалить</button>

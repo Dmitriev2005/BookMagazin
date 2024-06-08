@@ -384,7 +384,7 @@ const getDeleteAuthor = async(req,res)=>{
     res.status(200).send('Автор удален!')
 }
 const getNewPub = (req,res)=>{
-    res.status(200).render('./pages/sotrudnik/sotrudnikEditGenre',{title:'Добавление издательства',namePage:'Добавление издательства'})
+    res.status(200).render('./pages/sotrudnik/sotrudnikEditPublishing',{title:'Добавление издательства',namePage:'Добавление издательства'})
 }
 const getPubSeriesConstraint = async(req,res)=>{
     const pub = await Publishing.findAll()
@@ -405,10 +405,25 @@ const getPubSeriesConstraint = async(req,res)=>{
     res.status(200).json(listPub)
     
 }
+const postNewPub = async(req,res)=>{
+    const newPubSer = req.body
+    const arSeries = newPubSer.listPubSer
+    const answerPub = await Publishing.create({
+        name:newPubSer.name
+    })
+
+    for(let i = 0; i<arSeries.length; i++){
+        const answerSeries = await Series.create({
+            publishingFk:answerPub.get('id'),
+            name:arSeries[i]
+        })
+    }
+    res.status(200).send("Жанр добавлен!")
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
     postImg,getNewBookPage,getDeleteBook,getNewGenrePage,
     getOneGenreManySubgenre,postNewGenreSub,getAllGenre,
     getEditGenre,getAuthor,getPageAuthor,postNewauthor,
-    getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub,getPubSeriesConstraint}
+    getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub,getPubSeriesConstraint,postNewPub}
