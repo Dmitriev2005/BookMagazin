@@ -1,7 +1,7 @@
 <%- include("../../partials/head") %>
 
 <div class="container" id="editGenreBody">
-    <h1 class="mt-2"><%=namePage%></h1>
+    <h1 class="mt-2">{{namePage}}</h1>
     <publishing-ser :back-handle="backHandle" :new-ser-pub-item="newSerPubItem" 
     :new-series="newSeries" :list-pub-ser="listPubSer" :publishing="publishing" :handle-change-new="handleChangeNew"
     :delete-sub-publishing-item="deleteSubGenreItem" :post-data-pub="postDataPub" :id-publishing="idPublishing"
@@ -14,39 +14,60 @@
                 idPublishing:0,
                 newSeries:"",
                 listPubSer:[],
-                publishing:''
+                publishing:'',
+                namePage:""
             }
         },
         methods:{
             async getDataGenre(){
                 const idPublishing = new URL(location.href).searchParams.get('id')
                 if (idPublishing!=="undefined"){
+                    this.namePage = "Редактировать издательство"
                     const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-publishing-subpublishing/${idPublishing}`)
                     if(res.ok){
                         const buffer = await res.json()
-                        this.publishing = buffer.publishing.name
-                        this.listPubSer = buffer.listSub
+                        this.publishing = buffer.pub.name
+                        this.listPubSer = buffer.listSeries
+                        console.log(buffer)
                     }
                 }
-               
+                else
+                    namePage = "Добавить издательство"
             },
             async postDataPub(){
+                const idPublishing = new URL(location.href).searchParams.get('id')
                 const saveData = {
                     name:this.publishing,
                     listPubSer:this.listPubSer
                 }
                 console.log(saveData)
-                const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-publishing',{
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    method:'POST',
-                    body:JSON.stringify(saveData)
-                })
-                if(res.ok){
-                    alert("Издательство добавлен!")
-                    location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                if (idPublishing!=="undefined"){
+                    const res = await fetch('http://localhost:9001/sotrudnik/save/post-edit-publishing/'+idPublishing,{
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:'POST',
+                        body:JSON.stringify(saveData)
+                    })
+                    if(res.ok){
+                        alert("Издательство добавлен!")
+                        location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                    }
                 }
+                else{
+                    const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-publishing',{
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:'POST',
+                        body:JSON.stringify(saveData)
+                    })
+                    if(res.ok){
+                        alert("Издательство добавлен!")
+                        location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                    }
+                }
+                
 
             },
             //Обработчики

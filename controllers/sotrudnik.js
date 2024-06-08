@@ -9,6 +9,7 @@ import 'dotenv/config'
 import 'fs'
 import path from "path"
 import { title } from "process"
+import { serialize } from "v8"
 
 const getOrder = (req,res)=>{
     const user = shortCut(req)
@@ -564,10 +565,68 @@ const postNewPub = async(req,res)=>{
     else
         res.status(404).send("Страница не найдена!")   
 }
+const getJsonEditPub = async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const idPub = Number(req.params.id)
+        const responsePublish = await Publishing.findOne({
+            where:{
+                id:idPub
+            }
+        })
+        const responseSeries = await Series.findAll({
+            where:{
+                publishingFk:idPub
+            }
+        })
+        const resAr = []
+        responseSeries.forEach(item=>{
+            resAr.push(item.dataValues)
+        })
+        const buffer = {
+            pub:responsePublish.dataValues.name,
+            listSeries:resAr
+        }
+        res.status(200).json(buffer)  
+    }
+    else
+        res.status(404).send("Страница не найдена!")   
+}
+const postEditPub = async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const save = req.body
+        const idPub = Number(req.params.id)
+        const pub = save.name
+        const listSer = save.listPubSer
+        const responsePub = await Publishing.update({
+            name:pub
+        },{
+            where:{
+                id:idPub
+            }
+        })
+        await Series.destroy({
+            where:{
+                publishingFk:idPub
+        }})
+        for(let i=0; i<listSer.length; i++){
+            await Series.create({
+                name: listSer[i].name
+            })
+        }
+        res.status(200).send("Издание отредактировано!")   
+
+    }
+    else
+        res.status(404).send("Страница не найдена!")   
+
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
     postImg,getNewBookPage,getDeleteBook,getNewGenrePage,
     getOneGenreManySubgenre,postNewGenreSub,getAllGenre,
     getEditGenre,getAuthor,getPageAuthor,postNewauthor,
-    getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub,getPubSeriesConstraint,postNewPub}
+    getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub,
+    getPubSeriesConstraint,postNewPub,getJsonEditPub,postEditPub}

@@ -2,7 +2,7 @@
 <%-include("../partials/header")%>
 <div class="container content" id="bodySub">
     <h2>{{namePage}}</h2>
-   <subgenre-book :list-book="listBook"></subgenre-book>
+   <subgenre-book :list-book="listBook" :handler-buy="handlerBuy"></subgenre-book>
 </div>
 <script>
     const bodySub = Vue.createApp({
@@ -26,6 +26,9 @@
             },
             getIdSubgenre(){
                 this.idSubgenre = Number(new URL(location.href).searchParams.get('id')) 
+            },
+            async handlerBuy(item){
+                location.href = 'http://localhost:9001/content/get-book/'+item.id           
             }
         },
         mounted(){
@@ -34,7 +37,7 @@
         }
     })
     bodySub.component('subgenre-book',{
-        props:['listBook'],
+        props:['listBook','handlerBuy'],
         template:`
              <div class="row">
                <div class="col">

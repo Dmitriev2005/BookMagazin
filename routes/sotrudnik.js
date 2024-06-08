@@ -6,7 +6,8 @@ import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getDeleteBook,getNewGenrePage,postNewGenreSub,
     getOneGenreManySubgenre,getAllGenre,getEditGenre,getAuthor,
     getPageAuthor,postNewauthor,getAuthorForEdit,
-    postEditAuthor,getDeleteAuthor,getNewPub,getPubSeriesConstraint,postNewPub} from '../controllers/sotrudnik.js'
+    postEditAuthor,getDeleteAuthor,getNewPub,getPubSeriesConstraint,
+    postNewPub,getJsonEditPub,postEditPub} from '../controllers/sotrudnik.js'
 import { uplaodS } from '../helpers/functionForServer.js'
 const routerSotrudnik = express.Router()
 
@@ -68,6 +69,11 @@ routerSotrudnik.get('/sotrudnik/save/get-delete-author/:id',getDeleteAuthor)
 routerSotrudnik.get('/sotrudnik/content/get-publishing',getNewPub)
 //Получение издательств и связанных с ними серии 
 routerSotrudnik.get('/sotrudnik/json/get-pub-series',getPubSeriesConstraint)
+//Сохранить новое издетельство
 routerSotrudnik.post('/sotrudnik/save/post-new-publishing',postNewPub)
+//Получить редактируемое издательство
+routerSotrudnik.get('/sotrudnik/json/get-one-publishing-subpublishing/:id',getJsonEditPub)
+//Сохранить измененное издательство 
+routerSotrudnik.post('/sotrudnik/save/post-edit-publishing/:id',postEditPub)
 
 export{routerSotrudnik}
