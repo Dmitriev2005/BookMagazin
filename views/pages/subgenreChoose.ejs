@@ -66,7 +66,7 @@
                     </div>
                <div class="col">
                  <div class="row ">
-                     <div class="d-flex flex-column col-2 mt-3"  v-for="item in listBook">
+                     <div class="d-flex flex-column col-3 mt-4"  v-for="item in listBook">
                         <img class="w-100"  height="280"  :src="'http://localhost:9001/get-image/'+item.id+'.jpg'">
                         <div v-if="item.discount!==null" class="fw-bold fs-4">
                         {{Math.floor(item.price-item.price*(item.discount/100))+"₽"}}<del class="mx-2">{{item.price+"₽"}}</del>

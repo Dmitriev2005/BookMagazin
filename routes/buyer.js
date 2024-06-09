@@ -4,7 +4,8 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getBasket,getPlacingOrder,getPayForm, 
     getRegistration,getListOrder,
     getShortcut,postAddInBasket,getBasketUserList,
-    getDeleteBasketItem,getBookForSubgenre,getBookFromSub,postSaveReviewBuyer} from '../controllers/buyer.js'
+    getDeleteBasketItem,getBookForSubgenre,
+    getBookFromSub,postSaveReviewBuyer,getSearchJSON} from '../controllers/buyer.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
@@ -44,6 +45,8 @@ buyerRouter.get('/buyer/content/get-book-choose-subgenre',getBookForSubgenre)
 buyerRouter.get('/buyer/json/get-book-from-subgenre/:id',getBookFromSub)
 //Отправка отзыва клиентом на модерацию
 buyerRouter.post('/buyer/save/review',postSaveReviewBuyer)
+//Получение искомых книг через главный поиск
+buyerRouter.get('/buyer/json/get-search/:search',getSearchJSON)
 
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!
 buyerRouter.get('/sh',getShortcut)

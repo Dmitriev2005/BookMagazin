@@ -255,12 +255,35 @@ const postSaveReviewBuyer = async(req,res)=>{
     res.status(404).send("нету")
 
 }
+const getSearchJSON = async(req,res)=>{
+  const search = req.params.search
+  const books = await Book.findAll()
+ const author = await Author.findAll()
+ const outputBook = []
+
+ author.forEach(aItem=>{
+    books.forEach(bItem=>{
+      if(aItem.dataValues.id===bItem.dataValues.authorFk)
+        outputBook.push({...aItem.dataValues, ...bItem.dataValues})
+    })    
+ })
+ const endAr = [] 
+ outputBook.forEach(item=>{
+  if(item.name.includes(search)||item.authorName.includes(search)||item.lastname.includes(search)){
+    endAr.push(item)
+  }
+ })
+ res.status(200).json(endAr)
+
+  //const responseAuthor
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getRegistration,
   getListOrder,getShortcut,postAddInBasket,
-  getBasketUserList,getDeleteBasketItem,getBookForSubgenre,getBookFromSub,postSaveReviewBuyer}
+  getBasketUserList,getDeleteBasketItem,
+  getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
