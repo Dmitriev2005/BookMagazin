@@ -8,4 +8,5 @@ autoRegRouter.get('/content/get-autoris',getAuthorisation)
 autoRegRouter.post('/save/post-autoris',postAuthorisation)
 //Удалить куку сесии пользователя
 autoRegRouter.get('/delete-cookie',getDeleteCookie)
+
 export {autoRegRouter}

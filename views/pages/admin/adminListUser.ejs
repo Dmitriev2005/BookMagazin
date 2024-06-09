@@ -1,6 +1,6 @@
 <%- include("../../partials/head") %>
 <body>
-    <div class="d-flex align-items-start mt-3 ms-3">
+    <div class="d-flex align-items-start mt-3 ms-3" id="bodyAdminList">
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <button class="nav-link active mt-2" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">Пользователи</button>
           <button class="nav-link mt-2" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false">Неодобренные комментарии</button>
@@ -15,9 +15,48 @@
                     <div class="col">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </div>
+                    <user-list :user-list="userList" :review-list="reviewList"></user-list>
                 </div>
             </div>
-            <button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+            
+          </div>
+          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+            <review-list :review-list="reviewList"></review-list>
+          </div>
+          <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+        </div>
+      </div>
+      <script>
+        const bodyAdminList = Vue.createApp({
+          data(){
+            return{
+              userList:[],
+              reviewList:[]
+            }
+          },
+          methods:{
+            async getUser(){
+            const res = await fetch('http://localhost:9001/admin/json/get-user-list')
+            if(res.ok){
+              this.userList = await res.json()
+            }
+            },
+            async getReview(){
+              const res = await fetch('http://localhost:9001/admin/json/get-review-list')
+              if(res.ok){
+                this.reviewList = await res.json()
+              }
+            }
+          },
+          mounted(){
+            this.getUser()
+            this.getReview()
+          }
+        })
+        bodyAdminList.component('user-list',{
+          props:['userList'],
+          template:`<button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg></button>
             
@@ -26,21 +65,27 @@
                     <tr>
                         <th scope="col">ID Пользователя</th>
                         <th scope="col">Почта</th>
-                        <th scope="col">ФИО</th>
+                        <th scope="col">Фамилия, имя</th>
                         <th scope="col">Роль</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                      <th scope="row">2000</th>
-                      <td>ivanov_ii@mail.ru</td>
-                      <td>Иванов Иван Иванович</td>
-                      <td>Сотрудник</td>
+                    <tr v-for="item in userList">
+                      <th scope="row">{{item.id}}</th>
+                      <td>{{item.email}}</td>
+                      <td>{{item.lastname+" "+item.name}}</td>
+                      <td>{{item.type}}</td>
                     </tr>
                   </tbody>
-            </table>
-          </div>
-          <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+            </table>`
+          })
+          bodyAdminList.component('review-list',{
+            props:['reviewList'],
+            template:`
+              <button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg></button>
+            
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -48,23 +93,20 @@
                         <th scope="col">ID Пользователя</th>
                         <th scope="col">Почта</th>
                         <th scope="col">ID Книги</th>
-                        <th scope="col">Название книги</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                      <th scope="row">1000</th>  
-                      <td>2000</td>  
-                      <td>ivanov_ii@mail.ru</td>
-                      <td>4000</td>
-                      <td>Летучий корабль</td>
+                    <tr v-for="item in reviewList">
+                      <th scope="row">{{item.id}}</th>
+                      <td>{{item.userId}}</td>
+                      <td>{{item.email}}</td>
+                      <td>{{item.bookFk}}</td>
                     </tr>
                   </tbody>
             </table>
-          </div>
-          <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
-          <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
-        </div>
-      </div>
+            `
+          })
+        bodyAdminList.mount("#bodyAdminList")
+      </script>
 </body>
 </html>
