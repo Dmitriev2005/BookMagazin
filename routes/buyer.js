@@ -4,7 +4,7 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getBasket,getPlacingOrder,getPayForm, 
     getRegistration,getListOrder,
     getShortcut,postAddInBasket,getBasketUserList,
-    getDeleteBasketItem,getBookForSubgenre,getBookFromSub} from '../controllers/buyer.js'
+    getDeleteBasketItem,getBookForSubgenre,getBookFromSub,postSaveReviewBuyer} from '../controllers/buyer.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
@@ -42,6 +42,9 @@ buyerRouter.get('/buyer/basket-delete-item/:id',getDeleteBasketItem)
 buyerRouter.get('/buyer/content/get-book-choose-subgenre',getBookForSubgenre)
 //Получить список книг согласно поджанру
 buyerRouter.get('/buyer/json/get-book-from-subgenre/:id',getBookFromSub)
+//Отправка отзыва клиентом на модерацию
+buyerRouter.post('/buyer/save/review',postSaveReviewBuyer)
+
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!
 buyerRouter.get('/sh',getShortcut)
 

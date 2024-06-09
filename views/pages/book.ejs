@@ -1,14 +1,23 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
     <div class="container content" id="bookBody">
-        <book :element-book="book" :element-review="review" :handler-buy="handlerBuy"></book>
+        <book :element-book="book" :element-review="review" 
+        :handler-buy="handlerBuy" :handler-send-review="handlerSendReview"
+        :review-send="reviewSend" 
+        :handler-gen-change="handlerGenChange" :handler-dis-change="handlerDisChange"
+        :handler-adv-change="handlerAdvChange"></book>
     </div>
     <script>
         const bookBody = Vue.createApp({
             data(){
                 return{
                     book:new Object(),
-                    review:[]
+                    review:[],
+                    reviewSend:{
+                        generalReview:"",
+                        disReview:"",
+                        advReview:""
+                    }
                 }
                 
             },
@@ -20,7 +29,6 @@
                     if(res.ok){
                         this.book = await res.json()
                         this.review = this.book.arReview
-                        console.log(this.book)
                     }
                     
                 },
@@ -39,6 +47,30 @@
                     if(res.ok){
                         alert("Товар добавлен в корзину!")
                     }
+                },
+                async handlerSendReview(){
+                    this.reviewSend.idBook = this.book.id
+                    const res =  await fetch('http://localhost:9001/buyer/save/review',{
+                        headers:{
+                            'Content-Type':'application/json'
+                        },
+                        method:'POST',
+                        body:JSON.stringify(this.reviewSend)
+                    })
+                    if(res.ok){
+                        alert('Ваш отзыв отправлен на модерацию')
+                        location.reload()
+                    }
+                },
+                handlerGenChange(el){
+                    this.reviewSend.generalReview = el.target.value
+                },
+                handlerDisChange(el){
+                    this.reviewSend.disReview = el.target.value
+
+                },
+                handlerAdvChange(el){
+                    this.reviewSend.advReview = el.target.value
                 }
             },
             mounted(){
@@ -47,7 +79,9 @@
             }
         })
         bookBody.component('book',{
-            props:['elementBook','elementReview','handlerBuy'],
+            props:['elementBook','elementReview','handlerBuy',
+            'handlerSendReview','reviewSend','handlerGenChange',
+            'handlerDisChange','handlerAdvChange'],
             template:`
             <div class="row">
                 <div class="col fs-3">
@@ -161,6 +195,25 @@
                     {{elementBook.discription}}
                 </div>
             </div>
+            <!--Окно создания отзыва--> 
+             <div class="row mt-2">
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Общий отзыв</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" :value="reviewSend.generalReview" @change="handlerGenChange"></textarea>
+                </div>
+                 <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Минусы</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" :value="reviewSend.disReview" @change="handlerDisChange"></textarea>
+                </div>
+                 <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Плюсы</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" :value="reviewSend.advReview"  @change="handlerAdvChange"></textarea>
+                </div>
+                 <div class="mb-3">
+                    <button type="button" class="align-self-end mt-auto btn btn-success w-100 h-100" @click="handlerSendReview">Отправить отзыв</button>  
+                </div>
+            </div>  
+
             <div class="row mt-3">
                 <div class="col-8 fs-3">
                     Отзывы

@@ -39,6 +39,11 @@ const postAuthorisation = async(req,res)=>{
                 url:'/sotrudnik/content/get-book-list'
             })
         }
+        else if(responseDB.get('type')==='администратор'){
+            res.status(200).json({
+                url:'/admin/content/get-user-list'
+            })
+        }
         else{
             res.status(200).json({
                 url:'/'

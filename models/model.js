@@ -328,6 +328,10 @@ const Review = db.define('review',{
   userFk:{
     field:'user_fk',
     type:DataTypes.INTEGER
+  },
+  status:{
+    field:'status',
+    type:DataTypes.ENUM('одобрено','не одобрено','ожидание')
   }
 })
 

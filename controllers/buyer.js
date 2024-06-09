@@ -234,12 +234,33 @@ const getBookFromSub = async(req,res)=>{
   res.status(200).json({bookList:arAnswer,namePage:responseSub1})
 
 }
+const postSaveReviewBuyer = async(req,res)=>{
+  const user = shortCut(req)
+  if(typeof user==="object"){
+    const body = req.body
+    
+    console.log(req.body)
+    await Review.create({
+      bookFk:body.idBook,
+      userFk:user.id,
+      generalReview:body.generalReview,
+      disReview:body.disReview,
+      advReview:body.advReview,
+      status:'ожидание'
+    })
+    res.status(200).send("ok")
+
+  }
+  else
+    res.status(404).send("нету")
+
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getRegistration,
   getListOrder,getShortcut,postAddInBasket,
-  getBasketUserList,getDeleteBasketItem,getBookForSubgenre,getBookFromSub}
+  getBasketUserList,getDeleteBasketItem,getBookForSubgenre,getBookFromSub,postSaveReviewBuyer}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
