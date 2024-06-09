@@ -53,9 +53,8 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col-2 " v-for="item in listBook">
-                    <div class="row" >
-                     <div class="d-flex flex-column col"  >
+
+                     <div class="d-flex flex-column col-2"  v-for="item in listBook">
                         <img class="w-100"  height="280"  :src="'http://localhost:9001/get-image/'+item.id+'.jpg'">
                         <div v-if="item.discount!==null" class="fw-bold fs-4">
                         {{Math.floor(item.price-item.price*(item.discount/100))+"₽"}}<del class="mx-2">{{item.price+"₽"}}</del>
@@ -70,9 +69,6 @@
                         {{item.authorName +' ' +item.lastname}}
                         </div>
                         <button type="button" class="align-self-end mt-auto btn btn-primary w-100" @click="handlerBuy(item)">Купить</button>  
-                    </div>
-                </div>
-                </div>
                     </div>
 
                 </div>
