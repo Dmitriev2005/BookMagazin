@@ -440,7 +440,6 @@ const getAuthor = async(req,res)=>{
         authors.forEach(item=>{
             arAuthors.push(item.dataValues)
         })
-        console.log(arAuthors)
         res.status(200).json(arAuthors)
     }
     else
@@ -581,10 +580,10 @@ const getJsonEditPub = async(req,res)=>{
         })
         const resAr = []
         responseSeries.forEach(item=>{
-            resAr.push(item.dataValues)
+            resAr.push(item.get('name'))
         })
         const buffer = {
-            pub:responsePublish.dataValues.name,
+            pub:responsePublish.get('name'),
             listSeries:resAr
         }
         res.status(200).json(buffer)  
@@ -612,7 +611,8 @@ const postEditPub = async(req,res)=>{
         }})
         for(let i=0; i<listSer.length; i++){
             await Series.create({
-                name: listSer[i].name
+                name: listSer[i],
+                publishingFk:idPub
             })
         }
         res.status(200).send("Издание отредактировано!")   
@@ -622,6 +622,78 @@ const postEditPub = async(req,res)=>{
         res.status(404).send("Страница не найдена!")   
 
 }
+const postEditGenre = async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const idGenre = Number(req.params.id)
+        const body = req.body
+        console.log(body)
+        const respGenre = await Genre.update({
+            name:body.name
+        },{
+            where:{
+                id:idGenre
+            }
+        })
+        const resDel = await Subgenre.destroy({
+            where:{
+                genreFk:idGenre
+            }
+        })
+        const listSub = body.listSubGenre
+        for(let i=0; i<listSub.length; i++){
+            
+            const respSubawait = await Subgenre.create({
+                name:listSub[i],
+                genreFk:idGenre
+            })
+        }
+        
+        res.status(200).send("Жанр отредактирован!")   
+
+    }
+    else
+        res.status(404).send("Страница не найдена!")   
+}
+const delGenre = async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const idGenre = Number(req.params.id)
+        await Subgenre.destroy({
+            where:{
+                genreFk:idGenre
+            }
+        })
+        await Genre.destroy({
+            where:{
+                id:idGenre
+            }
+        })
+        res.status(200).send("Жанр удален!")   
+    }
+    else
+        res.status(404).send("Страница не найдена!")   
+
+}
+const delPub = async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const idPub = Number(req.params.id)
+        await Series.destroy({
+            where:{
+                publishingFk:idPub
+            }
+        })
+        await Publishing.destroy({
+            where:{
+                id:idPub
+            }
+        })
+        res.status(200).send("Издательство удалено!")
+    }
+    else
+        res.status(404).send("Страница не найдена!")
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
@@ -629,4 +701,4 @@ export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getOneGenreManySubgenre,postNewGenreSub,getAllGenre,
     getEditGenre,getAuthor,getPageAuthor,postNewauthor,
     getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub,
-    getPubSeriesConstraint,postNewPub,getJsonEditPub,postEditPub}
+    getPubSeriesConstraint,postNewPub,getJsonEditPub,postEditPub,postEditGenre,delGenre,delPub}

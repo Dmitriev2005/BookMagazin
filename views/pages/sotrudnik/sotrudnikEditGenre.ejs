@@ -5,7 +5,7 @@
     <genre-subgenre :back-handle="backHandle" :new-sub-genre-item="newSubGenreItem" 
     :new-subgenre="newSubgenre" :list-sub-genre="listSubGenre" :genre="genre" :handle-change-new="handleChangeNew"
     :delete-sub-genre-item="deleteSubGenreItem" :post-data-genre="postDataGenre" :id-genre="idGenre"
-    :handle-change-genre="handleChangeGenre"></genre-subgenre>
+    :handle-change-genre="handleChangeGenre" :handler-delete-book="handlerDeleteBook"></genre-subgenre>
 </div>
 <script>
     const editGenreBody = Vue.createApp({
@@ -19,13 +19,15 @@
         },
         methods:{
             async getDataGenre(){
-                const idGenre = new URL(location.href).searchParams.get('id')
-                if (idGenre!=="undefined"){
-                    const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-genre-subgenre/${idGenre}`)
+                this.idGenre = Number(new URL(location.href).searchParams.get('id'))
+                if (this.idGenre){
+                    const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-genre-subgenre/${this.idGenre}`)
                     if(res.ok){
                         const buffer = await res.json()
-                        this.genre = buffer.genre.name
-                        this.listSubGenre = buffer.listSub
+                        const buffer2 = buffer.genre
+                        this.genre = buffer2.name
+                        buffer.listSub.forEach(item=>this.listSubGenre.push(item.name))
+                        
                     }
                 }
                
@@ -36,16 +38,31 @@
                     listSubGenre:this.listSubGenre
                 }
                 console.log(saveData)
-                const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-genre',{
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
-                    method:'POST',
-                    body:JSON.stringify(saveData)
-                })
-                if(res.ok){
-                    alert("Жанр добавлен!")
-                    location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                if(this.idGenre){
+                    const res = await fetch('http://localhost:9001/sotrudnik/save/post-edit-genre/'+this.idGenre,{
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:'POST',
+                        body:JSON.stringify(saveData)
+                    })
+                    if(res.ok){
+                        alert("Жанр отредактрован!")
+                        location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                    } 
+                }
+                else{
+                    const res = await fetch('http://localhost:9001/sotrudnik/save/post-new-genre',{
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:'POST',
+                        body:JSON.stringify(saveData)
+                    })
+                    if(res.ok){
+                        alert("Жанр добавлен!")
+                        location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                    }
                 }
 
             },
@@ -58,6 +75,7 @@
                 if(this.newSubgenre!=="")
                     this.listSubGenre.push(this.newSubgenre)
                 this.newSubgenre=""
+
             },
             deleteSubGenreItem(elem){
                 for(let i = 0; i<this.listSubGenre.length; i++){
@@ -67,12 +85,20 @@
                 console.log(this.listSubGenre)
             },
             handleChangeNew(el){
-                this.newSubgenre = el.target.value
+               this.newSubgenre = el.target.value
+               console.log(this.newSubgenre)
                 el.target.value = ""
             },
             handleChangeGenre(el){
                 this.genre = el.target.value
-                console.log(this.genre)
+            },
+            async handlerDeleteBook(){
+                const res = await fetch(`http://localhost:9001/sotrudnik/delete/delete-genre/${this.idGenre}`)
+                if(res.ok){
+                    alert("Жанр удален!")
+                    location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                }
+
             }
         },
         mounted(){
@@ -81,7 +107,7 @@
     })
     editGenreBody.component('genreSubgenre',{
         props:['backHandle','newSubGenreItem','listSubGenre','genre',
-        'newSubgenre','handleChangeNew','deleteSubGenreItem','postDataGenre','idGenre','handleChangeGenre'],
+        'newSubgenre','handleChangeNew','deleteSubGenreItem','postDataGenre','idGenre','handleChangeGenre','handlerDeleteBook'],
         template:`
         <div class="row mt-4">
             <div class="col-2">
@@ -91,7 +117,7 @@
             </div>
             <div class="col-4">
                 <label for="exampleFormControlTextarea1" class="form-label">Название жанра</label>
-                <input @change="handleChangeGenre" class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" >
+                <input @change="handleChangeGenre" :value="genre" class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" >
             </div>
         </div>
         <div class="row mt-3">

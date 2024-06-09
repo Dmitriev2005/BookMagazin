@@ -244,9 +244,7 @@
                       <td>{{item.authorName+" "+item.lastname}}</td>
                       <td>{{item.genreName}}</td>
                       <td>
-                        <template v-for="subItem in item.subgenre">
-                          {{subItem.name+" "}}
-                        </template>
+                          {{item.subgenre[0].name}}
                       </td>
                       <td>{{item.price+"₽"}}</td>
                       <template v-if="item.discount">

@@ -4,8 +4,8 @@
     <h1 class="mt-2">{{namePage}}</h1>
     <publishing-ser :back-handle="backHandle" :new-ser-pub-item="newSerPubItem" 
     :new-series="newSeries" :list-pub-ser="listPubSer" :publishing="publishing" :handle-change-new="handleChangeNew"
-    :delete-sub-publishing-item="deleteSubGenreItem" :post-data-pub="postDataPub" :id-publishing="idPublishing"
-    :handle-change-pub="handleChangePub"></publishing-ser>
+    :delete-seires-item="deleteSeiresItem" :post-data-pub="postDataPub" :id-publishing="idPublishing"
+    :handle-change-pub="handleChangePub" :handler-delete-pub="handlerDeletePub"></publishing-ser>
 </div>
 <script>
     const editGenreBody = Vue.createApp({
@@ -20,13 +20,13 @@
         },
         methods:{
             async getDataGenre(){
-                const idPublishing = new URL(location.href).searchParams.get('id')
-                if (idPublishing!=="undefined"){
+                this.idPublishing = new URL(location.href).searchParams.get('id')
+                if (this.idPublishing!=="undefined"){
                     this.namePage = "Редактировать издательство"
-                    const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-publishing-subpublishing/${idPublishing}`)
+                    const res = await fetch(`http://localhost:9001/sotrudnik/json/get-one-publishing-subpublishing/${this.idPublishing}`)
                     if(res.ok){
                         const buffer = await res.json()
-                        this.publishing = buffer.pub.name
+                        this.publishing = buffer.pub
                         this.listPubSer = buffer.listSeries
                         console.log(buffer)
                     }
@@ -35,14 +35,13 @@
                     namePage = "Добавить издательство"
             },
             async postDataPub(){
-                const idPublishing = new URL(location.href).searchParams.get('id')
                 const saveData = {
                     name:this.publishing,
                     listPubSer:this.listPubSer
                 }
                 console.log(saveData)
-                if (idPublishing!=="undefined"){
-                    const res = await fetch('http://localhost:9001/sotrudnik/save/post-edit-publishing/'+idPublishing,{
+                if (this.idPublishing!=="undefined"){
+                    const res = await fetch('http://localhost:9001/sotrudnik/save/post-edit-publishing/'+this.idPublishing,{
                         headers:{
                             "Content-Type":"application/json"
                         },
@@ -50,7 +49,7 @@
                         body:JSON.stringify(saveData)
                     })
                     if(res.ok){
-                        alert("Издательство добавлен!")
+                        alert("Издательство отредактировано!")
                         location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
                     }
                 }
@@ -70,6 +69,13 @@
                 
 
             },
+            async handlerDeletePub(){
+                const res = await fetch('http://localhost:9001/sotrudnik/delete/del-publishing/'+this.idPublishing)
+                if(res.ok){
+                    alert("Издательство удалено!")
+                    location.href = "http://localhost:9001/sotrudnik/content/get-book-list"
+                }
+            },
             //Обработчики
             backHandle(){
                 location.href='http://localhost:9001/sotrudnik/content/get-book-list'
@@ -80,7 +86,7 @@
                     this.listPubSer.push(this.newSeries)
                 this.newSeries=""
             },
-            deleteSubGenreItem(elem){
+            deleteSeiresItem(elem){
                 for(let i = 0; i<this.listPubSer.length; i++){
                     if(this.listPubSer[i]===elem)
                         this.listPubSer.splice(i,1)
@@ -102,7 +108,7 @@
     })
     editGenreBody.component('publishingSer',{
         props:['backHandle','newSerPubItem','listPubSer','publishing',
-        'newSeries','handleChangeNew','deleteSubGenreItem','postDataPub','idPublishing','handleChangePub'],
+        'newSeries','handleChangeNew','deleteSeiresItem','postDataPub','idPublishing','handleChangePub','handlerDeletePub'],
         template:`
         <div class="row mt-4">
             <div class="col-2">
@@ -112,7 +118,7 @@
             </div>
             <div class="col-4">
                 <label for="exampleFormControlTextarea1" class="form-label">Название Издательства</label>
-                <input @change="handleChangePub" class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" >
+                <input :value="publishing" @change="handleChangePub" class="form-control me-2" id="exampleFormControlTextarea1" type="search"  aria-label="Search" >
             </div>
         </div>
         <div class="row mt-3">
@@ -138,7 +144,7 @@
                 <input class="form-control me-2" id="exampleFormControlTextarea1" type="search" aria-label="Search" :value="item">           
             </div>
             <div class="col-2">
-                <svg xmlns="http://www.w3.org/2000/svg" @click="deleteSubGenreItem(item)" width="36" height="36" fill="red" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" @click="deleteSeiresItem(item)" width="36" height="36" fill="red" class="bi bi-dash-circle-fill" viewBox="0 0 16 16">
                     <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h7a.5.5 0 0 0 0-1z"/>
                 </svg>
             </div>
@@ -149,8 +155,8 @@
             <div class="col-2">
                 <button type="button" class="btn btn-success" @click="postDataPub">Сохранить</button>
             </div>
-            <div class="col-2" v-if="idPublishing!==0">
-                <button @click="handlerDeleteBook" type="button" class="btn btn-danger">Удалить</button>
+            <div class="col-2" v-if="idPublishing!=='undefined'">
+                <button @click="handlerDeletePub" type="button" class="btn btn-danger">Удалить</button>
             </div>
         </div>  
         `
