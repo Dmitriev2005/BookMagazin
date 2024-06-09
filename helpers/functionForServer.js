@@ -69,7 +69,29 @@ const storage = multer.diskStorage({
 		cb(null,req.params.id+'.jpg')
 	}
 })
-
+function generatePassword(length) {
+	const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+	const digits = '0123456789';
+	const specialChars = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+	
+	// Объединяем все символы в одну строку
+	const allChars = uppercase + lowercase + digits + specialChars;
+  
+	// Функция для случайного выбора символа из строки
+	function getRandomChar(str) {
+	  const randomIndex = Math.floor(Math.random() * str.length);
+	  return str[randomIndex];
+	}
+  
+	// Генерируем пароль
+	let password = '';
+	for (let i = 0; i < length; i++) {
+	  password += getRandomChar(allChars);
+	}
+  
+	return password;
+}
 const upload = multer({storage:storage})
 const uplaodS = upload.single('file')
-export {verifyToken, translit,uplaodS,shortCut}
+export {verifyToken, translit,uplaodS,shortCut,generatePassword}

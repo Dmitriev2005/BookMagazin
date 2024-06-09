@@ -1,9 +1,9 @@
 <%- include("../../partials/head") %>
-<div class="container">
+<div class="container" id="bodyMontCom">
     <h1 class="mt-2">Модерация комментария #1000</h1>
     <div class="row mt-4">
         <div class="col-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+            <svg href="sdfd" xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="blue" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
                 <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
               </svg>
         </div>
@@ -12,26 +12,66 @@
                 <div class="col">
                     <div class="mt-4">
                         <label for="exampleFormControlTextarea2" class="form-label">Комментарий</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+                        <textarea v-model="review.generalReview" class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
                     </div>
                     <div class="mt-4">
                         <label for="exampleFormControlTextarea2" class="form-label">Плюсы</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+                        <textarea v-model="review.advReview" class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
                     </div>
                     <div class="mt-4">
                         <label for="exampleFormControlTextarea2" class="form-label">Минусы</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
+                        <textarea v-model="review.disReview" class="form-control" id="exampleFormControlTextarea2" rows="3"></textarea>
                     </div>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-2">
-                    <button class="btn btn-success">Опубликовать</button>
+                    <button class="btn btn-success" @click="hSend">Опубликовать</button>
                  </div>
                  <div class="col-3">
-                     <button class="btn btn-danger">Удалить</button>
+                     <button class="btn btn-danger" @click="hDel">Удалить</button>
                   </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+ 
+    const bodyMontCom = Vue.createApp({
+        data(){
+            return{
+                review:new Object(),
+                idReview:0
+            }
+        },
+        methods:{
+            async getRiview(){
+                this.idReview = new URL(location.href).searchParams.get('id')
+                const res = await fetch('http://localhost:9001/admin/json/get-this-review/'+this.idReview)
+                if(res.ok){
+                    this.review = await res.json()
+                    console.log(this.review)
+                }
+            },
+            async hSend(){
+                const res = await fetch('http://localhost:9001/admin/save/moderate/'+this.idReview)
+                if(res.ok){
+                    alert('Комментарий опубликован!')
+                    location.href = "http://localhost:9001/admin/content/get-user-list"
+                }
+            },
+            async hDel(){
+                const res = await fetch('http://localhost:9001/admin/del/moderate/'+this.idReview)
+                if(res.ok){
+                    alert('Комментарий помещен в удаленные!')
+                    location.href = "http://localhost:9001/admin/content/get-user-list"
+                }
+            }
+        },
+        mounted(){
+            this.getRiview()
+        }
+        
+    })
+    bodyMontCom.mount("#bodyMontCom")
+</script>

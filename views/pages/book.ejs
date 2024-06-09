@@ -221,7 +221,8 @@
             </div>        
             <!--Отзывы-->
             <div class="row mt-4" v-for="item in elementReview" style="background-color:#e8e8e8">
-                <div class="row mt-2">
+                <template  v-if="item.status==='одобрено'">
+                    <div class="row mt-2">
                     <div class="col-8 fs-10 fw-light">
                         {{item.name}}
                     </div>
@@ -259,6 +260,8 @@
                         </div>
                     </div>
                 </div>
+                </template>
+                
             </div>
             `
         })

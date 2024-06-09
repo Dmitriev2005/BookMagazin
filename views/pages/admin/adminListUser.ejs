@@ -15,7 +15,7 @@
                     <div class="col">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </div>
-                    <user-list :handler-click-us-item="handlerClickUsItem" :user-list="userList" :review-list="reviewList"></user-list>
+                    <user-list :handeler-new-user="handelerNewUser" :handler-click-us-item="handlerClickUsItem" :user-list="userList" :review-list="reviewList"></user-list>
                 </div>
             </div>
             
@@ -53,6 +53,9 @@
             },
             handlerClickRevItem(item){
               location.href = 'http://localhost:9001/admin/content/get-edit-comment?id='+item.id
+            },
+            handelerNewUser(item){
+              location.href = 'http://localhost:9001/admin/content/get-user-edit?id='+item.id
             }
           },
           mounted(){
@@ -61,12 +64,12 @@
           }
         })
         bodyAdminList.component('user-list',{
-          props:['userList','handlerClickUsItem'],
+          props:['userList','handlerClickUsItem','handelerNewUser'],
           template:`
           <div class="container">
             <div class="row">
               <div class="col-2">
-                <button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                <button @click="handelerNewUser" type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg></button>
               </div>
