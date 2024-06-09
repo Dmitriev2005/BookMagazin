@@ -32,7 +32,7 @@
                    <button class="btn btn-success" @click="handlerSave">Сохранить учетную запись</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-danger">Удалить учетную запись</button>
+                    <button class="btn btn-danger" @click="delUser">Удалить учетную запись</button>
                  </div>
             </div>
         </div>
@@ -74,6 +74,13 @@
                 })
                 if(res.ok){
                     alert('Запись обновлена!')
+                    location.href = 'http://localhost:9001/admin/content/get-user-list'
+                }
+            },
+            async delUser(){
+                const res = await fetch('http://localhost:9001/admin/del/this-user/'+this.idUser)
+                if(res.ok){
+                    alert('Запись удалена!')
                     location.href = 'http://localhost:9001/admin/content/get-user-list'
                 }
             }

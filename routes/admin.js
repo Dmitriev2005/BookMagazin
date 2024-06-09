@@ -1,5 +1,5 @@
 import {getUserList,getUserEdit,getEditComment,
-    getReviewList,getUserListJSON,getThisUser,saveUser,getReviewThis,getSaveCom,getDelCom} from '../controllers/admin.js'
+    getReviewList,getUserListJSON,getThisUser,saveUser,getReviewThis,getSaveCom,getDelCom,getDelUser,postEmailUser,postCheckCode} from '../controllers/admin.js'
 import express from 'express'
 const routerAdmin = express.Router()
 
@@ -23,5 +23,13 @@ routerAdmin.get('/admin/json/get-this-review/:id',getReviewThis)
 routerAdmin.get('/admin/save/moderate/:id',getSaveCom)
 //Отклонить коммент
 routerAdmin.get('/admin/del/moderate/:id',getDelCom)
+//удаление учетки
+routerAdmin.get('/admin/del/this-user/:id',getDelUser)
+//Отправка почты пользователя
+routerAdmin.post('/admin/post-email',postEmailUser)
+//Подтверждение кода
+routerAdmin.post('/admin/check-code',postCheckCode)
+
+
 
 export {routerAdmin}

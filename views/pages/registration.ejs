@@ -1,6 +1,6 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
-<div class="container content ">
+<div class="container content " id="bodyReg">
     <div class="row">
         <div class="col-4">
 
@@ -15,18 +15,95 @@
 
         </div>
         <div class="col-4">
-            <form>
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Почта</label>
-                  <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                </div>
-                <div class="mb-3">
-                  <label for="exampleInputPassword1" class="form-label">Пароль</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1">
-                </div>
-                <button type="submit" class="btn btn-primary">Отправить код подтверждения на почту</button>
-              </form>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Почта</label>
+                <input v-model="user.email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Имя</label>
+                <input v-model="user.name" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Фамилия</label>
+                <input v-model="user.lastname" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Пароль</label>
+                <input v-model="user.password" type="password" class="form-control" id="exampleInputPassword1">
+              </div>
+              <button @click="checkEmail" v-if="!isClickAut" class="btn btn-primary">Отправить код подтверждения на почту</button>
+              <div class="mb-3" v-if="isClickAut">
+                <label   for="exampleInputPassword1" class="form-label">Код подтверждения</label>
+                <input v-model="user.checkCode" type="password" class="form-control" id="exampleInputPassword1">
+              </div>
+              <button @click="checkCode" v-if="isClickAut" class="btn btn-primary">Подтвердить</button>
+              <div v-if="isClickAut" class="label">Код будет не действителен через: {{timer}}</div>
         </div>
     </div>
 </div>
+<script>
+  const bodyReg = Vue.createApp({
+    data(){
+            return{
+                user:{
+                    email:"",
+                    password:"",
+                    name:"",
+                    lastname:"",
+                    checkCode:""
+                },
+                isClickAut:false,
+                timer:100
+            }
+        },
+        methods:{
+            
+            async checkEmail(){
+                const res = await fetch(
+                    "http://localhost:9001/admin/post-email",
+                    {
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:"POST",
+                        body:JSON.stringify(this.user)
+                    }
+                )
+                if(res.ok){
+                    this.isClickAut = true
+                    this.startTimer()
+                }
+            },
+            async checkCode(){
+                const res = await fetch(
+                    "http://localhost:9001/admin/check-code",
+                    {
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:"POST",
+                        body:JSON.stringify(this.user)
+                    }
+                )
+                if(res.ok){
+                    alert("Вы зарегистрировались!")
+                    location.href = "http://localhost:9001"
+                }
+            },
+            startTimer(){
+                this.interval = setInterval(()=>{
+                    if(this.timer===0)
+                        location.reload()
+                    else
+                        this.timer--
+                },1000)
+            }
+        },
+        
+        beforeUnmount(){
+            clearInterval(this.interval)
+        }
+  })
+  bodyReg.mount('#bodyReg')
+</script>
 <%-include("../partials/footer")%> 

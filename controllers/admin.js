@@ -9,6 +9,8 @@ import 'dotenv/config'
 import 'fs'
 import path from "path"
 import nodemailer from "nodemailer"
+import NodeCache from "node-cache"
+let cache = new NodeCache()
 const getUserList = (req,res)=>{
   const user = shortCut(req)
   if(user.type==="администратор"){
@@ -104,7 +106,27 @@ const saveUser = async(req,res)=>{
         password:password,
         type:'работник'
       })
-    
+      const transporter = nodemailer.createTransport({
+        host: 'mail.malojhomelab.ru',
+        port: 587,
+        auth:{
+          user:'artyom@malojhomelab.ru',
+          pass:`yfWThPtr"jK;G2"`
+        }
+      })
+      const mailOptions = {
+        from:'artyom@malojhomelab.ru',
+        to:reqUser.email,
+        subject:'Пароль от сайта ЧиталоффЪ',
+        text:'Пароль от сайта ЧиталоффЪ. Никому не сообщайте.',
+        html:`<b>${password}</b>`
+      }
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return console.log(error);
+        }
+        console.log('Email sent: ' + info.response);
+      })
       res.status(200).send("Пользователь добавлен!")
     }
     else{
@@ -178,5 +200,66 @@ const getDelCom = async(req,res)=>{
   else
     res.status(404).send("Страница не найдена")
 }
+const getDelUser = async(req,res)=>{
+  const user = shortCut(req)
+  if(user.type==="администратор"){
+    const idUser = Number(req.params.id)
+    await User.destroy({
+      where:{
+        id:idUser
+      }
+    })
+    res.status(200).send("Htlfr")
+  }
+  else{
+    res.status(404).send("Страница не найдена")
+  }
+}
+//Ненадо было делать в админа!!!!!!
+const postEmailUser = async(req,res)=>{
+  const user = req.body
+  const rnd = generatePassword(6)
+  const transporter = nodemailer.createTransport({
+    host: 'mail.malojhomelab.ru',
+    port: 587,
+    auth:{
+      user:'artyom@malojhomelab.ru',
+      pass:`yfWThPtr"jK;G2"`
+    }
+  })
+  const mailOptions = {
+    from:'artyom@malojhomelab.ru',
+    to:user.email,
+    subject:'Подтверждение почты',
+    text:'Код для подтверждения почты',
+    html:`<b>${rnd}</b>`
+  }
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log('Email sent: ' + info.response);
+  })
+  cache.set("checkCode",rnd,100)
+  res.status(200).send("email")
+}
+const postCheckCode = async(req,res)=>{
+  const user = req.body
+  if(user.checkCode===cache.get("checkCode")){
+    const responseDB = await User.create({
+      name:user.name,
+      lastname:user.lastname,
+      email:user.email,
+      password:user.password,
+      type:"клиент"
+    })
+    if(!responseDB.isNewRecord)
+      res.status(200).send("Пользователь добавлен!")
+    else
+      res.status(500).send("Пользователь не добавлен!")
+  }else{
+    res.status(400).send("Неправильный код!")
+  }
+}
 export {getUserList,getUserEdit,getEditComment,getUserListJSON,
-  getReviewList,getThisUser,saveUser,getReviewThis,getSaveCom,getDelCom}
+  getReviewList,getThisUser,saveUser,getReviewThis,getSaveCom,getDelCom,getDelUser,postEmailUser,postCheckCode}
