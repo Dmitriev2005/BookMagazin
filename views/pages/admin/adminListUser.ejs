@@ -10,18 +10,18 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <input class="form-control me-2" type="search" placeholder="Книга, автор, жанр и тд." aria-label="Search">
+                        <input class="form-control me-2" type="search" placeholder="Почта, фамилия и т.д." aria-label="Search">
                     </div>      
                     <div class="col">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </div>
-                    <user-list :user-list="userList" :review-list="reviewList"></user-list>
+                    <user-list :handler-click-us-item="handlerClickUsItem" :user-list="userList" :review-list="reviewList"></user-list>
                 </div>
             </div>
             
           </div>
           <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-            <review-list :review-list="reviewList"></review-list>
+            <review-list :handler-click-rev-item="handlerClickRevItem" :review-list="reviewList"></review-list>
           </div>
           <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
           <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
@@ -47,6 +47,12 @@
               if(res.ok){
                 this.reviewList = await res.json()
               }
+            },
+            handlerClickUsItem(item){
+              location.href = 'http://localhost:9001/admin/content/get-user-edit?id='+item.id
+            },
+            handlerClickRevItem(item){
+              location.href = 'http://localhost:9001/admin/content/get-edit-comment?id='+item.id
             }
           },
           mounted(){
@@ -55,10 +61,19 @@
           }
         })
         bodyAdminList.component('user-list',{
-          props:['userList'],
-          template:`<button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+          props:['userList','handlerClickUsItem'],
+          template:`
+          <div class="container">
+            <div class="row">
+              <div class="col-2">
+                <button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
             </svg></button>
+              </div>
+            </div>
+
+          </div>
+        
             
             <table class="table table-striped">
                 <thead>
@@ -70,7 +85,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in userList">
+                    <tr v-for="item in userList" @click="handlerClickUsItem(item)" style="cursor:pointer;">
                       <th scope="row">{{item.id}}</th>
                       <td>{{item.email}}</td>
                       <td>{{item.lastname+" "+item.name}}</td>
@@ -80,7 +95,7 @@
             </table>`
           })
           bodyAdminList.component('review-list',{
-            props:['reviewList'],
+            props:['reviewList','handlerClickRevItem'],
             template:`
               <button type="button" class="btn btn-outline-success mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
               <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
@@ -96,7 +111,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in reviewList">
+                    <tr v-for="item in reviewList" @click="handlerClickRevItem(item)" style="cursor:pointer;">
                       <th scope="row">{{item.id}}</th>
                       <td>{{item.userId}}</td>
                       <td>{{item.email}}</td>

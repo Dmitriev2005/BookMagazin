@@ -78,4 +78,49 @@ const getReviewList = async(req,res)=>{
   else
     res.status(404).send("Страница не найдена")
 }
-export {getUserList,getUserEdit,getEditComment,getUserListJSON,getReviewList}
+const getThisUser = async(req,res)=>{
+  const user = shortCut(req)
+  if(user.type==="администратор"){
+    const idUser = Number(req.params.id)
+    const responseUserDB = await User.findByPk(idUser)
+    console.log(responseUserDB.dataValues)
+    res.status(200).json(responseUserDB.dataValues)
+
+  }
+  else{
+    res.status(404).send("Страница не найдена")
+  }
+}
+const saveUser = async(req,res)=>{
+  const user = shortCut(req)
+  if(user.type==="администратор"){
+    const userId = req.params.id
+    const reqUser = req.body
+    if(userId==="undefined"){
+      await User.create({
+        name:reqUser.name,
+        lastname:reqUser.lastname,
+        email:reqUser.email
+      })
+      res.status(200).send("Пользователь добавлен!")
+    }
+    else{
+      await User.update({
+        name:reqUser.name,
+        lastname:reqUser.lastname,
+        email:reqUser.email
+      },{
+        where:{
+          id:Number(userId)
+        }
+      })
+      res.status(200).send("Пользователь отредактирован!")
+
+    }
+     
+  }
+  else
+    res.status(404).send("Страница не найдена")
+}
+export {getUserList,getUserEdit,getEditComment,getUserListJSON,
+  getReviewList,getThisUser,saveUser}

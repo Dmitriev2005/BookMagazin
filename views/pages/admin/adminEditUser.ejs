@@ -1,6 +1,5 @@
 <%- include("../../partials/head") %>
-<%- include("../../partials/head") %>
-<div class="container">
+<div class="container" id="bodyEditUser2">
     <h1 class="mt-2">Редактировать пользователя</h1>
     <div class="row mt-4">
         <div class="col-2">
@@ -12,30 +11,25 @@
             <div class="row">
                 <div class="col-3">
                     <label for="userName">Фамилия</label>
-                    <input id="userName" class="form-control me-2" type="search" aria-label="Search">
+                    <input v-model="userData.lastname" id="userName" class="form-control me-2" type="search" aria-label="Search">
                 </div>
             </div>
             <div class="row">
                 <div class="col-3">
                     <label for="userName">Имя</label>
-                    <input id="userName" class="form-control me-2" type="search" aria-label="Search">
+                    <input v-model="userData.name" id="userName" class="form-control me-2" type="search" aria-label="Search">
                 </div>
             </div>
-            <div class="row">
-                <div class="col-3">
-                    <label for="userName">Отчество</label>
-                    <input id="userName" class="form-control me-2" type="search" aria-label="Search">
-                </div>
-            </div>
+          
             <div class="row">
                 <div class="col-3">
                     <label for="userName">Почта</label>
-                    <input id="userName" class="form-control me-2" type="search" aria-label="Search">
+                    <input v-model="userData.email" id="userName" class="form-control me-2" type="search" aria-label="Search">
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-3">
-                   <button class="btn btn-success">Сохранить учетную запись</button>
+                   <button class="btn btn-success" @click="handlerSave">Сохранить учетную запись</button>
                 </div>
                 <div class="col-3">
                     <button class="btn btn-danger">Удалить учетную запись</button>
@@ -45,3 +39,48 @@
     </div>
    
 </div>
+<script>
+    const bodyEditUser2 = Vue.createApp({
+        data(){
+            return{
+                userData:{
+                    lastname:"",
+                    name:"",
+                    email:""
+                },
+                idUser:0
+            }
+
+        },
+        methods:{
+            async getUserData(){
+                this.idUser = new URL(location.href).searchParams.get('id')
+                if(this.idUser!=='undefined'){
+                    const res = await fetch('http://localhost:9001/admin/json/get-this-user/'+this.idUser)
+                    if(res.ok){
+                        this.userData = await res.json()
+
+                    }
+                }
+              
+            },
+            async handlerSave(){
+                const res = await fetch('http://localhost:9001/admin/save/this-user/'+this.idUser,{
+                    headers:{
+                        "Content-Type":"application/json"
+                    },
+                    method:'POST',
+                    body:JSON.stringify(this.userData)
+                })
+                if(res.ok){
+                    alert('Запись обновлена!')
+                    location.href = 'http://localhost:9001/admin/content/get-user-list'
+                }
+            }
+        },
+        mounted(){
+            this.getUserData()
+        }
+    })
+    bodyEditUser2.mount('#bodyEditUser2')
+</script>
