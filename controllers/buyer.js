@@ -145,17 +145,17 @@ const getShortcut = (req,res)=>{
 }
 const postAddInBasket = async(req,res)=>{
   const user = shortCut(req)
-  const book = req.body 
   if(typeof user==="object"){
-    
+    const book = req.body 
     await Basket.create({
       userFk:user.id,
       bookFk:book.id,
       count:1
     })
-
+    res.status(200).send("Книга добавлена в корзину")
   }
-  res.status(200).send("Книга добавлена в корзину")
+  else
+    res.status(404).send("Нету")
 }
 const getBasketUserList = async(req,res)=>{
   const user = shortCut(req)

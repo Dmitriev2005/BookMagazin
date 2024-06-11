@@ -57,7 +57,7 @@
 
 var myMap, searchControl, адресПунктаВыдачи;
 
-function init() {
+async function  init() {
     // Создаем карту.
     myMap = new ymaps.Map("map", {
         center: [55.76, 37.64], // Координаты центра карты (Москва).
@@ -76,62 +76,49 @@ function init() {
     myMap.controls.add(searchControl);
 
     // Выполняем поиск.
-    searchControl.search('пункт выдачи заказов в Москве');
-
+    await searchControl.search('пункт выдачи заказов в Москве');
+    console.log(searchControl.getResultsArray())
+    searchControl.getResultsArray().forEach(item=>{
+        item.events.add('click', function (event) {
+        var results = searchControl.getResultsArray();
+            var coords = item.geometry.getCoordinates();
+            var title = item.properties.get('name');
+            var address = item.properties.get('description');
+            console.log(address)
+            
+        })
+    })
+   
+        
+    // setTimeout(()=>{
+        
+    // });
+    // },2000)
     // Обрабатываем результаты поиска.
-    searchControl.events.add('load', function (event) {
-        if (event.get('type') === 'submit') {
-            var results = searchControl.getResultsArray();
-            results.forEach(function (result) {
-                var coords = result.geometry.getCoordinates();
-                var title = result.properties.get('name');
-                var address = result.properties.get('description');
+  
 
-                var placemark = createPlacemark(coords, title, address);
-                myMap.geoObjects.add(placemark);
-            });
-        }
-    });
+    // // Обработчик кликов по карте
+    // myMap.events.add('click', function (e) {
+    //     var coords = e.get('coords');
+    //     console.log('Координаты клика: ', coords);
 
-    // Обработчик кликов по карте
-    myMap.events.add('click', function (e) {
-        var coords = e.get('coords');
-        console.log('Координаты клика: ', coords);
+    //     // Использование геокодера для получения адреса
+    //     ymaps.geocode(coords).then(function (res) {
+    //         var firstGeoObject = res.geoObjects.get(0);
 
-        // Использование геокодера для получения адреса
-        ymaps.geocode(coords).then(function (res) {
-            var firstGeoObject = res.geoObjects.get(0);
+    //         var address = firstGeoObject.getAddressLine();
+    //         console.log('Адрес метки: ', address);
 
-            var address = firstGeoObject.getAddressLine();
-            console.log('Адрес метки: ', address);
+    //         // Создание и добавление метки с полученным адресом
+    //         var placemark = createPlacemark(coords, 'Новая метка', address);
 
-            // Создание и добавление метки с полученным адресом
-            var placemark = createPlacemark(coords, 'Новая метка', address);
-
-            myMap.geoObjects.add(placemark);
-        });
-    });
+    //         myMap.geoObjects.add(placemark);
+    //     });
+    // });
+    
 }
 
-function createPlacemark(coords, title, address) {
-    var placemark = new ymaps.Placemark(coords, {
-        balloonContentHeader: title,
-        balloonContentBody: address,
-        hintContent: title
-    }, {
-        preset: 'islands#icon',
-        iconColor: '#0095b6'
-    });
 
-    // Добавляем обработчик клика по метке
-    placemark.events.add('click', function (e) {
-        console.log('Метка кликнута, адрес: ', address);
-        адресПунктаВыдачи = address;  // Сохраняем адрес в переменную
-        workWithAddress(address);
-    });
-
-    return placemark;
-}
 
 // Пример функции для работы с полученным адресом
 function workWithAddress(address) {
