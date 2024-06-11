@@ -277,13 +277,16 @@ const getSearchJSON = async(req,res)=>{
 
   //const responseAuthor
 }
+const postSavePlaceOrder = async(){
+
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getRegistration,
   getListOrder,getShortcut,postAddInBasket,
   getBasketUserList,getDeleteBasketItem,
-  getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON}
+  getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON,postSavePlaceOrder}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

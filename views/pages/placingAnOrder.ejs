@@ -14,9 +14,9 @@
     </div>
     </div>
     <div class="col">
-    <button type="button" class="fs-4 align-self-end mt-auto btn btn-outline-success w-50 h-25" @click="handlerBuy">Оплатить</button> 
+    <button type="button" class="fs-4 align-self-end mt-auto btn btn-outline-success w-50 h-25" id="buy">Оплатить</button> 
     <div class="mt-3">
-        Итого: <b class="fs-5">{{endPrice}}₽</b>
+        Итого: <b class="fs-5" id="endPrice"></b>
     </div> 
     </div>
 </div>
@@ -55,8 +55,14 @@
 
 <script type="text/javascript">
 
-var myMap, searchControl, адресПунктаВыдачи;
-
+function setPrice(thisUrl){
+    const price = new URL(thisUrl).searchParams.get('endPrice')
+    const priceEl = document.querySelector('#endPrice')
+    priceEl.textContent = price+'₽'
+}
+setPrice(location.href)
+var myMap, searchControl, address;
+document.querySelector('input[name="exampleRadios"]:checked').value;
 async function  init() {
     // Создаем карту.
     myMap = new ymaps.Map("map", {
@@ -83,51 +89,43 @@ async function  init() {
         var results = searchControl.getResultsArray();
             var coords = item.geometry.getCoordinates();
             var title = item.properties.get('name');
-            var address = item.properties.get('description');
-            console.log(address)
-            
+            address = item.properties.get('description');
+            clickAddres(address)
         })
     })
-   
-        
-    // setTimeout(()=>{
-        
-    // });
-    // },2000)
-    // Обрабатываем результаты поиска.
-  
-
-    // // Обработчик кликов по карте
-    // myMap.events.add('click', function (e) {
-    //     var coords = e.get('coords');
-    //     console.log('Координаты клика: ', coords);
-
-    //     // Использование геокодера для получения адреса
-    //     ymaps.geocode(coords).then(function (res) {
-    //         var firstGeoObject = res.geoObjects.get(0);
-
-    //         var address = firstGeoObject.getAddressLine();
-    //         console.log('Адрес метки: ', address);
-
-    //         // Создание и добавление метки с полученным адресом
-    //         var placemark = createPlacemark(coords, 'Новая метка', address);
-
-    //         myMap.geoObjects.add(placemark);
-    //     });
-    // });
     
 }
+ymaps.ready(init)
 
+function clickAddres(adr){
+    localStorage.removeItem('address')
+    localStorage.setItem('address',adr)
 
-
-// Пример функции для работы с полученным адресом
-function workWithAddress(address) {
-    console.log('Работаем с адресом: ', address);
-    // Ваш код для работы с адресом
 }
+document.querySelector('#buy').addEventListener('click',async()=>{
+    const endPlacingOrder = {
+        addres:localStorage.getItem('address'),
+        price: new URL(location.href).searchParams.get('endPrice')
+    }
+    const radioButtons = document.getElementsByName('exampleRadios')
+    let uponReceipt = false
+    radioButtons.forEach(item=>{
+        if(item.checked&&item.value==='При получении')
+            uponReceipt = true
+    })
+    if(uponReceipt){
+        const res = await fetch('http://localhost:9001/buyer/save/order',{
+            headers:{
+                "Content-Type":"application/json"
+            },
+            method:'POST',
+            body:JSON.stringify(endPlacingOrder)
+        })
 
-ymaps.ready(init);
+    }
 
+    console.log(endPlacingOrder.addres)
+})
 </script>
 <%-include("../partials/footer")%>
 
