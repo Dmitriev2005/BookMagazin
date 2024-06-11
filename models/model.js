@@ -267,15 +267,15 @@ const Order = db.define('user_order',{
   },
   orderDate:{
     field:'order_date',
-    type:DataTypes.DATEONLY
+    type:DataTypes.DATE
   },
   dateIssue:{
     field:'date_issue',
-    type:DataTypes.DATEONLY
+    type:DataTypes.DATE
   },
   status:{
     field:'order_status',
-    type:DataTypes.ENUM('в пути','доставлен','отменен')
+    type:DataTypes.ENUM('в пути','доставлен','отменен','в обработке')
   },
   userFk:{
     field:'user_fk',

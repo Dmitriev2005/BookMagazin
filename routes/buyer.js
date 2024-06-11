@@ -5,7 +5,7 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getRegistration,getListOrder,
     getShortcut,postAddInBasket,getBasketUserList,
     getDeleteBasketItem,getBookForSubgenre,
-    getBookFromSub,postSaveReviewBuyer,getSearchJSON,postSavePlaceOrder} from '../controllers/buyer.js'
+    getBookFromSub,postSaveReviewBuyer,getSearchJSON,postSavePlaceOrder,getListOrderJSON} from '../controllers/buyer.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
@@ -49,6 +49,9 @@ buyerRouter.post('/buyer/save/review',postSaveReviewBuyer)
 buyerRouter.get('/buyer/json/get-search/:search',getSearchJSON)
 //Сохранить заказ пользователя
 buyerRouter.post('/buyer/save/placingOrder',postSavePlaceOrder)
+//Получить список заказов клиента
+buyerRouter.get('/buyer/json/get-list-order',getListOrderJSON)
+
 
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!
 buyerRouter.get('/sh',getShortcut)

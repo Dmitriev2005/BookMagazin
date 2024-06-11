@@ -277,8 +277,76 @@ const getSearchJSON = async(req,res)=>{
 
   //const responseAuthor
 }
-const postSavePlaceOrder = async(){
+const postSavePlaceOrder = async(req,res)=>{
+  const user = shortCut(req)
+  if(typeof user==="object"){
+    console.log("sdasfsdgds")
+    const body = req.body
+    
+    const responseOrder = await Order.create({
+      addres:body.addres,
+      orderDate:new Date(),
+      status:'в обработке',
+      userFk:user.id
 
+    })
+    console.log(responseOrder)
+    const responseBasket = await Basket.findAll({
+      where:{
+        userFk:user.id
+      }
+    })
+    const allBook = await Book.findAll()
+    for(let i=0; i<responseBasket.length; i++){
+      for(let j=0; j<allBook.length; j++){
+        if(responseBasket[i].get('bookFk')===allBook[j].get('id')){
+          await OrderElements.create({
+            bookFk:allBook[j].get('id'),
+            orderFk:responseOrder.get('id'),
+            count:responseBasket[i].get('count')
+          })
+
+        }
+      }
+    }
+    await Basket.destroy({
+      where:{
+        userFk:user.id
+      }
+    })
+    res.status(200).send('Заказ добавлен!')
+  }
+  else{
+    res.status(404).send("Нету")
+  }
+}
+const getListOrderJSON = async(req,res)=>{
+  const user = shortCut(req)
+  if(typeof user==="object"){
+    const responseDBOrder = await Order.findAll({
+      where:{
+        userFk:user.id
+      }
+    })
+    const outAr = []
+    const responseDBOrderEl = await OrderElements.findAll()
+    for(let i=0; i<responseDBOrderEl.length; i++){
+      for(let j=0; j<responseDBOrder.length; j++){
+        if(responseDBOrder[j].get('id')===responseDBOrderEl[i].get('orderFk')){
+          const responseDBBook = await Book.findByPk(responseDBOrderEl[i].get('bookFk'))
+          const buffer = {
+            book:responseDBBook.dataValues,
+            count:responseDBOrderEl[i].get('count')
+          }
+          outAr.push(buffer)
+        }
+      }
+    }
+    res.status(200).json(outAr)
+  }
+  else{
+    res.status(200).render('./pages/authorisation',{title:'Авторизация',user})
+  }
 }
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
@@ -286,7 +354,7 @@ export {getIndex, getGenre, getSubgenre, getNewBookRow,
   getRegistration,
   getListOrder,getShortcut,postAddInBasket,
   getBasketUserList,getDeleteBasketItem,
-  getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON,postSavePlaceOrder}
+  getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON,postSavePlaceOrder,getListOrderJSON}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

@@ -1,6 +1,6 @@
 <%-include("../partials/head")%>
 <%-include("../partials/header")%>
-<div class="container content ">
+<div class="container content " id="bodyListOrder">
     <h1 class="mb-4">Заказы</h1>
     <div class="row" style="background-color:#e6f0f7">
         <div class="row pt-2">
@@ -36,4 +36,31 @@
        
     </div>
 </div>
+<script>
+    const bodyListOrder = Vue.createApp({
+        data(){
+            return{
+                listOrder:[]
+            }
+        },
+        methods:{
+            async getOrderList(){
+                const res = await fetch('http://localhost:9001/buyer/json/get-list-order')
+                if(res.ok){
+                    this.lsitOrder = await res.json()
+                    console.log(this.lsitOrder)
+                }
+
+            }
+        },
+        mounted(){
+            this.getOrderList()
+        }
+    })
+    bodyListOrder.component('list-order',{
+        props:['listOrder'],
+        template:``
+    })
+    bodyListOrder.mount('#bodyListOrder')
+</script>
 <%-include("../partials/footer")%> 

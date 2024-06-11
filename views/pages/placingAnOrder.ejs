@@ -110,18 +110,22 @@ document.querySelector('#buy').addEventListener('click',async()=>{
     const radioButtons = document.getElementsByName('exampleRadios')
     let uponReceipt = false
     radioButtons.forEach(item=>{
-        if(item.checked&&item.value==='При получении')
+        if(item.checked&&item.value==='option2')
             uponReceipt = true
     })
     if(uponReceipt){
-        const res = await fetch('http://localhost:9001/buyer/save/order',{
+        const res = await fetch('http://localhost:9001/buyer/save/placingOrder',{
             headers:{
                 "Content-Type":"application/json"
             },
             method:'POST',
             body:JSON.stringify(endPlacingOrder)
         })
-
+        if(res.ok){
+            alert('Заказ оформлен!')
+            location.href = 'http://localhost:9001'
+        }
+            
     }
 
     console.log(endPlacingOrder.addres)
