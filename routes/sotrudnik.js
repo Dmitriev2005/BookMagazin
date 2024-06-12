@@ -7,7 +7,8 @@ import {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getOneGenreManySubgenre,getAllGenre,getEditGenre,getAuthor,
     getPageAuthor,postNewauthor,getAuthorForEdit,
     postEditAuthor,getDeleteAuthor,getNewPub,getPubSeriesConstraint,
-    postNewPub,getJsonEditPub,postEditPub,postEditGenre,delGenre,delPub} from '../controllers/sotrudnik.js'
+    postNewPub,getJsonEditPub,postEditPub,postEditGenre,
+    delGenre,delPub,getAllOrders,getChangeOrders,postStatusOrder} from '../controllers/sotrudnik.js'
 import { uplaodS } from '../helpers/functionForServer.js'
 const routerSotrudnik = express.Router()
 
@@ -81,6 +82,12 @@ routerSotrudnik.post('/sotrudnik/save/post-edit-genre/:id',postEditGenre)
 routerSotrudnik.get('/sotrudnik/delete/delete-genre/:id',delGenre)
 //Удаление издательства
 routerSotrudnik.get('/sotrudnik/delete/del-publishing/:id',delPub)
+//Получение всех заказов
+routerSotrudnik.get('/sotrudnik/json/get-all-orders',getAllOrders)
+//Получение выбранного заказа
+routerSotrudnik.get('/sotrudnik/json/get-change-order/:id',getChangeOrders)
+//Сохранение статуса заказа
+routerSotrudnik.post('/sotrudnik/save/post-status-order',postStatusOrder)
 
 
 export{routerSotrudnik}

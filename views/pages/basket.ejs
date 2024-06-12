@@ -44,12 +44,12 @@
                         this.endPrice = this.endPrice+(element.book.price*element.count)
                     console.log((((element.book.discount/100)*element.book.price)*element.count))
                 });
-            },
+            },                      
             handlerDicrement(el){
                 if(el.count-1>0){
                     el.count--
                     if(el.book.discount)
-                        this.endPrice = this.endPrice-(el.book.discount/100)*el.book.price
+                        this.endPrice = this.endPrice-Math.floor(el.book.price-((el.book.discount/100)*el.book.price))
                     else
                         this.endPrice = this.endPrice-el.book.price
                 }
@@ -58,7 +58,7 @@
                 if(el.count+1<11){
                     el.count++
                     if(el.book.discount)
-                        this.endPrice = this.endPrice+(el.book.discount/100)*el.book.price
+                        this.endPrice = this.endPrice+Math.floor(el.book.price-((el.book.discount/100)*el.book.price))
                     else
                         this.endPrice = this.endPrice+el.book.price
                 }

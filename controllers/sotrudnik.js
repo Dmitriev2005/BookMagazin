@@ -2,7 +2,8 @@ import { Op, json, where } from "sequelize"
 import {User, Subgenre, Genre, 
   SubgenreBook, Publishing, Series,
   Author, Book, Basket, 
-  Order, Review}from "../models/model.js"
+  Order, Review,
+  OrderElements}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
 import {verifyToken, translit, shortCut} from "../helpers/functionForServer.js"
 import 'dotenv/config'
@@ -694,6 +695,62 @@ const delPub = async(req,res)=>{
     else
         res.status(404).send("Страница не найдена!")
 }
+const getAllOrders =  async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const orders = await Order.findAll()
+        const orderAr = []
+        orders.forEach(item=>orderAr.push(item.dataValues))
+        res.status(200).json(orderAr)
+    }
+    else
+        res.status(404).send("Страница не найдена!")
+}
+const getChangeOrders = async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const idOrder = Number(req.params.id)
+        const order = await Order.findByPk(idOrder)
+        const elOrder = await OrderElements.findAll({
+            where:{
+                orderFk:idOrder
+            }
+        })
+        const book = await Book.findAll()
+        const bookAr = []
+        for(let i=0; i<elOrder.length; i++){
+            for(let j=0; j<book.length; j++)
+                if(book[j].get('id')===elOrder[i].get('bookFk')){
+                    bookAr.push({...book[j].dataValues, ...{count:elOrder[i].get('count')}})
+                }
+        }
+        const buffer = {
+            books:bookAr,
+            order:order.dataValues
+        }
+        console.log(buffer)
+        res.status(200).json(buffer)
+    }
+    else
+        res.status(404).send("Страница не найдена!")
+}
+const postStatusOrder = async(req,res)=>{
+    const user = shortCut(req)
+    if(user.type==="работник"){
+        const body = req.body
+        await Order.update({
+            status:body.status
+        },
+        {
+            where:{
+                id:Number(body.id)
+            }
+        })
+        res.status(200).send("ok")
+    }
+    else
+        res.status(404).send("Страница не найдена!")
+}
 export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getCurrentSubgenreGenre,getGenreSubgenre,getCurrentAuthor,
     getAllAuthors,getPubSeries,getAllSeriesBooks,postEditBook,
@@ -701,4 +758,5 @@ export {getAllBooks,getOrder, getBookList,getEditBook,getEditBookJson,
     getOneGenreManySubgenre,postNewGenreSub,getAllGenre,
     getEditGenre,getAuthor,getPageAuthor,postNewauthor,
     getAuthorForEdit,postEditAuthor,getDeleteAuthor,getNewPub,
-    getPubSeriesConstraint,postNewPub,getJsonEditPub,postEditPub,postEditGenre,delGenre,delPub}
+    getPubSeriesConstraint,postNewPub,getJsonEditPub,postEditPub,
+    postEditGenre,delGenre,delPub,getAllOrders,getChangeOrders,postStatusOrder}
