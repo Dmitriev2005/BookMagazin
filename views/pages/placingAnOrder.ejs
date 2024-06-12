@@ -128,6 +128,9 @@ document.querySelector('#buy').addEventListener('click',async()=>{
         }
             
     }
+    else{
+        location.href = `http://localhost:9001/content/get-pay-form?addres=${endPlacingOrder.addres}&price=${endPlacingOrder.price}`
+    }
 
     console.log(endPlacingOrder.addres)
 })

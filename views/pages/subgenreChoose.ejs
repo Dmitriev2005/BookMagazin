@@ -11,7 +11,10 @@
                 idSubgenre:0,
                 namePage:"",
                 listBook:[],
-                authorOne:[]
+                authorOne:[],
+                filter:{
+                    authors:[]
+                }
             }
         },
         methods:{
@@ -39,8 +42,9 @@
                 }
 
             },
-            handleChangeAuthor(){
-                
+            handleChangeAuthor(item,$){
+                //console.log($)
+                //filter.authors.push(item)
             }
         },
         async mounted(){
@@ -58,7 +62,7 @@
                             Автор
                         </h3>
                         <div class="form-check" v-for="item in authorOne">
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" @change="handleChangeAuthor(item)">
+                            <input class="form-check-input" type="checkbox"  name="authorCheckGroup" @change="handleChangeAuthor(item)">
                             <label class="form-check-label" for="defaultCheck1">
                                 {{item.authorName +' ' +item.lastname}}
                             </label>

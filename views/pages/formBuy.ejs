@@ -7,9 +7,8 @@
         <hr>
         <div class="row mt-5">
             <div class="col-4"></div>
-            <div class="col-5">
-                <h2>Оплата заказа №1111</h2>
-                <form>
+            <div class="col-5" id="bodyFormPay">
+                <h2>Оплата заказа №{{idOrder}}</h2>
                     <div class="row gy-3">
                       
               
@@ -41,8 +40,7 @@
                     </div>
                     <hr class="my-4 w-50">
                     
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">Оплатить</button>
-                  </form>
+                    <button class="btn btn-primary btn-lg btn-block" @click="handlerSendForm">Оплатить</button>
             </div>
         </div>
         <div class="row">
@@ -104,6 +102,46 @@
             </div>
         </div>
     </div>
+    <script>
+        const bodyFormPay = Vue.createApp({
+            data(){
+                return{
+                    idOrder:0,
+                    endPlacingOrder:new Object()
+                    //     type:'',
+                    //     addres:'',
+
+                    // }
+                }
+            },
+            methods:{
+                getOrderData(){
+                    this.endPlacingOrder.type = 'картой на сайте',
+                    this.endPlacingOrder.addres = new URL(location.href).searchParams.get('addres'),
+                    this.endPlacingOrder.price = new URL(location.href).searchParams.get('price')
+                    this.idOrder = new URL(location.href).searchParams.get('idOrder')
+                },
+                async handlerSendForm(){
+                   console.log(this.endPlacingOrder)
+                    const res = await fetch('http://localhost:9001/buyer/save/placingOrder',{
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        method:'POST',
+                        body:JSON.stringify(this.endPlacingOrder)
+                    })
+                    if(res.ok){
+                        alert('Заказ оформлен!')
+                        location.href = 'http://localhost:9001'
+                    }
+                }
+            },
+            mounted(){
+                this.getOrderData()
+            }
+        })
+        bodyFormPay.mount('#bodyFormPay')
+    </script>
 </body>
 </html>
 

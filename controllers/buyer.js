@@ -282,9 +282,8 @@ const getSearchJSON = async(req,res)=>{
 const postSavePlaceOrder = async(req,res)=>{
   const user = shortCut(req)
   if(typeof user==="object"){
-    console.log("sdasfsdgds")
     const body = req.body
-    
+    console.log(body)
     const responseOrder = await Order.create({
       addres:body.addres,
       orderDate:new Date(),
