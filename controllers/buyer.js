@@ -365,13 +365,30 @@ const getListOrderJSON = async(req,res)=>{
     res.status(200).render('./pages/authorisation',{title:'Авторизация',user})
   }
 }
+const getCancelOrder = async (req,res)=>{
+  const user = shortCut(req)
+  if(typeof user==="object"){
+    await Order.update({
+      status:'отменен'
+    },{
+      where:{
+        userFk:Number(user.id)
+      }
+    })
+    res.status(200).send('Заказ отменен!')
+  }
+  else
+    res.status(200).render('./pages/authorisation',{title:'Авторизация',user})
+
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
   getRegistration,
   getListOrder,getShortcut,postAddInBasket,
   getBasketUserList,getDeleteBasketItem,
-  getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON,postSavePlaceOrder,getListOrderJSON}
+  getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON,
+  postSavePlaceOrder,getListOrderJSON,getCancelOrder}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

@@ -54,8 +54,8 @@
                 </div>
             </div>
             <div class="col-2">
-                <div class="p-3 mb-2 bg-warning text-dark" style="text-align: center;">
-                    {{item.status}}
+                <div class="p-3 mb-2  text-dark bg-warning" style="text-align: center;">
+                    <b>{{item.status}}</b>
                 </div>
                 <div class="row pt-2">
                     <b class="fs-5">{{item.price+"₽"}}</b>
@@ -73,7 +73,7 @@
         </div>
 
        
-        <div class="row mt-4 pb-2">
+        <div class="row mt-4 pb-2" v-if="item.status!=='отменен'">
             <div class="col">
                 <button type="button" @click="handlerCancel" class="btn btn-outline-danger">Отменить</button>
             </div>
