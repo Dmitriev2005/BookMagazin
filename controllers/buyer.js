@@ -4,7 +4,7 @@ import {User, Subgenre, Genre,
   Author, Book, Basket, 
   Order, Review,OrderElements}from "../models/model.js"
 import jwt, { decode } from "jsonwebtoken"
-import {verifyToken, translit, shortCut} from "../helpers/functionForServer.js"
+import {verifyToken, translit, shortCut,convertDate} from "../helpers/functionForServer.js"
 import 'dotenv/config'
 import 'fs'
 import path from "path"
@@ -287,7 +287,9 @@ const postSavePlaceOrder = async(req,res)=>{
       addres:body.addres,
       orderDate:new Date(),
       status:'в обработке',
-      userFk:user.id
+      userFk:user.id,
+      typeBuy:body.typeBuy,
+      price:Number(body.price)
 
     })
     console.log(responseOrder)
@@ -328,21 +330,36 @@ const getListOrderJSON = async(req,res)=>{
         userFk:user.id
       }
     })
-    const outAr = []
+
+    const orderSAr = []
     const responseDBOrderEl = await OrderElements.findAll()
-    for(let i=0; i<responseDBOrderEl.length; i++){
       for(let j=0; j<responseDBOrder.length; j++){
-        if(responseDBOrder[j].get('id')===responseDBOrderEl[i].get('orderFk')){
-          const responseDBBook = await Book.findByPk(responseDBOrderEl[i].get('bookFk'))
-          const buffer = {
-            book:responseDBBook.dataValues,
-            count:responseDBOrderEl[i].get('count')
+        const orderAr = []
+        for(let i=0; i<responseDBOrderEl.length; i++){        
+          if(responseDBOrder[j].get('id')===responseDBOrderEl[i].get('orderFk')){
+            const responseDBBook = await Book.findByPk(responseDBOrderEl[i].get('bookFk'))
+            const buffer = {
+             
+              book:responseDBBook.dataValues,
+              count:responseDBOrderEl[i].get('count')
+            }
+            orderAr.push(buffer)
           }
-          outAr.push(buffer)
-        }
       }
+      const dateBuf = convertDate(new Date(responseDBOrder[j].get('dateIssue')))!=="1970-01-01 00:00:00"?convertDate(new Date(responseDBOrder[j].get('dateIssue'))):"-"
+      const buffer2 = {
+        price:responseDBOrder[j].get('price'),
+        status:responseDBOrder[j].get('status'),
+        addres:responseDBOrder[j].get('addres'),
+        typeBuy:responseDBOrder[j].get('typeBuy'),
+        dateIssue:dateBuf,
+        orderDate:convertDate(new Date(responseDBOrder[j].get('orderDate'))),
+        idOrder:responseDBOrder[j].get('id'),
+        books:orderAr
+      }
+      orderSAr.push(buffer2)
     }
-    res.status(200).json(outAr)
+    res.status(200).json(orderSAr)
   }
   else{
     res.status(200).render('./pages/authorisation',{title:'Авторизация',user})

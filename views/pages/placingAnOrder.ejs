@@ -114,6 +114,7 @@ document.querySelector('#buy').addEventListener('click',async()=>{
             uponReceipt = true
     })
     if(uponReceipt){
+        endPlacingOrder.typeBuy = 'при получении'
         const res = await fetch('http://localhost:9001/buyer/save/placingOrder',{
             headers:{
                 "Content-Type":"application/json"

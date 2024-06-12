@@ -280,6 +280,14 @@ const Order = db.define('user_order',{
   userFk:{
     field:'user_fk',
     type:DataTypes.INTEGER
+  },
+  typeBuy:{
+    field:'type_buy',
+    type:DataTypes.ENUM('картой на сайте','при получении')
+  },
+  price:{
+    field:'price',
+    type:DataTypes.INTEGER
   }
 })
 const OrderElements = db.define('order_elements',{

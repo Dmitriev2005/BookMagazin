@@ -2,39 +2,7 @@
 <%-include("../partials/header")%>
 <div class="container content " id="bodyListOrder">
     <h1 class="mb-4">Заказы</h1>
-    <div class="row" style="background-color:#e6f0f7">
-        <div class="row pt-2">
-            <div class="col-10">
-                <h3>Зазказ №1111 от 26.05.2024</h3>
-                <div class="fw-ligh fs-8 mt-3">
-                    Ожидаемая дата доставки: 27.05.2024
-                </div>
-                <div class="m">
-                    Оплата картой на сайте
-                </div>
-                <div class="">
-                    Орск ул. Ленина 40
-                </div>
-            </div>
-            <div class="col-1">
-                <div class="status drive">
-                    В пути
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-10 mx-3">
-                <img   height="80"  src="http://localhost:9001/get-image/2.jpg">
-            </div>
-          
-        </div>
-        <div class="row mt-4 pb-2">
-            <div class="col">
-                <button type="button" class="btn btn-outline-danger">Отменить</button>
-            </div>
-        </div>
-       
-    </div>
+    <list-order :list-order="listOrder" :handler-cancel="handlerCancel"></list-order>
 </div>
 <script>
     const bodyListOrder = Vue.createApp({
@@ -47,10 +15,21 @@
             async getOrderList(){
                 const res = await fetch('http://localhost:9001/buyer/json/get-list-order')
                 if(res.ok){
-                    this.lsitOrder = await res.json()
-                    console.log(this.lsitOrder)
+                    this.listOrder = await res.json()
+                    console.log(this.listOrder)
                 }
 
+            },
+            async handlerCancel(){
+                if(confirm("Вы точно хотите отменить заказ?")){
+                    const res = await fetch('http://localhost:9001/buyer/get/cancel')
+                    if(res.ok){
+                        alert("Заказ отменен!")
+                        location.reload()
+                    }
+                }
+
+               
             }
         },
         mounted(){
@@ -58,8 +37,50 @@
         }
     })
     bodyListOrder.component('list-order',{
-        props:['listOrder'],
-        template:``
+        props:['listOrder','handlerCancel'],
+        template:`
+             <div class="row" v-for="item in listOrder" style="background-color:#e6f0f7">
+        <div class="row pt-2">
+            <div class="col-10">
+                <h3>Зазказ {{item.idOrder}} от {{item.orderDate}}</h3>
+                <div class="fw-ligh fs-8 mt-3">
+                    Ожидаемая дата доставки: {{String(item.dateIssue).replace(/T/, ' ').replace(/\.\d{3}Z/, '')}}
+                </div>
+                <div class="m">
+                    Оплата {{item.typeBuy}}
+                </div>
+                <div class="">
+                    {{item.addres}}
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="p-3 mb-2 bg-warning text-dark" style="text-align: center;">
+                    {{item.status}}
+                </div>
+                <div class="row pt-2">
+                    <b class="fs-5">{{item.price+"₽"}}</b>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-1 mt-4" v-for="itemBook in item.books">
+
+            <div class="row mt-2">
+                <div class="col-10 mx-3">
+                    <img   height="80"  :src="'http://localhost:9001/get-image/'+itemBook.book.id+'.jpg'">
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="row mt-4 pb-2">
+            <div class="col">
+                <button type="button" @click="handlerCancel" class="btn btn-outline-danger">Отменить</button>
+            </div>
+        </div>
+       
+    </div>
+        `
     })
     bodyListOrder.mount('#bodyListOrder')
 </script>
