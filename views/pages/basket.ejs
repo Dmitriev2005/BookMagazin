@@ -30,9 +30,11 @@
         methods:{
             async getBasketList(){
                 const res = await fetch('http://localhost:9001/buyer/get-basket-list')
-                if(res.ok){
+                if(res.status===200){
                     this.basketList = await res.json()
                 }
+                else if(res.status===201)
+                    location.href = 'http://localhost:9001/buyer/get-empty-basket'
             },
             getCalculate(){
                 this.basketList.forEach(element => {

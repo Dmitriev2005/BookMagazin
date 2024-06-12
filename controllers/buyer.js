@@ -184,8 +184,10 @@ const getBasketUserList = async(req,res)=>{
       })
       })
 
-
-      res.status(200).json(arBasketList)
+      if(arBasketList.length>0)
+        res.status(200).json(arBasketList)
+      else
+        res.status(201).send("нету")
   }
   else
     res.status(500).send("нету")
@@ -359,7 +361,11 @@ const getListOrderJSON = async(req,res)=>{
       }
       orderSAr.push(buffer2)
     }
-    res.status(200).json(orderSAr)
+    if(orderSAr.length>0)
+      res.status(200).json(orderSAr)
+    else
+      res.status(201).send("не")
+
   }
   else{
     res.status(200).render('./pages/authorisation',{title:'Авторизация',user})
@@ -381,6 +387,25 @@ const getCancelOrder = async (req,res)=>{
     res.status(200).render('./pages/authorisation',{title:'Авторизация',user})
 
 }
+const getEmptyBasket = async(req,res)=>{
+  const user = shortCut(req)
+  if(typeof user==="object"){
+    res.status(200).render('./pages/emptyBasket',{title:'Корзина',user})
+  }
+  else{
+    res.status(200).render('./pages/authorisation',{title:'Авторизация',user})
+  }
+}
+const getEmptyOrder = async(req,res)=>{
+  const user = shortCut(req)
+  if(typeof user==="object"){
+    res.status(200).render('./pages/emptyOrderList',{title:'Список заказов',user})
+  }
+  else{
+    res.status(200).render('./pages/authorisation',{title:'Авторизация',user})
+  }
+
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
@@ -388,7 +413,7 @@ export {getIndex, getGenre, getSubgenre, getNewBookRow,
   getListOrder,getShortcut,postAddInBasket,
   getBasketUserList,getDeleteBasketItem,
   getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON,
-  postSavePlaceOrder,getListOrderJSON,getCancelOrder}
+  postSavePlaceOrder,getListOrderJSON,getCancelOrder,getEmptyBasket,getEmptyOrder}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})

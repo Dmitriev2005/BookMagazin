@@ -14,9 +14,12 @@
         methods:{
             async getOrderList(){
                 const res = await fetch('http://localhost:9001/buyer/json/get-list-order')
-                if(res.ok){
+                if(res.status===200){
                     this.listOrder = await res.json()
                     console.log(this.listOrder)
+                }
+                else if(res.status===201){
+                    location.href = 'http://localhost:9001/buyer/content/get-empty-list-order'
                 }
 
             },
