@@ -6,7 +6,8 @@ import {getIndex,getGenre,getSubgenre,getNewBookRow,
     getShortcut,postAddInBasket,getBasketUserList,
     getDeleteBasketItem,getBookForSubgenre,
     getBookFromSub,postSaveReviewBuyer,getSearchJSON,
-    postSavePlaceOrder,getListOrderJSON,getCancelOrder,getEmptyBasket,getEmptyOrder} from '../controllers/buyer.js'
+    postSavePlaceOrder,getListOrderJSON,getCancelOrder,
+    getEmptyBasket,getEmptyOrder,getPubSerAll} from '../controllers/buyer.js'
 const buyerRouter = express.Router()
 
 buyerRouter.get('/',getIndex)
@@ -58,6 +59,8 @@ buyerRouter.get('/buyer/get/cancel',getCancelOrder)
 buyerRouter.get('/buyer/get-empty-basket',getEmptyBasket)
 //Получить пустую страницу корзины
 buyerRouter.get('/buyer/content/get-empty-list-order',getEmptyOrder)
+//Получить все издательства и серии
+buyerRouter.get('/buyer/json/get-pub-ser-all',getPubSerAll)
 
 
 //Для БЫСТРОГО доступа к КЛИЕНТСКИМ страницам!!!!

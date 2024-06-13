@@ -2,7 +2,10 @@
 <%-include("../partials/header")%>
 <div class="container content" id="bodySub">
     <h2>{{namePage}}</h2>
-   <subgenre-book :list-book="listBook" :handler-buy="handlerBuy" :author-one="authorOne" :handle-change-author="handleChangeAuthor"></subgenre-book>
+   <subgenre-book :list-book="listBook" :handler-buy="handlerBuy" :author-one="authorOne" 
+   :handle-change-author="handleChangeAuthor" :handler-start-price="handlerStartPrice" 
+   :handler-end-price="handlerEndPrice" :handle-change-restrict="handleChangeRestrict" 
+   :restrict-one="restrictOne" :pub-one="pubOne" :handler-pub="handlerPub" :handler-ser="handlerSer"></subgenre-book>
 </div>
 <script>
     const bodySub = Vue.createApp({
@@ -11,9 +14,19 @@
                 idSubgenre:0,
                 namePage:"",
                 listBook:[],
+                bufferBook:[],
                 authorOne:[],
+                restrictOne:[],
+                pubOne:[],
                 filter:{
-                    authors:[]
+                    authors:[],
+                    restrict:[],
+                    price:new Object(),
+                    pubSer:[{
+                        pub:new Object(),
+                        ser:[]
+                    }
+                    ]
                 }
             }
         },
@@ -25,6 +38,7 @@
                     const buffer = await res.json()
                     this.listBook = buffer.bookList
                     this.namePage = buffer.namePage.name
+                    this.bufferBook = this.listBook
                 }
             },
             getIdSubgenre(){
@@ -42,30 +56,202 @@
                 }
 
             },
-            handleChangeAuthor(item,$){
-                //console.log($)
-                //filter.authors.push(item)
+            handleChangeAuthor(item,event){
+                if(event.target.checked)
+                    this.filter.authors.push(item)
+                else{
+                    for(let i=0; i<this.filter.authors.length; i++){
+                        if(this.filter.authors[i].id===item.id)
+                            this.filter.authors.splice(i,1)
+                    }
+                }
+                console.log(item)
+                this.getFilter()
+            },
+            handlerStartPrice(el){
+                this.filter.price.startPrice = el.target.value
+                getFilter()
+            },
+            handlerEndPrice(el){
+                this.filter.price.endPrice = el.target.value
+                this.getFilter()
+            },
+            handleChangeRestrict(item,event){
+                if(event.target.checked)
+                    this.filter.restrict.push(item)
+                else{
+                    for(let i=0; i<this.filter.restrict.length; i++){
+                        if(this.filter.restrict[i].ageRestrictions===item.ageRestrictions)
+                            this.filter.restrict.splice(i,1)
+                    }
+                }
+                this.getFilter()
+            },
+            getRestOne(){
+                const buffer = []
+                for(let i = 0; i<this.listBook.length; i++){
+                   if(!this.restrictOne.find(q=>q.ageRestrictions===this.listBook[i].ageRestrictions)){
+                    this.restrictOne.push(this.listBook[i])
+                   }
+                }
+            },
+            async getPubOne(){
+               const res = await fetch('http://localhost:9001/buyer/json/get-pub-ser-all')
+               if(res.ok){
+                    this.pubOne = await res.json()
+               }
+            },
+            handlerPub(item,event){
+                if(event.target.checked){
+                    this.filter.pubSer.push({
+                        pub:item.pub,
+                        ser:[]
+                    })
+                    item.pub.isCheck = true
+                }
+                else{
+                    for(let i=0; i<this.filter.pubSer.length; i++){
+                        if(this.filter.pubSer[i].pub.id===item.pub.id)
+                            this.filter.pubSer.splice(i,1)
+                    }
+                    item.pub.isCheck = false
+                }
+                //getFilter()
+            },
+            handlerSer(item,event){
+                if(event.target.checked){
+                    const onePubSer = this.filter.pubSer.find(q=>q.pub.id===item.ser.publishingFk)
+                    if(!Array.isArray(onePubSer.ser))
+                        onePubSer.ser = []
+                    onePubSer.ser.push(item.ser)
+                    for(let i=0; i<this.filter.pubSer.length; i++)
+                        if(onePubSer.pub.id===this.filter.pubSer[i].pub.id)
+                            this.filter.pubSer[i] = onePubSer
+                    
+                }
+                else{
+                    for(let i=0; i<this.filter.pubSer.length; i++){
+                        for(let j=0; j<this.filter.pubSer.length; j++){
+                            if(this.filter.pubSer[i].ser[j].id===item.ser.id)
+                                this.filter.pubSer[i].ser.splice(j,1)
+                        }
+                    }
+                }
+               // getFilter()
+                console.log(this.filter.pubSer)
+            },
+            getFilter(){
+                this.listBook = this.bufferBook
+                // filter:{
+                //     authors:[],
+                //     restrict:[],
+                //     price:new Object(),
+                //     pubSer:{
+                //         pub:[],
+                //         ser:[]
+                //     }
+                // }
+                if(typeof this.filter.authors!=="undefined")
+                    this.filter.authors.forEach(aItem=>{
+                        console.log(this.filter.authors)
+                        this.listBook = this.listBook.filter(q=>q.authorFk===aItem.id)
+                    })
+                if(typeof this.filter.restrict!==undefined)
+                    this.filter.restrict.forEach(resItem=>{
+                        this.listBook = this.listBook.filter(q=>q.ageRestrictions===resItem.ageRestrictions)
+                    })
+                    //this.listBook = this.listBook.filter(q=>q.price>=Number(this.filter.price.startPrice)&&q.price<=Number(this.filter.price.endPrice))
+                // if(this.filter.pubSer.ser.length>0)
+                //     this.filter.pubSer.forEach(pItem=>{
+                //         this.bufferBook = this.bufferBook.filter(q=>q.seriesFk===pItem.id)
+                // })
+                //if()
+                
             }
         },
         async mounted(){
             await this.getIdSubgenre()
             await this.getBook()
             this.getAuthorOne()
+            this.getRestOne()
+            await this.getPubOne()
         }
     })
     bodySub.component('subgenre-book',{
-        props:['listBook','handlerBuy','authorOne','handleChangeAuthor'],
+        props:['listBook','handlerBuy','authorOne','handleChangeAuthor',
+        'handlerEndPrice','handlerStartPrice','handleChangeRestrict','restrictOne','pubOne','handlerPub','handlerSer'],
         template:`
              <div class="row">
                  <div class="col-3">
-                        <h3>
-                            Автор
-                        </h3>
-                        <div class="form-check" v-for="item in authorOne">
-                            <input class="form-check-input" type="checkbox"  name="authorCheckGroup" @change="handleChangeAuthor(item)">
-                            <label class="form-check-label" for="defaultCheck1">
-                                {{item.authorName +' ' +item.lastname}}
-                            </label>
+                        <div class="row mt-3">
+                            <div class="col">
+                            <h3>
+                                Автор
+                            </h3>
+                            <div class="form-check" v-for="aItem in authorOne">
+                                <input class="form-check-input" type="checkbox"  name="authorCheckGroup" @click="handleChangeAuthor(aItem,$event)">
+                                <label class="form-check-label" for="defaultCheck1">
+                                    {{aItem.authorName +' ' +aItem.lastname}}
+                                </label>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col"> 
+                                <h3>Год издания</h3>
+                                 <div class="row">
+                                    <div class="col-1">
+                                        От
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="number" value="1970" class="form-control" id="validationCustom02" @change="handlerStartPrice">
+                                    </div>
+                                    <div class="col-1">
+                                        До
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="number" value="2024" class="form-control" id="validationCustom02" @change="handlerEndPrice">
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <h3>Возрастное ограничение</h3>
+                                 <div class="form-check" v-for="item in restrictOne">
+                                    <input class="form-check-input" type="checkbox"  name="authorCheckGroup" @click="handleChangeRestrict(item,$event)">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        {{item.ageRestrictions}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                              <div class="col">
+                                <h3>Издательства</h3>
+                                 <div class="form-check" v-for="item in pubOne">
+                                    <input class="form-check-input" type="checkbox"  name="authorCheckGroup" @click="handlerPub(item,$event)">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                        {{item.pub.name}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                              <div class="col">
+                                <h3>Серии</h3>
+                                    <template v-for="item in pubOne">
+                                        <template v-if="item.pub.isCheck">
+                                            <div class="form-check" v-for="itemS in item.ser">
+                                                <input class="form-check-input" type="checkbox"  name="authorCheckGroup" @click="handlerSer(item,$event)">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    {{itemS.name}}
+                                                </label>
+                                            </div>
+                                        </template>
+                                    </template>
+                                
+                            </div>
                         </div>
                     </div>
                <div class="col">

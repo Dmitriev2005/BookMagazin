@@ -405,6 +405,25 @@ const getEmptyOrder = async(req,res)=>{
   }
 
 }
+const getPubSerAll = async(req,res)=>{
+  const pub = await Publishing.findAll()
+  const ser = await Series.findAll()
+  const outputAr = []
+  pub.forEach(pItem=>{
+    const arSer = []
+    ser.forEach(sItem=>{
+      if(pItem.get('id')===sItem.get('publishingFk'))
+        arSer.push(sItem.dataValues)
+    })
+    const buffer = {
+      pub:pItem.dataValues,
+      ser:arSer
+    }
+    outputAr.push(buffer)
+
+  })
+  res.status(200).json(outputAr)
+}
 export {getIndex, getGenre, getSubgenre, getNewBookRow, 
   getImage, getBookPage, getBookJson,getSearch,
   getBasket,getPlacingOrder,getPayForm,
@@ -412,7 +431,7 @@ export {getIndex, getGenre, getSubgenre, getNewBookRow,
   getListOrder,getShortcut,postAddInBasket,
   getBasketUserList,getDeleteBasketItem,
   getBookForSubgenre,getBookFromSub,postSaveReviewBuyer,getSearchJSON,
-  postSavePlaceOrder,getListOrderJSON,getCancelOrder,getEmptyBasket,getEmptyOrder}
+  postSavePlaceOrder,getListOrderJSON,getCancelOrder,getEmptyBasket,getEmptyOrder,getPubSerAll}
 //выдача токена
 // const token = jwt.sign(userAuthourisation,secretWord,{expiresIn:"1h"})
 // res.cookie('authorisation_token',token,{httpOnly:true})
